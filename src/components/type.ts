@@ -12,15 +12,40 @@ interface SubItem {
 }
 
 export interface ScheduleProps {
-    day: string;
-    events: {
-        title: string;
-        time: string;
-        description: string;
-        pic: string;
-        note?: string;
-        contact: string;
-        category: string;
-        status?: string;
-    }[];
+	day: string;
+	events: {
+		title: string;
+		time: string;
+		description: string;
+		pic: string;
+		note?: string;
+		contact: string;
+		category: string;
+		status?: "Pending" | "Approved" | "Cancelled";
+	}[];
+}
+
+export interface InventoryItem {
+	id: string;
+	nameItem: string;
+	procurementYear: number;
+	specification: string;
+	quantity: number;
+	goodCondition: number;
+	fairCondition: number;
+	poorCondition: number;
+	note?: string;
+}
+
+export interface InventoryHeaderTable {
+	id: string;
+	nameItem: string;
+	procurementYear: number;
+	specification: string;
+	quantity: number;
+	goodCondition: number;
+	fairCondition: number;
+	poorCondition: number;
+	note?: string;
+	action: string;
 }

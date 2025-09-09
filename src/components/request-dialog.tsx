@@ -14,7 +14,7 @@ export function RequestDialog() {
     return (
 			<Dialog>
 				<DialogTrigger asChild>
-					<Button className="bg-blue-400">Request Lab +</Button>
+					<Button className="bg-blue-400">Request Schedule +</Button>
 				</DialogTrigger>
 				<DialogContent className="sm:max-w-[425px] p-0">
 					<DialogHeader className="p-4 pb-0">

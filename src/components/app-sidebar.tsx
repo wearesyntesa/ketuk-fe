@@ -6,6 +6,9 @@ import {
 	Gpu,
 	CalendarDays,
 	BookCheck,
+	Archive,
+	DoorClosedIcon,
+	DoorOpen,
 } from "lucide-react";
 
 import {
@@ -22,6 +25,7 @@ import { Separator } from "./ui/separator";
 import { SideBarItem } from "@/components/type";
 import NavMain from "./nav-main";
 import NavFooter from "./nav-footer";
+import Link from "next/link";
 
 // Menu items.
 const items: SideBarItem[] = [
@@ -32,9 +36,15 @@ const items: SideBarItem[] = [
 		child: [],
 	},
 	{
-		title: "Lab Requests",
-		url: "/requests",
+		title: "Requests Schedule",
+		url: "/app/requests",
 		icon: BookCheck,
+		child: [],
+	},
+	{
+		title: "Inventory",
+		url: "/app/inventory",
+		icon: Archive,
 		child: [],
 	},
 ];
@@ -47,15 +57,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				<SidebarHeader>
 					<SidebarMenu>
 						<SidebarMenuItem>
-							<SidebarMenuButton
-								asChild
-								className="data-[slot=sidebar-menu-button]:!p-1.5">
-								<a href="/dashboard" className="py-10">
+							<SidebarMenuButton asChild>
+								<Link href="/app" className="flex items-center">
 									<div className="flex h-5 w-5">
-										<HomeIcon className="!size-6" />
+										<DoorOpen className="!size-6" />
 									</div>
-									<span className="text-xl font-semibold">Ketuk</span>
-								</a>
+									<span className="text-lg font-semibold mb-0">Ketuk</span>
+								</Link>
 							</SidebarMenuButton>
 						</SidebarMenuItem>
 					</SidebarMenu>

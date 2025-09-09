@@ -23,13 +23,23 @@ import {
 	SelectValue,
 } from "./ui/select";
 import { useState } from "react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
-export function RequestForm({ border }: { border?: boolean }) {
+export function RequestForm({
+	border,
+	className,
+}: {
+	border?: boolean;
+	className?: string;
+}) {
 	const [eventName, setEventName] = useState("");
 	const [eventDate, setEventDate] = useState("");
 	const [startTime, setStartTime] = useState("");
 	const [endTime, setEndTime] = useState("");
 	const [eventType, setEventType] = useState("");
+	const [pic, setPic] = useState("");
+	const [email, setEmail] = useState("");
+	const [contact, setContact] = useState("");
 	const [description, setDescription] = useState("");
 
 	const [page, setPage] = useState(1);
@@ -43,7 +53,10 @@ export function RequestForm({ border }: { border?: boolean }) {
 	};
 
 	return (
-		<Card className={`w-full ${border ? "border" : "border-0"}`}>
+		<Card
+			className={`${border ? "border" : "border-0"} ${
+				className ? className : "w-full"
+			}`}>
 			<CardHeader>
 				<CardTitle>Request Lab</CardTitle>
 				<CardDescription>
@@ -60,6 +73,7 @@ export function RequestForm({ border }: { border?: boolean }) {
 									<Input
 										id="event-name"
 										type="text"
+										// value={eventName}
 										placeholder="Praktikum Pemrograman Dasar"
 										required
 									/>
@@ -74,16 +88,16 @@ export function RequestForm({ border }: { border?: boolean }) {
 									<div className="flex gap-2">
 										<Input
 											type="time"
-											step="1"
-											defaultValue="10:30:00"
-											className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none w-fit"
+											// value={startTime}
+											defaultValue="10:30"
+											className="bg-background appearance-none w-fit"
 											required
 										/>
 										<Input
 											type="time"
-											step="1"
-											defaultValue="10:30:00"
-											className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none w-fit"
+											// value={endTime}
+											defaultValue="10:30"
+											className="bg-background appearance-none w-fit"
 											required
 										/>
 									</div>
@@ -92,7 +106,7 @@ export function RequestForm({ border }: { border?: boolean }) {
 									<div className="flex items-center">
 										<Label htmlFor="event-type">Jenis Kegiatan</Label>
 									</div>
-									<Select>
+									<Select onValueChange={setEventType}>
 										<SelectTrigger id="event-type" className="w-full">
 											<SelectValue placeholder="Pilih jenis kegiatan" />
 										</SelectTrigger>
@@ -156,13 +170,18 @@ export function RequestForm({ border }: { border?: boolean }) {
 			</CardContent>
 			<CardFooter className="flex-col gap-2">
 				{page === 1 ? (
-					<Button className="w-full" onClick={handleNext}>
-						Next
-					</Button>
+					<div className="w-full flex justify-end">
+						<Button
+							variant={"secondary"}
+							className="w-fit"
+							onClick={handleNext}>
+							Next <ArrowRight className="ml-2" />
+						</Button>
+					</div>
 				) : (
 					<div className="grid grid-cols-2 w-full gap-2">
 						<Button variant={"outline"} className="w-full" onClick={handleBack}>
-							Back
+							<ArrowLeft /> Back
 						</Button>
 						<Button type="submit" className="w-full">
 							Submit Request
