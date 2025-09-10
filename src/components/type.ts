@@ -36,16 +36,3 @@ export interface InventoryItem {
 	poorCondition: number;
 	note?: string;
 }
-
-export interface InventoryHeaderTable {
-	id: string;
-	nameItem: string;
-	procurementYear: number;
-	specification: string;
-	quantity: number;
-	goodCondition: number;
-	fairCondition: number;
-	poorCondition: number;
-	note?: string;
-	action: string;
-}

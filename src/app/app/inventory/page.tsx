@@ -5,41 +5,65 @@ import InventoryTable from "@/components/inventory-table";
 import { inventoryItem } from "../data";
 import { ColumnDef } from "@tanstack/react-table";
 import { InventoryItem } from "@/components/type";
+import { Dropdown } from "react-day-picker";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { EllipsisVertical } from "lucide-react";
 
 const tableHeader: ColumnDef<InventoryItem>[] = [
-    {
-        accessorKey: "nameItem",
-        header: "Name",
-    },
-    {
-        accessorKey: "procurementYear",
-        header: "Procurement Year",
-    },
-    {
-        accessorKey: "specification",
-        header: "Specification",
-    },
-    {
-        accessorKey: "quantity",
-        header: "Quantity", 
-    },
-    {
-        accessorKey: "goodCondition",
-        header: "Good Condition",
-    },
-    {
-        accessorKey: "fairCondition",
-        header: "Fair Condition",
-    },
-    {
-        accessorKey: "poorCondition",
-        header: "Poor Condition",
-    },
-    {
-        accessorKey: "note",
-        header: "Note",
-    },
-]
+	{
+		accessorKey: "nameItem",
+		header: "Name",
+	},
+	{
+		accessorKey: "procurementYear",
+		header: "Procurement Year",
+	},
+	{
+		accessorKey: "specification",
+		header: "Specification",
+	},
+	{
+		accessorKey: "quantity",
+		header: "Quantity",
+	},
+	{
+		accessorKey: "goodCondition",
+		header: "Good Condition",
+	},
+	{
+		accessorKey: "fairCondition",
+		header: "Fair Condition",
+	},
+	{
+		accessorKey: "poorCondition",
+		header: "Poor Condition",
+	},
+	{
+		accessorKey: "note",
+		header: "Note",
+	},
+	{
+		header: "Action",
+		cell: () => {
+			return (
+				<DropdownMenu>
+					<DropdownMenuTrigger className="p-2 flex justify-center items-center rounded-md hover:bg-accent/50 w-40">
+						<EllipsisVertical className="h-5 w-5 cursor-pointer text-muted-foreground" />
+					</DropdownMenuTrigger>
+					<DropdownMenuContent>
+						<DropdownMenuItem>Edit</DropdownMenuItem>
+						<DropdownMenuItem>Delete</DropdownMenuItem>
+					</DropdownMenuContent>
+				</DropdownMenu>
+			);
+		},
+	},
+];
 
 export default function InventoryPage() {
     return (
