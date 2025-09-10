@@ -25,7 +25,7 @@ export default function NavFooter() {
 			<SidebarMenu>
 				<SidebarMenuItem>
 					<SidebarMenuButton asChild>
-						<Link href="/dashboard/settings">
+						<Link href="/app/your-requests">
 							<Ticket />
 							<span className="font-semibold">Your Requests</span>
 						</Link>
@@ -41,7 +41,7 @@ export default function NavFooter() {
 				</SidebarMenuItem>
 				<SidebarMenuItem>
 					<SidebarMenuButton asChild>
-						<Link href="/dashboard/settings">
+						<Link href="/app/settings">
 							<SettingsIcon />
 							<span className="font-semibold">Settings</span>
 						</Link>
@@ -50,9 +50,7 @@ export default function NavFooter() {
 				<Separator />
 				<SidebarMenuItem>
 					<SidebarMenuButton asChild>
-						<a
-							href="/help"
-							className="h-12 flex justify-between items-center px-2">
+						<div className="h-12 flex justify-between items-center px-2">
 							<div className="flex gap-2 justify-center items-center">
 								<div
 									className={`w-10 h-10 px-4 rounded-full flex items-center justify-center font-medium bg-orange-100 text-orange-700`}>
@@ -71,7 +69,7 @@ export default function NavFooter() {
 									</DropdownMenuContent>
 								</DropdownMenu>
 							</div>
-						</a>
+						</div>
 					</SidebarMenuButton>
 				</SidebarMenuItem>
 			</SidebarMenu>
