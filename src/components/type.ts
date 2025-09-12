@@ -20,9 +20,22 @@ export interface ScheduleProps {
 		pic: string;
 		note?: string;
 		contact: string;
-		category: string;
+		category: "praktikum" | "skripsi" | "kelas" | string;
 		status?: "Pending" | "Approved" | "Cancelled";
 	}[];
+}
+
+export interface EventRequest {
+	id: string;
+	date: string;
+	title: string;
+	time: string;
+	description: string;
+	pic: string;
+	note?: string;
+	contact: string;
+	category: "praktikum" | "skripsi" | "kelas" | string;
+	status?: "Pending" | "Approved" | "Cancelled";
 }
 
 export interface InventoryItem {
