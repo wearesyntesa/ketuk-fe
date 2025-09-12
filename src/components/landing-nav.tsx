@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { CheckSquare } from "lucide-react";
+import { DoorOpen } from "lucide-react";
 
 export default function LandingNav() {
 	return (
@@ -8,7 +8,7 @@ export default function LandingNav() {
 			<div className="container mx-auto px-4">
 				<div className="flex items-center justify-between h-16">
 					<div className="flex items-center space-x-2">
-						<CheckSquare className="h-8 w-8 text-primary" />
+						<DoorOpen className="h-8 w-8 text-primary" />
 						<span className="text-xl font-bold">Ketuk</span>
 					</div>
 

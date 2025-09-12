@@ -3,7 +3,19 @@ import { Button } from "@/components/ui/button";
 export default function LandingHero() {
 	return (
 		<section className="relative min-h-screen bg-gradient-to-b from-background to-muted/20 flex items-center justify-center">
-			<div className="container mx-auto px-4 py-20 text-center">
+			<div className="bg-green-500/10 absolute top-50 right-1/2 aspect-square w-[24rem] rounded-full blur-3xl mix-blend-multiply"></div>
+			<div className="bg-blue-400/15 absolute top-80 right-1/3 aspect-square w-[30rem] rounded-full blur-2xl mix-blend-multiply"></div>
+			<div
+				className="absolute inset-0 opacity-20"
+				style={{
+					WebkitMaskImage:
+						"radial-gradient(circle at 50% 50%, white 40%, transparent 70%)",
+					maskImage:
+						"radial-gradient(circle at 50% 50%, white 40%, transparent 70%)",
+				}}>
+				<div className="w-full h-full bg-[linear-gradient(rgba(0,0,0,0.15)_2px,transparent_2px),linear-gradient(90deg,rgba(0,0,0,0.15)_2px,transparent_2px)] bg-[length:20px_20px]" />
+			</div>
+			<div className="container mx-auto px-4 py-20 z-10 text-center">
 				<div className="max-w-4xl mx-auto space-y-8">
 					<h1 className="text-5xl md:text-7xl font-bold tracking-tight text-foreground">
 						Take control of
@@ -14,7 +26,7 @@ export default function LandingHero() {
 					</h1>
 
 					<p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-						Ketuk platform that helps streamline lab management.
+						Ketuk platform that helps streamline lab management for RPL.
 					</p>
 
 					<div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8">
