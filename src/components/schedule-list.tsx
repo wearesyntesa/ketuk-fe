@@ -1,7 +1,6 @@
 import { RequestDialog } from "./request-dialog"
 import ScheduleCard from "./schedule-card"
-import { ScheduleProps } from "./type"
-import { Button } from "./ui/button"
+import { ScheduleProps } from "./type";
 import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 
 export default function ScheduleList({

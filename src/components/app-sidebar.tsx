@@ -1,15 +1,4 @@
-import {
-	HomeIcon,
-	Container,
-	Database,
-	Layers,
-	Gpu,
-	CalendarDays,
-	BookCheck,
-	Archive,
-	DoorClosedIcon,
-	DoorOpen,
-} from "lucide-react";
+import { CalendarDays, BookCheck, Archive, DoorOpen } from "lucide-react";
 
 import {
 	Sidebar,

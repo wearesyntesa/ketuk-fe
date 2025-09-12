@@ -3,17 +3,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
 import {
 	Search,
-	Users,
 	Plus,
-	Calendar,
 	CheckCircle2,
 	Circle,
 	MessageCircle,
 	MoreHorizontal,
-	ChevronRight,
 } from "lucide-react";
 
 export default function LandingDemo() {

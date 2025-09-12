@@ -2,7 +2,6 @@ import { CheckCircle, Hourglass, XCircle } from "lucide-react";
 import { EventRequest } from "./type";
 import { Card } from "./ui/card";
 import { Button } from "./ui/button";
-import { Separator } from "./ui/separator";
 
 export default function RequestCard({item}: {item: EventRequest}) {
     const icon = item.status === "Approved" ? <CheckCircle className="text-green-500" /> : item.status === "Pending" ? <Hourglass className="text-yellow-500" /> : <XCircle className="text-red-500" />;

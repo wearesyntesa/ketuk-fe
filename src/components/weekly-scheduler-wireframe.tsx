@@ -122,8 +122,7 @@ export default function WeeklySchedulerWireframe() {
 								{timeSlots.map((time) => (
 									<div
 										key={time}
-										className="h-16 border-b border-r flex items-center justify-center"
-									>
+										className="h-16 border-b border-r flex items-center justify-center">
 										<span className="text-sm text-muted-foreground font-mono">
 											{time}
 										</span>
@@ -135,8 +134,7 @@ export default function WeeklySchedulerWireframe() {
 									{days.map((day) => (
 										<div
 											key={day}
-											className="h-14 border-r flex flex-col items-center justify-center bg-muted/20"
-										>
+											className="h-14 border-r flex flex-col items-center justify-center bg-muted/20">
 											<span className="text-xs text-muted-foreground">
 												{day}
 											</span>
@@ -150,9 +148,8 @@ export default function WeeklySchedulerWireframe() {
 									{timeSlots.map((time) =>
 										days.map((day, dayIndex) => (
 											<div
-												key={`${time}-${day}`}
-												className="h-16 border-r border-b relative hover:bg-muted/20 transition-colors"
-											>
+												key={dayIndex}
+												className="h-16 border-r border-b relative hover:bg-muted/20 transition-colors">
 												{Math.random() > 0.7 && (
 													<div className="absolute inset-1 bg-primary/20 rounded border-l-2 border-primary flex items-center px-2">
 														<div className="w-full">
@@ -260,8 +257,7 @@ export default function WeeklySchedulerWireframe() {
 										<div className="h-4 bg-muted/50 rounded w-20"></div>
 										<Badge
 											variant="secondary"
-											className="bg-green-500/10 text-green-600"
-										>
+											className="bg-green-500/10 text-green-600">
 											Available
 										</Badge>
 									</div>

@@ -22,7 +22,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "./ui/select";
-import { useState } from "react";
+import React, { useState } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
 export function RequestForm({
@@ -32,6 +32,7 @@ export function RequestForm({
 	border?: boolean;
 	className?: string;
 }) {
+	// Form state
 	const [eventName, setEventName] = useState("");
 	const [eventDate, setEventDate] = useState("");
 	const [startTime, setStartTime] = useState("");
@@ -42,6 +43,38 @@ export function RequestForm({
 	const [contact, setContact] = useState("");
 	const [description, setDescription] = useState("");
 
+	// Form value change handlers
+	const handleEventNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setEventName(e.target.value);
+	};
+	const handleEventDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setEventDate(e.target.value);
+	};
+	const handleStartTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setStartTime(e.target.value);
+	};
+	const handleEndTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setEndTime(e.target.value);
+	};
+	const handleTypeChange = (value: string) => {
+		setEventType(value);
+	};
+	const handlePicChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setPic(e.target.value);
+	};
+	const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setEmail(e.target.value);
+	};
+	const handleContactChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setContact(e.target.value);
+	};
+	const handleDescriptionChange = (
+		e: React.ChangeEvent<HTMLTextAreaElement>
+	) => {
+		setDescription(e.target.value);
+	};
+
+	// Pagination state
 	const [page, setPage] = useState(1);
 
 	const handleNext = () => {
@@ -73,7 +106,8 @@ export function RequestForm({
 									<Input
 										id="event-name"
 										type="text"
-										// value={eventName}
+										value={eventName}
+										onChange={handleEventNameChange}
 										placeholder="Praktikum Pemrograman Dasar"
 										required
 									/>
@@ -88,14 +122,16 @@ export function RequestForm({
 									<div className="flex gap-2">
 										<Input
 											type="time"
-											// value={startTime}
+											value={startTime}
+											onChange={handleStartTimeChange}
 											defaultValue="10:30"
 											className="bg-background appearance-none w-fit"
 											required
 										/>
 										<Input
 											type="time"
-											// value={endTime}
+											value={endTime}
+											onChange={handleEndTimeChange}
 											defaultValue="10:30"
 											className="bg-background appearance-none w-fit"
 											required
@@ -107,7 +143,13 @@ export function RequestForm({
 										<Label htmlFor="event-type">Jenis Kegiatan</Label>
 									</div>
 									<Select onValueChange={setEventType}>
-										<SelectTrigger id="event-type" className="w-full">
+										<SelectTrigger
+											value={eventType}
+											onChange={(e) =>
+												handleTypeChange((e.target as HTMLSelectElement).value)
+											}
+											id="event-type"
+											className="w-full">
 											<SelectValue placeholder="Pilih jenis kegiatan" />
 										</SelectTrigger>
 										<SelectContent>
@@ -131,6 +173,8 @@ export function RequestForm({
 									<Input
 										id="pic"
 										type="text"
+										value={pic}
+										onChange={handlePicChange}
 										placeholder="Nama Penanggung Jawab"
 										required
 									/>
@@ -142,7 +186,9 @@ export function RequestForm({
 									<Input
 										id="email"
 										type="email"
-										placeholder="Nama Penanggung Jawab"
+										value={email}
+										onChange={handleEmailChange}
+										placeholder="Email Unesa"
 										required
 									/>
 								</div>
@@ -153,7 +199,9 @@ export function RequestForm({
 									<Input
 										id="contact"
 										type="text"
-										placeholder="Nama Penanggung Jawab"
+										value={contact}
+										onChange={handleContactChange}
+										placeholder="Nomor Telepon"
 										required
 									/>
 								</div>
@@ -161,7 +209,12 @@ export function RequestForm({
 									<div className="flex items-center">
 										<Label htmlFor="description">Deskripsi Kegiatan</Label>
 									</div>
-									<Textarea id="description" required />
+									<Textarea
+										value={description}
+										onChange={handleDescriptionChange}
+										id="description"
+										required
+									/>
 								</div>
 							</>
 						)}

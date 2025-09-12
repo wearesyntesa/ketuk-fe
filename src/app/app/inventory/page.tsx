@@ -5,7 +5,6 @@ import InventoryTable from "@/components/inventory-table";
 import { inventoryItem } from "../data";
 import { ColumnDef } from "@tanstack/react-table";
 import { InventoryItem } from "@/components/type";
-import { Dropdown } from "react-day-picker";
 import {
 	DropdownMenu,
 	DropdownMenuContent,

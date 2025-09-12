@@ -1,7 +1,13 @@
 import { ScheduleProps } from "./type";
-import { AlertDialog, AlertDialogHeader, AlertDialogTitle, AlertDialogContent, AlertDialogTrigger, AlertDialogDescription, AlertDialogCancel } from "./ui/alert-dialog";
 import { Badge } from "./ui/badge";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "./ui/dialog";
 import { Separator } from "./ui/separator";
 
 export default function ScheduleCard({ day, events }: ScheduleProps) {
