@@ -124,15 +124,14 @@ export function RequestForm({
 											type="time"
 											value={startTime}
 											onChange={handleStartTimeChange}
-											defaultValue="10:30"
 											className="bg-background appearance-none w-fit"
 											required
 										/>
+										<span className="flex items-center">-</span>
 										<Input
 											type="time"
 											value={endTime}
 											onChange={handleEndTimeChange}
-											defaultValue="10:30"
 											className="bg-background appearance-none w-fit"
 											required
 										/>
