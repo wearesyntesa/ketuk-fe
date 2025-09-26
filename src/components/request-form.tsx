@@ -34,7 +34,6 @@ export function RequestForm({
 }) {
 	// Form state
 	const [eventName, setEventName] = useState("");
-	const [eventDate, setEventDate] = useState("");
 	const [startTime, setStartTime] = useState("");
 	const [endTime, setEndTime] = useState("");
 	const [eventType, setEventType] = useState("");
@@ -46,9 +45,6 @@ export function RequestForm({
 	// Form value change handlers
 	const handleEventNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setEventName(e.target.value);
-	};
-	const handleEventDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setEventDate(e.target.value);
 	};
 	const handleStartTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setStartTime(e.target.value);

@@ -11,7 +11,7 @@ export default function ScheduleList({
 	return (
 		<div>
 			<div className="flex justify-between items-center mb-4">
-				<h1 className="text-2xl font-bold">This Week's Schedule</h1>
+				<h1 className="text-2xl font-bold">This Weeks Schedule</h1>
 				{/* <Button className="bg-blue-400">Request Lab +</Button> */}
 				<RequestDialog />
 			</div>
