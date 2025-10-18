@@ -4,6 +4,7 @@ import { schedules } from "./data";
 import BannerDashboard from "@/components/banner-dashboard";
 
 export default function Dashboard() {
+
 	return (
 		<>
 			<AppHeader title="Dashboard" />

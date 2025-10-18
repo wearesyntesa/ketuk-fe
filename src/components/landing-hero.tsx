@@ -35,7 +35,7 @@ export default function LandingHero(isLogin: { isLogin: boolean }) {
 						{/* <Button size="lg" className="text-lg px-8 py-4 h-auto">
 							Get started
 						</Button> */}
-						{!isLogin ? (
+						{!isLogin.isLogin ? (
 							<SignInButton />
 						) : (
 							<Link href="/app">

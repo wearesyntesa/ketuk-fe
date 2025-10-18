@@ -28,7 +28,7 @@ export default async function LandingNav(isLogin: { isLogin: boolean }) {
 							<Link href="/app">Get started</Link>
 						</Button>
 					</div> */}
-					{isLogin && (
+					{isLogin.isLogin && (
 						<DropdownMenu>
 							<DropdownMenuTrigger>
 								<Image
@@ -40,7 +40,7 @@ export default async function LandingNav(isLogin: { isLogin: boolean }) {
 								/>
 							</DropdownMenuTrigger>
 							<DropdownMenuContent align="end" className="w-56">
-								<DropdownMenuItem>
+								<DropdownMenuItem className="w-full">
 									<SignOutButton />
 								</DropdownMenuItem>
 							</DropdownMenuContent>

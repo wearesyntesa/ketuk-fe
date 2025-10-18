@@ -1,17 +1,25 @@
 import type { Metadata } from "next";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/app-sidebar";
+import { auth } from "../auth";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
 	title: "Ketuk Dashboard - Lab Management",
 	description: "Manage your lab bookings and schedules",
 };
 
-export default function AppLayout({
+export default async function AppLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	const session = await auth();
+
+	if (!session) {
+		redirect("/");
+	}
+
 	return (
 		<SidebarProvider
 			style={
