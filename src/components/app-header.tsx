@@ -44,41 +44,25 @@ export default function AppHeader({ title }: { title: string }) {
 							<Bell className="h-7 w-7 p-1  rounded-full border border-slate-300 shadow" />
 						</DropdownMenuTrigger>
 						<DropdownMenuContent align="end" className="w-56">
-							{/* <DropdownMenuLabel>My Account</DropdownMenuLabel>
-							<DropdownMenuSeparator />
-							<DropdownMenuItem>Profile</DropdownMenuItem>
-							<DropdownMenuItem>Billing</DropdownMenuItem>
-							<DropdownMenuItem>Team</DropdownMenuItem>
-							<DropdownMenuItem>Subscription</DropdownMenuItem> */}
 							<DropdownMenuLabel>Announcements</DropdownMenuLabel>
 							<DropdownMenuSeparator />
 							{AnnouncementItem.map((item, index) => (
 								<DropdownMenuItem key={index} className="flex items-start">
 									<div className="mr-2 mt-1 p-2 border rounded-full bg-primary/10 text-primary">
-									<Bell className="size-4 flex-shrink-0" />
+										<Bell className="size-4 flex-shrink-0" />
 									</div>
 									<div className="flex flex-col">
-										<Link href={item.url} className="font-medium">{item.title}</Link>
-										<span className="text-xs text-muted-foreground">{item.time}</span>
+										<Link href={item.url} className="font-medium">
+											{item.title}
+										</Link>
+										<span className="text-xs text-muted-foreground">
+											{item.time}
+										</span>
 									</div>
 								</DropdownMenuItem>
 							))}
 						</DropdownMenuContent>
 					</DropdownMenu>
-
-					{/* <DropdownMenu>
-						<DropdownMenuTrigger>
-							<User className="h-7 w-7 p-1  rounded-full border border-slate-300 shadow" />
-						</DropdownMenuTrigger>
-						<DropdownMenuContent align="end" className="w-56">
-							<DropdownMenuLabel>My Account</DropdownMenuLabel>
-							<DropdownMenuSeparator />
-							<DropdownMenuItem>Profile</DropdownMenuItem>
-							<DropdownMenuItem>Billing</DropdownMenuItem>
-							<DropdownMenuItem>Team</DropdownMenuItem>
-							<DropdownMenuItem>Subscription</DropdownMenuItem>
-						</DropdownMenuContent>
-					</DropdownMenu> */}
 				</div>
 			</div>
 		</header>

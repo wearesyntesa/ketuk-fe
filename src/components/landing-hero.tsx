@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
+import SignInButton from "./signin-button";
+import Link from "next/link";
 
-export default function LandingHero() {
+export default function LandingHero(isLogin: { isLogin: boolean }) {
 	return (
 		<section className="relative min-h-screen bg-gradient-to-b from-background to-muted/20 flex items-center justify-center">
 			<div className="bg-green-500/10 absolute top-50 right-1/2 aspect-square w-[24rem] rounded-full blur-3xl mix-blend-multiply"></div>
@@ -30,9 +32,16 @@ export default function LandingHero() {
 					</p>
 
 					<div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8">
-						<Button size="lg" className="text-lg px-8 py-4 h-auto">
+						{/* <Button size="lg" className="text-lg px-8 py-4 h-auto">
 							Get started
-						</Button>
+						</Button> */}
+						{!isLogin ? (
+							<SignInButton />
+						) : (
+							<Link href="/app">
+								<Button>Go to App</Button>
+							</Link>
+						)}
 					</div>
 				</div>
 			</div>
