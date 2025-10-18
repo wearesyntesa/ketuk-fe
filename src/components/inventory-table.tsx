@@ -41,7 +41,10 @@ export default function InventoryTable<TData, TValue>({
 										<TableHead
 											key={header.id}
 											className={`px-4 ${
-												header.column.columnDef.header === "Action"
+												header.column.columnDef.header === "Action" ||
+												header.column.columnDef.header === "Quantity" ||
+												header.column.columnDef.header === "Good Condition" ||
+												header.column.columnDef.header === "Poor Condition"
 													? "text-center"
 													: ""
 											}`}>
@@ -68,11 +71,10 @@ export default function InventoryTable<TData, TValue>({
 										<TableCell
 											key={cell.id}
 											className={`px-4 ${
-												cell.column.columnDef.header === "Procurement Year" ||
 												cell.column.columnDef.header === "Quantity" ||
 												cell.column.columnDef.header === "Good Condition" ||
-												cell.column.columnDef.header === "Fair Condition" ||
-												cell.column.columnDef.header === "Poor Condition"
+												cell.column.columnDef.header === "Poor Condition" ||
+												cell.column.columnDef.header === "Action"
 													? "align-middle text-center"
 													: ""
 											}`}>

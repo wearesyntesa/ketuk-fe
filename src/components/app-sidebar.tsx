@@ -1,4 +1,10 @@
-import { CalendarDays, BookCheck, Archive, DoorOpen } from "lucide-react";
+import {
+	CalendarDays,
+	BookCheck,
+	Archive,
+	DoorOpen,
+	Ticket,
+} from "lucide-react";
 
 import {
 	Sidebar,
@@ -34,6 +40,12 @@ const items: SideBarItem[] = [
 		title: "Inventory",
 		url: "/app/inventory",
 		icon: Archive,
+		child: [],
+	},
+	{
+		title: "Requests History",
+		url: "/app/your-requests",
+		icon: Ticket,
 		child: [],
 	},
 ];

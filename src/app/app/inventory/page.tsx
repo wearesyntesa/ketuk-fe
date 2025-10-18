@@ -4,7 +4,7 @@ import AppHeader from "@/components/app-header";
 import InventoryTable from "@/components/inventory-table";
 import { inventoryItem } from "../data";
 import { ColumnDef } from "@tanstack/react-table";
-import { InventoryItem } from "@/components/type";
+import { InventoryDetailItem, InventoryItem } from "@/components/type";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -12,15 +12,60 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { EllipsisVertical } from "lucide-react";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog";
+import { AlertDialogHeader } from "@/components/ui/alert-dialog";
+import InventoryDetailTable from "@/components/inventory-detail-table";
+
+const tableDetail: ColumnDef<InventoryDetailItem>[] = [
+	{
+		accessorKey: "serialNumber",
+		header: "Serial Number",
+	},
+	{
+		accessorKey: "procurementYear",
+		header: "Procurement Year",
+	},
+	{
+		accessorKey: "condition",
+		header: "Condition",
+	},
+	{
+		accessorKey: "note",
+		header: "Note",
+	},
+];
 
 const tableHeader: ColumnDef<InventoryItem>[] = [
 	{
 		accessorKey: "nameItem",
 		header: "Name",
-	},
-	{
-		accessorKey: "procurementYear",
-		header: "Procurement Year",
+		cell: ({ row }) => (
+			<Dialog>
+				<DialogTrigger className="cursor-pointer">
+					{row.getValue("nameItem")}
+				</DialogTrigger>
+				<DialogContent className="min-w-4xl">
+					<AlertDialogHeader>
+						<DialogTitle>{row.getValue("nameItem")}</DialogTitle>
+						<DialogDescription>
+							Detail information about the item can be displayed here.
+						</DialogDescription>
+					</AlertDialogHeader>
+					<InventoryDetailTable
+						columns={tableDetail}
+						data={row.original.items}
+					/>
+					{/* <div className="h-96">
+					</div> */}
+				</DialogContent>
+			</Dialog>
+		),
 	},
 	{
 		accessorKey: "specification",
@@ -35,30 +80,32 @@ const tableHeader: ColumnDef<InventoryItem>[] = [
 		header: "Good Condition",
 	},
 	{
-		accessorKey: "fairCondition",
-		header: "Fair Condition",
-	},
-	{
 		accessorKey: "poorCondition",
 		header: "Poor Condition",
 	},
 	{
-		accessorKey: "note",
-		header: "Note",
-	},
-	{
 		header: "Action",
-		cell: () => {
+		cell: ({ row }) => {
 			return (
-				<DropdownMenu>
-					<DropdownMenuTrigger className="p-2 flex justify-center items-center rounded-md hover:bg-accent/50 w-40">
-						<EllipsisVertical className="h-5 w-5 cursor-pointer text-muted-foreground" />
-					</DropdownMenuTrigger>
-					<DropdownMenuContent>
-						<DropdownMenuItem>Edit</DropdownMenuItem>
-						<DropdownMenuItem>Delete</DropdownMenuItem>
-					</DropdownMenuContent>
-				</DropdownMenu>
+				<Dialog>
+					<DialogTrigger className="cursor-pointer hover:font-semibold">
+						Detail
+					</DialogTrigger>
+					<DialogContent className="min-w-4xl">
+						<AlertDialogHeader>
+							<DialogTitle>{row.getValue("nameItem")}</DialogTitle>
+							<DialogDescription>
+								Detail information about the item can be displayed here.
+							</DialogDescription>
+						</AlertDialogHeader>
+						<InventoryDetailTable
+							columns={tableDetail}
+							data={row.original.items}
+						/>
+						{/* <div className="h-96">
+						</div> */}
+					</DialogContent>
+				</Dialog>
 			);
 		},
 	},
