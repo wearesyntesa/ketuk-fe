@@ -3,6 +3,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/app-sidebar";
 import { auth } from "../auth";
 import { redirect } from "next/navigation";
+import WarningEmail from "@/components/warning-email";
 
 export const metadata: Metadata = {
 	title: "Ketuk Dashboard - Lab Management",
@@ -33,7 +34,11 @@ export default async function AppLayout({
 			<SidebarInset>
 				<div className="flex flex-1 flex-col">
 					<div className="@container/main flex flex-1 flex-col gap-2">
-						<div className="flex flex-col gap-4 md:gap-6">{children}</div>
+						<div className="flex flex-col gap-4 md:gap-6">
+							{children}
+							{/* <Toaster position="bottom-right" /> */}
+							<WarningEmail email={session?.user?.email} />
+						</div>
 					</div>
 				</div>
 			</SidebarInset>

@@ -81,7 +81,16 @@ function InitialIcon({title}: {title: string}) {
 		"bg-teal-100 text-teal-700",
 		"bg-orange-100 text-orange-700",
 	];
-	const colorClass = colors[Math.floor(Math.random() * colors.length)];
+	function hashString(str: string) {
+		let h = 0;
+		for (let i = 0; i < str.length; i++) {
+			h = (h << 5) - h + str.charCodeAt(i);
+			h |= 0;
+		}
+		return Math.abs(h);
+	}
+
+	const colorClass = colors[hashString(title) % colors.length];
 	return (
         <div className="flex items-center gap-3">
 			<div>
