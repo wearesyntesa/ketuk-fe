@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
-import SignInButton from "./signin-button";
 import Link from "next/link";
+import { SignInButton } from "./signin-button";
 
 export default function LandingHero(isLogin: { isLogin: boolean }) {
 	return (

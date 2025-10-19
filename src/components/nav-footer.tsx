@@ -20,7 +20,6 @@ import {
 } from "./ui/dropdown-menu";
 import { auth } from "@/app/auth";
 import Image from "next/image";
-import SignInButton from "./signin-button";
 import { SignOutButton } from "./signout-button";
 
 export default async function NavFooter() {
