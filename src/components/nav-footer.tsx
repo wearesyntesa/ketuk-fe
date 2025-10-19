@@ -18,8 +18,14 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import { auth } from "@/app/auth";
+import Image from "next/image";
+import SignInButton from "./signin-button";
+import { SignOutButton } from "./signout-button";
 
-export default function NavFooter() {
+export default async function NavFooter() {
+	const session = await auth();
+
 	return (
 		<SidebarFooter className="mt-auto">
 			<SidebarMenu>
@@ -52,10 +58,17 @@ export default function NavFooter() {
 					<SidebarMenuButton asChild>
 						<div className="h-12 flex justify-between items-center px-2">
 							<div className="flex gap-2 justify-center items-center">
-								<div
+								{/* <div
 									className={`w-10 h-10 px-4 rounded-full flex items-center justify-center font-medium bg-orange-100 text-orange-700`}>
 									U
-								</div>
+								</div> */}
+								<Image
+									src={session?.user?.image ?? "/default-avatar.png"}
+									width={40}
+									height={40}
+									alt="User Avatar"
+									className="w-8 h-8 rounded-full"
+								/>
 								<span className="font-semibold">Account</span>
 							</div>
 							<div>
@@ -65,7 +78,9 @@ export default function NavFooter() {
 									</DropdownMenuTrigger>
 									<DropdownMenuContent>
 										<DropdownMenuItem>Edit</DropdownMenuItem>
-										<DropdownMenuItem>Delete</DropdownMenuItem>
+										<DropdownMenuItem>
+											<SignOutButton />
+										</DropdownMenuItem>
 									</DropdownMenuContent>
 								</DropdownMenu>
 							</div>

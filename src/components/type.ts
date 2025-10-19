@@ -41,11 +41,21 @@ export interface EventRequest {
 export interface InventoryItem {
 	id: string;
 	nameItem: string;
-	procurementYear: number;
 	specification: string;
 	quantity: number;
 	goodCondition: number;
-	fairCondition: number;
 	poorCondition: number;
-	note?: string;
+	items: {
+		serialNumber: string;
+		procurementYear: number;
+		condition: "Good" | "Poor";
+		note: string;
+	}[];
+}
+
+export interface InventoryDetailItem {
+	serialNumber: string;
+	procurementYear: number;
+	condition: "Good" | "Poor";
+	note: string;
 }
