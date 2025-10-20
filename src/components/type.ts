@@ -59,3 +59,16 @@ export interface InventoryDetailItem {
 	condition: "Good" | "Poor";
 	note: string;
 }
+
+export interface MonthlyEvent  {
+	id?: string;
+	title: string;
+	description?: string;
+	contact?: string;
+	category: "Praktikum" | "Skripsi" | "Kelas" | string;
+	status: "Pending" | "Approved" | "Cancelled" | string;
+	startTime: string;
+	endTime: string;
+	date: string; // YYYY-MM-DD
+	day: string; // weekday name
+};
