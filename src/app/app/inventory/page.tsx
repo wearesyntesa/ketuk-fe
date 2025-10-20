@@ -5,13 +5,13 @@ import InventoryTable from "@/components/inventory-table";
 import { inventoryItem } from "../data";
 import { ColumnDef } from "@tanstack/react-table";
 import { InventoryDetailItem, InventoryItem } from "@/components/type";
-// import {
-// 	DropdownMenu,
-// 	DropdownMenuContent,
-// 	DropdownMenuItem,
-// 	DropdownMenuTrigger,
-// } from "@/components/ui/dropdown-menu";
-// import { EllipsisVertical } from "lucide-react";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { MenuIcon } from "lucide-react";
 import {
 	Dialog,
 	DialogContent,
@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/dialog";
 import { AlertDialogHeader } from "@/components/ui/alert-dialog";
 import InventoryDetailTable from "@/components/inventory-detail-table";
+import { Badge } from "@/components/ui/badge";
 
 const tableDetail: ColumnDef<InventoryDetailItem>[] = [
 	{
@@ -38,6 +39,22 @@ const tableDetail: ColumnDef<InventoryDetailItem>[] = [
 	{
 		accessorKey: "note",
 		header: "Note",
+	},
+	{
+		header: "Action",
+		cell: () => {
+			return (
+				<DropdownMenu>
+					<DropdownMenuTrigger asChild>
+						<MenuIcon className="cursor-pointer" />
+					</DropdownMenuTrigger>
+					<DropdownMenuContent>
+						<DropdownMenuItem>Edit</DropdownMenuItem>
+						<DropdownMenuItem>Delete</DropdownMenuItem>
+					</DropdownMenuContent>
+				</DropdownMenu>
+			);
+		},
 	},
 ];
 
@@ -76,12 +93,19 @@ const tableHeader: ColumnDef<InventoryItem>[] = [
 		header: "Quantity",
 	},
 	{
-		accessorKey: "goodCondition",
-		header: "Good Condition",
-	},
-	{
-		accessorKey: "poorCondition",
-		header: "Poor Condition",
+		header: "Condition",
+		cell: ({ row }) => {
+			return (
+				<div className="flex flex-col gap-2 w-14">
+					<Badge className="mr-2 bg-green-100 text-green-800 w-full">
+						Good: {row.original.goodCondition}
+					</Badge>
+					<Badge className="bg-yellow-100 text-yellow-800 w-full">
+						Poor: {row.original.poorCondition}
+					</Badge>
+				</div>
+			);
+		},
 	},
 	{
 		header: "Action",
@@ -112,16 +136,16 @@ const tableHeader: ColumnDef<InventoryItem>[] = [
 ];
 
 export default function InventoryPage() {
-    return (
-            <>
-                <AppHeader title="Inventory" />
-                <div className="@container/main flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-                    {/* <SectionCards /> */}
-                    <div className="px-4 lg:gap-2 lg:px-6">
-                        {/* <ChartAreaInteractive /> */}
-                        <InventoryTable columns={tableHeader} data={inventoryItem} />
-                    </div>
-                </div>
-            </>
-        )
+	return (
+		<>
+			<AppHeader title="Inventory" />
+			<div className="@container/main flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+				{/* <SectionCards /> */}
+				<div className="px-4 lg:gap-2 lg:px-6 flex flex-col gap-4">
+					{/* <ChartAreaInteractive /> */}
+					<InventoryTable columns={tableHeader} data={inventoryItem} />
+				</div>
+			</div>
+		</>
+	);
 }
