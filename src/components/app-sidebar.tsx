@@ -37,15 +37,15 @@ const items: SideBarItem[] = [
 		child: [],
 	},
 	{
-		title: "Inventory",
-		url: "/app/inventory",
-		icon: Archive,
-		child: [],
-	},
-	{
 		title: "Requests History",
 		url: "/app/your-requests",
 		icon: Ticket,
+		child: [],
+	},
+	{
+		title: "Inventory",
+		url: "/app/inventory",
+		icon: Archive,
 		child: [],
 	},
 ];

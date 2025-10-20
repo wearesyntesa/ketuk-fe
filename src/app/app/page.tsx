@@ -1,6 +1,5 @@
 import AppHeader from "@/components/app-header";
 import ScheduleLab from "@/components/schedule-lab";
-import { schedules } from "./data";
 import BannerDashboard from "@/components/banner-dashboard";
 
 export default function Dashboard() {

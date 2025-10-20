@@ -4,7 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { RequestDialog } from "./request-dialog";
 import ScheduleMonth from "./schedule-month";
 import ScheduleWeek from "./schedule-week";
-import { MonthlyEvent, ScheduleProps } from "./type";
+import { MonthlyEvent } from "./type";
 import {
 	Select,
 	SelectContent,
