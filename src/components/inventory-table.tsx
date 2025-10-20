@@ -1,8 +1,27 @@
-import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table"
+import {
+	ColumnDef,
+	flexRender,
+	getCoreRowModel,
+	useReactTable,
+	SortingState,
+	ColumnFiltersState,
+	getFilteredRowModel,
+	getPaginationRowModel,
+} from "@tanstack/react-table";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "./ui/table";
 import { Card } from "./ui/card";
 import { Input } from "./ui/input";
 import InventoryDialog from "./inventory-dialog";
+import { useState } from "react";
+import { Button } from "./ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
@@ -13,24 +32,64 @@ export default function InventoryTable<TData, TValue>({
 	columns,
 	data,
 }: DataTableProps<TData, TValue>) {
+	const [sorting, setSorting] = useState<SortingState>([]);
+	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+
 	const table = useReactTable({
 		data,
 		columns,
 		getCoreRowModel: getCoreRowModel(),
+		onSortingChange: setSorting,
+		onColumnFiltersChange: setColumnFilters,
+		getFilteredRowModel: getFilteredRowModel(),
+		getPaginationRowModel: getPaginationRowModel(),
+		state: {
+			sorting,
+			columnFilters,
+		},
 	});
+
+	console.log(table.getColumn("nameItem")?.getFilterValue());
+
 	return (
 		<div className="overflow-hidden rounded-md flex flex-col gap-4">
 			<Card className="p-2">
 				<div className="flex items-center">
-					<Input placeholder="Search inventory..." className="flex-1" />
+					<Input
+						id="search-inventory"
+						type="text"
+						placeholder="Search inventory..."
+						className="flex-1"
+						value={
+							(table.getColumn("nameItem")?.getFilterValue() as string) ?? ""
+						}
+						onChange={(event) => {
+							table.getColumn("nameItem")?.setFilterValue(event.target.value);
+						}}
+					/>
 					<InventoryDialog />
-					{/* <Button
-						variant="outline"
-						className="ml-2 bg-gradient-to-br from-blue-500 via-blue-400 to-blue-300 text-white">
-						Add Item +
-					</Button> */}
 				</div>
 			</Card>
+			<div className="flex justify-between items-center px-2">
+				<div>
+					Data {table.getState().pagination.pageIndex + 1} of{" "}
+					{table.getState().pagination.pageSize}
+				</div>
+				<div className="flex gap-4">
+					<Button
+						variant="outline"
+						onClick={() => table.previousPage()}
+						disabled={!table.getCanPreviousPage()}>
+						<ChevronLeft size={16} />
+					</Button>
+					<Button
+						variant="outline"
+						onClick={() => table.nextPage()}
+						disabled={!table.getCanNextPage()}>
+						<ChevronRight size={16} />
+					</Button>
+				</div>
+			</div>
 			<Card className="p-0">
 				<Table>
 					<TableHeader>
