@@ -7,7 +7,8 @@ export function SignOutButton() {
 			action={async () => {
 				"use server";
 				await signOut();
-			}}>
+			}}
+			className="w-full">
 			<Button variant={"destructive"} type="submit" className="w-full flex">
 				Sign Out
 			</Button>

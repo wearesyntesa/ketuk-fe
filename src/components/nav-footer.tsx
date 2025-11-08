@@ -28,14 +28,14 @@ export default async function NavFooter() {
 	return (
 		<SidebarFooter className="mt-auto">
 			<SidebarMenu>
-				<SidebarMenuItem>
+				{/* <SidebarMenuItem>
 					<SidebarMenuButton asChild>
 						<Link href="/app/your-requests">
 							<Ticket />
 							<span className="font-semibold">Your Requests</span>
 						</Link>
 					</SidebarMenuButton>
-				</SidebarMenuItem>
+				</SidebarMenuItem> */}
 				<SidebarMenuItem>
 					<SidebarMenuButton asChild>
 						<a href="/help">
@@ -76,7 +76,6 @@ export default async function NavFooter() {
 										<EllipsisVertical className="h-5 w-5 cursor-pointer text-muted-foreground" />
 									</DropdownMenuTrigger>
 									<DropdownMenuContent>
-										<DropdownMenuItem>Edit</DropdownMenuItem>
 										<DropdownMenuItem>
 											<SignOutButton />
 										</DropdownMenuItem>

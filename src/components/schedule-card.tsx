@@ -1,6 +1,5 @@
 "use client";
 
-import { TabsContent } from "@radix-ui/react-tabs";
 import { MonthlyEvent } from "./type";
 import { Badge } from "./ui/badge";
 import {
@@ -11,7 +10,6 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "./ui/dialog";
-import { Separator } from "./ui/separator";
 
 export default function ScheduleCard({
 	events,
@@ -22,72 +20,62 @@ export default function ScheduleCard({
 	day: string;
 	id: number;
 }) {
-	const baseDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-	const todayDay = new Date().getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
-	const startIndex = todayDay === 0 || todayDay === 6 ? 0 : todayDay - 1;
-	const days = baseDays.slice(startIndex).concat(baseDays.slice(0, startIndex));
 	const date = new Date().getDate();
 
 	return (
-		<TabsContent value={day} className="w-full">
-			<div className="gap-4">
-				{(() => {
-					const dayEvents = events.filter((event) => {
-						const eventDate = new Date(event.date);
-						return eventDate.getDate() === date + id;
-					});
+		<div className="gap-4">
+			{(() => {
+				const dayEvents = events.filter((event) => {
+					const eventDate = new Date(event.date);
+					return eventDate.getDate() === date + id;
+				});
 
-					if (dayEvents.length === 0) {
-						return (
-							<p className="text-sm text-muted-foreground text-start">
-								No events scheduled for {day}.
-							</p>
-						);
-					}
-
+				if (dayEvents.length === 0) {
 					return (
-						<>
-							{dayEvents.map((event, index) => (
-								<Dialog key={index}>
-									<DialogTrigger asChild>
-										<div className="flex gap-4 hover:bg-accent px-2 py-4 rounded-lg cursor-pointer items-center">
-											{InitialIcon(event.title)}
-											<div className="flex flex-col items-start">
-												<h3 className="text-lg font-medium text-start">
-													{event.title}
-												</h3>
-												<p className="text-sm text-muted-foreground text-start">
-													{event.note}
-												</p>
-												<p className="text-sm text-start">
-													{event.description}
-												</p>
-												<Badge className="mt-2 bg-green-100 text-green-800">
-													Lecturer: {event.lecturerName}
-												</Badge>
-											</div>
-										</div>
-									</DialogTrigger>
-									<DialogContent>
-										<DialogHeader>
-											<DialogTitle className="text-2xl">
-												{event.title}
-											</DialogTitle>
-											<DialogDescription>{event.note}</DialogDescription>
-											<DialogDescription>
-												{event.lecturerName}
-											</DialogDescription>
-											<DialogDescription>{event.description}</DialogDescription>
-											<Badge>Category: {event.category}</Badge>
-										</DialogHeader>
-									</DialogContent>
-								</Dialog>
-							))}
-						</>
+						<p className="text-sm text-muted-foreground text-start">
+							No events scheduled for {day}.
+						</p>
 					);
-				})()}
-			</div>
-		</TabsContent>
+				}
+
+				return (
+					<>
+						{dayEvents.map((event, index) => (
+							<Dialog key={index}>
+								<DialogTrigger asChild>
+									<div className="flex gap-4 hover:bg-accent px-2 py-4 rounded-lg cursor-pointer items-center">
+										{InitialIcon(event.title)}
+										<div className="flex flex-col items-start">
+											<h3 className="text-lg font-medium text-start">
+												{event.title}
+											</h3>
+											<p className="text-sm text-muted-foreground text-start">
+												{event.note}
+											</p>
+											<p className="text-sm text-start">{event.description}</p>
+											<Badge className="mt-2 bg-green-100 text-green-800">
+												Lecturer: {event.lecturerName}
+											</Badge>
+										</div>
+									</div>
+								</DialogTrigger>
+								<DialogContent>
+									<DialogHeader>
+										<DialogTitle className="text-2xl">
+											{event.title}
+										</DialogTitle>
+										<DialogDescription>{event.note}</DialogDescription>
+										<DialogDescription>{event.lecturerName}</DialogDescription>
+										<DialogDescription>{event.description}</DialogDescription>
+										<Badge>Category: {event.category}</Badge>
+									</DialogHeader>
+								</DialogContent>
+							</Dialog>
+						))}
+					</>
+				);
+			})()}
+		</div>
 	);
 }
 

@@ -3,7 +3,7 @@
 import { monthlySchedule } from "@/app/app/data";
 import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 import ScheduleCard from "./schedule-card";
-import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 
 export default function ScheduleWeek() {
 	const baseDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
@@ -16,7 +16,7 @@ export default function ScheduleWeek() {
 			<div className="flex flex-col gap-4 w-full">
 				{/* <ScheduleCard events={monthlySchedule} /> */}
 				<Tabs defaultValue={days[0]} className="flex flex-row w-full">
-					<TabsList className="flex flex-col h-full">
+					<TabsList className="flex flex-col h-[405px]">
 						{days.map((day, id) => (
 							<TabsTrigger
 								key={id}
@@ -51,7 +51,12 @@ export default function ScheduleWeek() {
 						))}
 					</TabsList>
 					{days.map((day, id) => (
-						<ScheduleCard events={monthlySchedule} day={day} id={id} key={id} />
+						<TabsContent
+							value={day}
+							key={id}
+							className="w-full h-[405px] overflow-y-scroll">
+							<ScheduleCard events={monthlySchedule} day={day} id={id} />
+						</TabsContent>
 					))}
 				</Tabs>
 			</div>
