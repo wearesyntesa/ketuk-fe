@@ -50,7 +50,7 @@ export default function GoogleCallbackPage() {
 				} else {
 					throw new Error(data.error || "Authentication failed");
 				}
-			} catch (err: any) {
+			} catch (err) {
 				console.error("OAuth callback error:", err);
 				const errorMessage = err instanceof Error ? err.message : "Failed to authenticate";
 				setError(errorMessage);
