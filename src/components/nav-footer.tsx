@@ -1,3 +1,5 @@
+"use client";
+
 import {
 	EllipsisVertical,
 	HelpCircle,
@@ -18,13 +20,23 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { auth } from "@/app/auth";
 import Image from "next/image";
-import SignInButton from "./signin-button";
 import { SignOutButton } from "./signout-button";
+import { useEffect, useState } from "react";
 
-export default async function NavFooter() {
-	const session = await auth();
+export default function NavFooter() {
+	const [user, setUser] = useState<any>(null);
+
+	useEffect(() => {
+		const userData = localStorage.getItem("user");
+		if (userData) {
+			try {
+				setUser(JSON.parse(userData));
+			} catch (error) {
+				console.error("Failed to parse user data:", error);
+			}
+		}
+	}, []);
 
 	return (
 		<SidebarFooter className="mt-auto">
@@ -58,18 +70,14 @@ export default async function NavFooter() {
 					<SidebarMenuButton asChild>
 						<div className="h-12 flex justify-between items-center px-2">
 							<div className="flex gap-2 justify-center items-center">
-								{/* <div
-									className={`w-10 h-10 px-4 rounded-full flex items-center justify-center font-medium bg-orange-100 text-orange-700`}>
-									U
-								</div> */}
 								<Image
-									src={session?.user?.image ?? "/default-avatar.png"}
+									src={user?.image || "/default-avatar.png"}
 									width={40}
 									height={40}
 									alt="User Avatar"
 									className="w-8 h-8 rounded-full"
 								/>
-								<span className="font-semibold">Account</span>
+								<span className="font-semibold">{user?.name || "Account"}</span>
 							</div>
 							<div>
 								<DropdownMenu>
