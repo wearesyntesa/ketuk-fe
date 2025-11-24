@@ -23,9 +23,10 @@ import {
 import Image from "next/image";
 import { SignOutButton } from "./signout-button";
 import { useEffect, useState } from "react";
+import { User } from "@/types/user";
 
 export default function NavFooter() {
-	const [user, setUser] = useState<any>(null);
+	const [user, setUser] = useState<User | null>(null);
 
 	useEffect(() => {
 		const userData = localStorage.getItem("user");

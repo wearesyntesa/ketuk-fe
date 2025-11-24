@@ -52,7 +52,8 @@ export default function GoogleCallbackPage() {
 				}
 			} catch (err: any) {
 				console.error("OAuth callback error:", err);
-				setError(err.message || "Failed to authenticate");
+				const errorMessage = err instanceof Error ? err.message : "Failed to authenticate";
+				setError(errorMessage);
 				setTimeout(() => {
 					window.location.href = "/auth/login?error=oauth_failed";
 				}, 2000);
