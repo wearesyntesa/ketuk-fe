@@ -6,13 +6,6 @@ import { inventoryItem } from "../data";
 import { ColumnDef } from "@tanstack/react-table";
 import { InventoryDetailItem, InventoryItem } from "@/components/type";
 import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { EllipsisVertical } from "lucide-react";
-import {
 	Dialog,
 	DialogContent,
 	DialogDescription,
