@@ -1,24 +1,49 @@
-import type { Metadata } from "next";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
+"use client";
+
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
-import { auth } from "../auth";
-import { redirect } from "next/navigation";
 import WarningEmail from "@/components/warning-email";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { User } from "@/types/user";
 
-export const metadata: Metadata = {
-	title: "Ketuk Dashboard - Lab Management",
-	description: "Manage your lab bookings and schedules",
-};
-
-export default async function AppLayout({
+export default function AppLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
-	const session = await auth();
+	const router = useRouter();
+	const [user, setUser] = useState<User | null>(null);
+	const [loading, setLoading] = useState(true);
 
-	if (!session) {
-		redirect("/");
+	useEffect(() => {
+		// Check if user is authenticated
+		const token = localStorage.getItem("access_token");
+		const userData = localStorage.getItem("user");
+
+		if (!token || !userData) {
+			// Not authenticated, redirect to login
+			window.location.href = "/auth/login";
+			return;
+		}
+
+		try {
+			setUser(JSON.parse(userData));
+		} catch (error) {
+			console.error("Failed to parse user data:", error);
+			window.location.href = "/auth/login";
+			return;
+		}
+
+		setLoading(false);
+	}, [router]);
+
+	if (loading) {
+		return (
+			<div className="flex min-h-screen items-center justify-center">
+				<div className="h-12 w-12 animate-spin rounded-full border-4 border-gray-200 border-t-blue-600" />
+			</div>
+		);
 	}
 
 	return (
@@ -37,7 +62,7 @@ export default async function AppLayout({
 						<div className="flex flex-col gap-4 md:gap-6">
 							{children}
 							{/* <Toaster position="bottom-right" /> */}
-							<WarningEmail email={session?.user?.email} />
+							<WarningEmail email={user?.email || ""} />
 						</div>
 					</div>
 				</div>

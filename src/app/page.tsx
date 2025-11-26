@@ -4,7 +4,6 @@ import { schedules } from "./app/data";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import ScheduleCard from "@/components/schedule-card";
 import { auth } from "./auth";
-import { useState } from "react";
 
 export default async function Home() {
 	const session = await auth();
