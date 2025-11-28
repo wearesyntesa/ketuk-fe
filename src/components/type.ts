@@ -1,8 +1,9 @@
 export interface SideBarItem {
-    title: string;
-    url: string;
-    icon: React.ElementType;
-    child: SubItem[];
+	title: string;
+	url: string;
+	icon: React.ElementType;
+	child: SubItem[];
+	bgGradient?: string;
 }
 
 interface SubItem {

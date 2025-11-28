@@ -32,16 +32,16 @@ export default function AppHeader({ title }: { title: string }) {
 	return (
 		<header className="flex h-(--header-height) shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
 			<div className="flex w-full items-center gap-1 px-4 lg:gap-2 lg:px-6">
-				<SidebarTrigger className="-ml-1" />
+				<SidebarTrigger className="-ml-1 w-6 h-6" />
 				<Separator
 					orientation="vertical"
 					className="mx-2 data-[orientation=vertical]:h-4"
 				/>
-				<h1 className="text-base font-medium">{title}</h1>
+				<h1 className="text-xl font-medium">{title}</h1>
 				<div className="flex ml-auto gap-2">
 					<DropdownMenu>
-						<DropdownMenuTrigger>
-							<Bell className="h-7 w-7 p-1  rounded-full border border-slate-300 shadow" />
+						<DropdownMenuTrigger className="p-1 rounded-full border border-slate-300 shadow">
+							<Bell className="min-w-7 min-h-7" />
 						</DropdownMenuTrigger>
 						<DropdownMenuContent align="end" className="w-56">
 							<DropdownMenuLabel>Announcements</DropdownMenuLabel>
