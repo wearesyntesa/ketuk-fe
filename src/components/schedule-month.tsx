@@ -31,6 +31,16 @@ export default function ScheduleMonth() {
 		});
 	};
 
+	const baseDays = [
+		"Sunday",
+		"Monday",
+		"Tuesday",
+		"Wednesday",
+		"Thursday",
+		"Friday",
+		"Saturday",
+	];
+
 	const prevMonth = () => {
 		setDisplayDate((prev) => {
 			const d = new Date(prev);
@@ -42,16 +52,31 @@ export default function ScheduleMonth() {
 	return (
 		<div>
 			<div className="grid grid-cols-7 gap-2">
-				<div className="flex gap-2 py-4 font-semibold">
-					<ChevronLeft onClick={prevMonth} />
-					<ChevronRight onClick={nextMonth} />
-					<span>
+				<div className="flex gap-2 py-4 font-semibold w-full items-center">
+					<span className="flex text-nowrap">
 						{displayDate.toLocaleString("default", {
 							month: "long",
 							year: "numeric",
 						})}
 					</span>
+					<div
+						className="bg-slate-50 border border-slate-300 p-1 rounded-md cursor-pointer"
+						onClick={prevMonth}>
+						<ChevronLeft />
+					</div>
+					<div
+						className="bg-slate-50 border border-slate-300 p-1 rounded-md cursor-pointer"
+						onClick={nextMonth}>
+						<ChevronRight />
+					</div>
 				</div>
+			</div>
+			<div className="grid grid-cols-7 gap-2">
+				{baseDays.map((day) => (
+					<div key={day} className="font-semibold text-center">
+						{day}
+					</div>
+				))}
 			</div>
 			<div className="grid grid-cols-7 gap-2">
 				{(() => {
