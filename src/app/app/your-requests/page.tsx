@@ -100,7 +100,7 @@ export default function YourRequestsPage() {
 	);
 }
 
-function InitialIcon({title}: {title: string}) {
+export function InitialIcon({ title }: { title: string }) {
 	const initial = title
 		.split(" ")
 		.filter((_, index) => index < 2)
@@ -128,14 +128,14 @@ function InitialIcon({title}: {title: string}) {
 
 	const colorClass = colors[hashString(title) % colors.length];
 	return (
-        <div className="flex items-center gap-3">
+		<div className="flex items-center gap-3">
 			<div>
-                <div
-                    className={`w-8 h-8 px-4 rounded-full flex items-center justify-center font-medium ${colorClass}`}>
-                    {initial}
-                </div>
-            </div>
-            <span>{title}</span>
+				<div
+					className={`w-8 h-8 px-4 rounded-full flex items-center justify-center font-medium ${colorClass}`}>
+					{initial}
+				</div>
+			</div>
+			<span>{title}</span>
 		</div>
 	);
 }
