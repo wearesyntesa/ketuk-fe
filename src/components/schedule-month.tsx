@@ -10,6 +10,19 @@ import {
 	DialogTrigger,
 } from "./ui/dialog";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Shadows_Into_Light, Nothing_You_Could_Do } from "next/font/google";
+
+const shadowIntoLight = Shadows_Into_Light({
+	subsets: ["latin"],
+	weight: "400",
+	variable: "--font-shadow-into-light",
+});
+
+const nothingYouCouldDo = Nothing_You_Could_Do({
+	subsets: ["latin"],
+	weight: "400",
+	variable: "--font-nothing-you-could-do",
+});
 
 export default function ScheduleMonth() {
 	const [displayDate, setDisplayDate] = useState(new Date());
@@ -148,6 +161,106 @@ export default function ScheduleMonth() {
 									</DialogHeader>
 								</DialogContent>
 							</Dialog>
+						);
+					});
+				})()}
+			</div>
+		</div>
+	);
+}
+
+export function ScheduleMonthLanding() {
+	const [displayDate, setDisplayDate] = useState(new Date());
+	const currentMonth = displayDate.getMonth();
+	const currentYear = displayDate.getFullYear();
+	const baseDays = [
+		"Sunday",
+		"Monday",
+		"Tuesday",
+		"Wednesday",
+		"Thursday",
+		"Friday",
+		"Saturday",
+	];
+
+	return (
+		<div className="max-w-6xl w-full  bg-white p-4 border rounded-lg shadow-xl relative">
+			<div className="absolute top-30 -left-30 z-10 rotate-12 w-96 h-96 bg-amber-200 p-8">
+				<h3
+					className={`${shadowIntoLight.className} md:text-4xl text-xl font-bold`}>
+					Event Today
+				</h3>
+				<ul className="list-disc list-inside md:text-xl text-lg">
+					<li>Practicum Data Structure</li>
+					<li>Data bases class 24F</li>
+				</ul>
+			</div>
+			<div className="absolute bottom-10 -right-10 z-10 -rotate-12 w-96 h-96 bg-amber-200 p-8">
+				<h3
+					className={`${nothingYouCouldDo.className} md:text-4xl text-xl font-bold`}>
+					Event Tomorrow
+				</h3>
+				<ul className="list-disc list-inside md:text-xl text-lg">
+					<li>Practicum Algorithm and Programming</li>
+					<li>Web Development Class 25C</li>
+				</ul>
+			</div>
+			<div className="absolute top-35 -left-25 rotate-6 w-[370px] h-96 bg-slate-200/50"></div>
+			<div className="absolute bottom-4 -right-2 -rotate-6 w-[370px] h-96 bg-slate-200/50"></div>
+			<div className="grid grid-cols-7 gap-2">
+				<div className="flex gap-2 py-4 font-semibold w-full items-center">
+					{/*6 <span className="flex text-nowrap">
+						{displayDate.toLocaleString("default", {
+							month: "long",	6						year: "numeric",
+						})}
+					</span>
+					<div
+						className="bg-slate-50 border border-slate-300 p-1 rounded-md cursor-pointer"
+						onClick={prevMonth}>
+						<ChevronLeft />
+					</div>
+					<div
+						className="bg-slate-50 border border-slate-300 p-1 rounded-md cursor-pointer"
+						onClick={nextMonth}>
+						<ChevronRight />
+					</div> */}
+				</div>
+			</div>
+			<div className="grid grid-cols-7 gap-2">
+				{baseDays.map((day) => (
+					<div key={day} className="font-semibold text-center">
+						{day}
+					</div>
+				))}
+			</div>
+			<div className="grid grid-cols-7 gap-2">
+				{(() => {
+					const firstDayIndex = new Date(currentYear, currentMonth, 1).getDay();
+					const daysInMonth = new Date(
+						currentYear,
+						currentMonth + 1,
+						0
+					).getDate();
+					const totalCells = firstDayIndex + daysInMonth;
+
+					return Array.from({ length: totalCells }).map((_, i) => {
+						// empty cells before the month starts or after it ends (to keep 6 rows)
+						if (i < firstDayIndex || i >= firstDayIndex + daysInMonth) {
+							return (
+								<div key={`empty-${i}`} className="min-h-[80px] p-1">
+									{/* <span className="text-gray-400">Empty</span> */}
+								</div>
+							);
+						}
+
+						const dayNum = i - firstDayIndex + 1;
+
+						return (
+							<div key={`day-${dayNum}`}>
+								<div className="min-h-28 p-2 border rounded items-start flex flex-col hover:bg-accent cursor-pointer">
+									<div className="text-sm font-medium">{dayNum}</div>
+								</div>
+							</div>
 						);
 					});
 				})()}
