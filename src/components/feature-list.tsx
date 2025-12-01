@@ -132,31 +132,31 @@ const DummyManageData = [
 
 export function ChildManageCard() {
     return (
-        <div className="min-w-96 bg-white p-4 rounded-lg shadow-md text-sm grayscale group-hover:grayscale-0 duration-500">
-            <div>
-                <h3 className="text-lg font-semibold mb-2">Inventory</h3>
-            </div>
-            <div className="grid grid-cols-4">
-                <span className="min-w-60">Item</span>
-                <span className="item-center w-full">Condition</span>
-            </div>
-            {DummyManageData.map((item, id) => (
-                <div className="grid grid-cols-4 gap-8 py-2 border-b">
-                    <span className="min-w-60 flex items-center gap-2">
-                        {item.name}
-                    </span>
-                    <span className="flex flex-col gap-1 items-center justify-center">
-                        <div className="bg-green-100 text-green-500 rounded-sm px-1 text-xs">
-                            Good : {item.good}
-                        </div>
-                        <div className="bg-yellow-100 text-yellow-500 rounded-sm px-1 text-xs">
-                            Poor: {item.poor}
-                        </div>
-                    </span>
-                </div>
-            ))}
-        </div>
-    )
+			<div className="min-w-96 bg-white p-4 rounded-lg shadow-md text-sm grayscale group-hover:grayscale-0 duration-500">
+				<div>
+					<h3 className="text-lg font-semibold mb-2">Inventory</h3>
+				</div>
+				<div className="grid grid-cols-4">
+					<span className="min-w-60">Item</span>
+					<span className="item-center w-full">Condition</span>
+				</div>
+				{DummyManageData.map((item, id) => (
+					<div key={id} className="grid grid-cols-4 gap-8 py-2 border-b">
+						<span className="min-w-60 flex items-center gap-2">
+							{item.name}
+						</span>
+						<span className="flex flex-col gap-1 items-center justify-center">
+							<div className="bg-green-100 text-green-500 rounded-sm px-1 text-xs">
+								Good : {item.good}
+							</div>
+							<div className="bg-yellow-100 text-yellow-500 rounded-sm px-1 text-xs">
+								Poor: {item.poor}
+							</div>
+						</span>
+					</div>
+				))}
+			</div>
+		);
 }
 
 export function ChildHistoryCard() {

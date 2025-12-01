@@ -27,43 +27,48 @@ const chartConfig: ChartConfig = {
 
 export default function DashboardChart() {
     return (
-        <div className="flex w-full justify-center gap-8">
-            <div className="flex flex-col w-fit">
-                <div className="flex h-28 w-fit items-center mb-4 px-4 py-2 bg-muted rounded-md">
-                    <div>
-                        <h3 className="text-xl font-semibold">Request Schedule Matrix</h3>
-                        <p className="text-sm text-muted-foreground">
-                            Overview of requests over the past 10 days.
-                        </p>
-                    </div>
-                    <div className="flex flex-col items-center justify-center w-48 border h-full">
-                        <h4>Total Request</h4>
-                        <p className="text-2xl font-semibold">1,258</p>
-                    </div>
-                    <div className="flex flex-col items-center justify-center w-48 border h-full">
-                        <h4>Accepted</h4>
-                        <p className="text-2xl font-semibold">1,024</p>
-                    </div>
-                </div>
-                <ChartContainer title="Requests Over Time" config={chartConfig} className="h-96 w-fit">
-                    <AreaChart accessibilityLayer data={chartData}>
-                        <CartesianGrid vertical={false} />
-                        <XAxis
-                            dataKey="date"
-                            tickLine={false}
-                            tickMargin={10}
-                            axisLine={false}
-                        />
-                        <ChartTooltip content={<ChartTooltipContent />} />
-                        <Area
-                            fill="var(--color-request)"
-                            type="monotone"
-                            dataKey="requests"
-                        />
-                    </AreaChart>
-                </ChartContainer>
-            </div>
-            <ChartPieSimple />
-        </div>
-    )
+			<div className="flex w-full justify-center gap-8">
+				<div className="flex flex-col w-full bg-white border rounded-2xl p-2 shadow-sm">
+					<div className="flex h-28 w-full justify-between items-center mb-4 px-4 py-2 rounded-md">
+						<div>
+							<h3 className="text-xl font-semibold">Request Schedule Matrix</h3>
+							<p className="text-sm text-muted-foreground">
+								Overview of requests over the past 10 days.
+							</p>
+						</div>
+						<div className="flex gap-4">
+							<div className="flex flex-col items-center justify-center w-48 h-full">
+								<h4>Total Request</h4>
+								<p className="text-2xl font-semibold">1,258</p>
+							</div>
+							<div className="flex flex-col items-center justify-center w-48 h-full">
+								<h4>Accepted</h4>
+								<p className="text-2xl font-semibold">1,024</p>
+							</div>
+						</div>
+					</div>
+					<ChartContainer
+						title="Requests Over Time"
+						config={chartConfig}
+						className="h-96 w-full p-4">
+						<AreaChart accessibilityLayer data={chartData}>
+							<CartesianGrid vertical={false} />
+							<XAxis
+								dataKey="date"
+								tickLine={false}
+								tickMargin={10}
+								axisLine={false}
+							/>
+							<ChartTooltip content={<ChartTooltipContent />} />
+							<Area
+								fill="var(--color-request)"
+								type="monotone"
+								dataKey="requests"
+							/>
+						</AreaChart>
+					</ChartContainer>
+				</div>
+				<ChartPieSimple />
+			</div>
+		);
 }

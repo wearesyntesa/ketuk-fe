@@ -24,11 +24,7 @@ const reviews = [
 ]
 
 export default function ReviewUser() {
-    const backgroundColors = [
-        "bg-cyan-200",
-        "bg-emerald-300",
-        "bg-amber-300"
-    ]
+    const backgroundColors = ["bg-cyan-300", "bg-emerald-300", "bg-amber-300"];
 
     const textColors = [
         "text-blue-700",
