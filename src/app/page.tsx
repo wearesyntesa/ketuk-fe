@@ -4,6 +4,7 @@ import { auth } from "./auth";
 import { ScheduleMonthLanding } from "@/components/schedule-month";
 import FeatureList from "@/components/feature-list";
 import ReviewUser from "@/components/review-user";
+import Footer from "@/components/footer";
 
 export default async function Home() {
 	const session = await auth();
@@ -37,6 +38,7 @@ export default async function Home() {
 					<ReviewUser />
 				</div>
 			</div>
+			<Footer />
 		</div>
 	);
 }
