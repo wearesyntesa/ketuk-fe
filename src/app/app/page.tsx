@@ -1,10 +1,9 @@
 import AppHeader from "@/components/app-header";
-import ScheduleList from "@/components/schedule-list";
-import { schedules } from "./data";
+import ScheduleLab from "@/components/schedule-lab";
 import BannerDashboard from "@/components/banner-dashboard";
+import DashboardChart from "@/components/dashboard-chart";
 
 export default function Dashboard() {
-
 	return (
 		<>
 			<AppHeader title="Dashboard" />
@@ -13,7 +12,8 @@ export default function Dashboard() {
 				<div className="px-4 gap-4 lg:px-6 flex flex-col">
 					{/* <ChartAreaInteractive /> */}
 					<BannerDashboard />
-					<ScheduleList schedules={schedules} />
+					<DashboardChart />
+					<ScheduleLab />
 				</div>
 			</div>
 		</>

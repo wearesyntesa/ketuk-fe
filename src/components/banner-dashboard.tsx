@@ -28,7 +28,7 @@ export default function BannerDashboard() {
 			return () => clearInterval(interval);
 		}, []);
 		return (
-			<Card className="w-full max-w-3xl mx-auto h-60 bg-gradient-to-br from-blue-600 via-blue-400 to-blue-200 backdrop-blur-lg border-0 relative shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out">
+			<Card className="w-full mx-auto h-60 bg-gradient-to-br from-blue-600 via-blue-400 to-blue-200 backdrop-blur-lg border-0 relative shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out">
 				{/* Background Circles */}
 				<div className="absolute -top-10 -left-10 w-32 h-32 bg-white/20 rounded-full">
 					<div className="absolute top-4 left-4 w-20 h-20 bg-white/20 rounded-full"></div>

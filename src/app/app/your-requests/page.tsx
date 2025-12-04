@@ -5,19 +5,24 @@ import { eventRequestItem } from "../data";
 import RequestsTable from "@/components/requests-table";
 import { ColumnDef } from "@tanstack/react-table";
 import { EventRequest } from "@/components/type";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { MenuIcon } from "lucide-react";
 
 const tableHeader: ColumnDef<EventRequest>[] = [
-    {
-        accessorKey: "title",
+	{
+		accessorKey: "title",
 		header: "Title Event",
-        cell: ({row}) => (
-            <InitialIcon title={row.original.title} />
-        ),
+		cell: ({ row }) => <InitialIcon title={row.original.title} />,
 	},
-    {
-        accessorKey: "date",
-        header: "Date",
-    },
+	{
+		accessorKey: "date",
+		header: "Date",
+	},
 	{
 		accessorKey: "time",
 		header: "Time",
@@ -29,42 +34,73 @@ const tableHeader: ColumnDef<EventRequest>[] = [
 	{
 		accessorKey: "pic",
 		header: "Person In Charge",
-        cell: ({row}) => (
-				<InitialIcon title={row.original.pic} />
-        ),
+		cell: ({ row }) => <InitialIcon title={row.original.pic} />,
 	},
 	{
-        accessorKey: "contact",
+		accessorKey: "contact",
 		header: "Contact",
 	},
 	{
-        accessorKey: "category",
+		accessorKey: "category",
 		header: "Category",
-        cell: ({row}) => <EventTypeCell category={row.original.category} />,
+		cell: ({ row }) => <EventTypeCell category={row.original.category} />,
 	},
-    {
-        accessorKey: "note",
-        header: "Note",
-    },
+	{
+		accessorKey: "note",
+		header: "Note",
+	},
+	{
+		accessorKey: "status",
+		header: "Status",
+		cell: ({ row }) => {
+			const status = row.original.status || "Pending";
+			const statusColor =
+				status === "Approved"
+					? "text-green-500"
+					: status === "Cancelled"
+					? "text-red-500"
+					: "text-yellow-500";
+			return <span className={statusColor}>{status}</span>;
+		},
+	},
+	{
+		header: "Actions",
+		cell: ({ row }) => {
+			return (
+				<DropdownMenu>
+					<DropdownMenuTrigger
+						className={`btn btn-sm ${
+							row.original.status === "Pending" ? "" : "hidden"
+						}`}>
+						<MenuIcon size={16} />
+					</DropdownMenuTrigger>
+					<DropdownMenuContent>
+						<DropdownMenuItem>Approve</DropdownMenuItem>
+						<DropdownMenuItem>Reject</DropdownMenuItem>
+					</DropdownMenuContent>
+				</DropdownMenu>
+			);
+		},
+	},
 ];
 
 export default function YourRequestsPage() {
-    return (
-        <>
-        <AppHeader title="Your Requests" />
-            <div className="@container/main flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-            {/* <SectionCards /> */}
-                <div className="px-4 gap-4 lg:px-6 flex flex-col">
-                    {/* <ChartAreaInteractive /> */}
-                    {/* <RequestsList items={eventRequestItem} /> */}
-                    <RequestsTable columns={tableHeader} data={eventRequestItem} />
-                </div>
-            </div>
-        </>
-    )
+	return (
+		<>
+			<AppHeader title="Requests History" />
+			<div className="@container/main flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+				{/* <SectionCards /> */}
+				<div className="px-4 gap-4 lg:px-6 flex flex-col">
+					{/* <ChartAreaInteractive /> */}
+					{/* <RequestsList items={eventRequestItem} /> */}
+					<RequestsTable columns={tableHeader} data={eventRequestItem} />
+				</div>
+			</div>
+		</>
+	);
 }
 
-function InitialIcon({title}: {title: string}) {
+export function InitialIcon({ title }: { title: string }) {
 	const initial = title
 		.split(" ")
 		.filter((_, index) => index < 2)
@@ -92,14 +128,14 @@ function InitialIcon({title}: {title: string}) {
 
 	const colorClass = colors[hashString(title) % colors.length];
 	return (
-        <div className="flex items-center gap-3">
+		<div className="flex items-center gap-3">
 			<div>
-                <div
-                    className={`w-8 h-8 px-4 rounded-full flex items-center justify-center font-medium ${colorClass}`}>
-                    {initial}
-                </div>
-            </div>
-            <span>{title}</span>
+				<div
+					className={`w-8 h-8 px-4 rounded-full flex items-center justify-center font-medium ${colorClass}`}>
+					{initial}
+				</div>
+			</div>
+			<span>{title}</span>
 		</div>
 	);
 }

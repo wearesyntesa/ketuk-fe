@@ -1,115 +1,4 @@
-import { EventRequest, InventoryItem, ScheduleProps } from "@/components/type";
-
-export const schedules: ScheduleProps[] = [
-	{
-		day: "Monday",
-		events: [
-			{
-				title: "Team Meeting",
-				time: "9:00 AM - 10:00 AM",
-				note: "Bring your own device",
-				contact: "team@example.com",
-				category: "Meeting",
-				status: "Approved",
-				description:
-					"Weekly sync-up with the team to discuss project updates and tasks.",
-				pic: "Alice Johnson",
-			},
-			{
-				title: "Design Review",
-				time: "10:30 AM - 11:30 AM",
-				note: "",
-				contact: "design@example.com",
-				category: "Research",
-				status: "Pending",
-				description: "Reviewing the latest design mockups with the UI/UX team.",
-				pic: "Brian Lee",
-			},
-		],
-	},
-	{
-		day: "Tuesday",
-		events: [
-			{
-				title: "Client Presentation",
-				time: "10:00 AM - 11:00 AM",
-				note: "",
-				contact: "client@example.com",
-				category: "Presentation",
-				status: "Pending",
-				description:
-					"Presenting the project proposal to the client and gathering feedback.",
-				pic: "Cynthia Smith",
-			},
-			{
-				title: "QA Testing",
-				time: "2:00 PM - 3:00 PM",
-				note: "",
-				contact: "qa@example.com",
-				category: "Testing",
-				status: "Pending",
-				description: "Testing new features and logging bugs.",
-				pic: "David Kim",
-			},
-		],
-	},
-	{
-		day: "Wednesday",
-		events: [
-			{
-				title: "Workshop on UX Design",
-				time: "11:00 AM - 12:00 PM",
-				note: "",
-				contact: "ux@example.com",
-				category: "Workshop",
-				status: "Pending",
-				description:
-					"An interactive workshop focusing on the principles of user experience design.",
-				pic: "Emma Williams",
-			},
-		],
-	},
-	{
-		day: "Thursday",
-		events: [
-			{
-				title: "Sprint Planning",
-				time: "1:00 PM - 2:00 PM",
-				note: "",
-				contact: "scrum@example.com",
-				category: "Planning",
-				status: "Pending",
-				description: "Planning the next sprint and assigning tasks.",
-				pic: "Frank Miller",
-			},
-		],
-	},
-	{
-		day: "Friday",
-		events: [
-			{
-				title: "Code Review",
-				time: "2:00 PM - 3:00 PM",
-				note: "",
-				contact: "dev@example.com",
-				category: "Review",
-				status: "Pending",
-				description: "Reviewing code submissions and providing feedback.",
-				pic: "Grace Chen",
-			},
-			{
-				title: "Retrospective",
-				time: "4:00 PM - 5:00 PM",
-				note: "",
-				contact: "scrum@example.com",
-				category: "Meeting",
-				status: "Pending",
-				description: "Discussing what went well and what can be improved.",
-				pic: "Henry Brown",
-			},
-		],
-	},
-];
+import { EventRequest, InventoryItem, MonthlyEvent } from "@/components/type";
 
 export const inventoryItem: InventoryItem[] = [
 	{
@@ -694,3 +583,98 @@ export const eventRequestItem: EventRequest[] = [
 		status: "Approved",
 	},
 ];
+
+const dateNow = new Date();
+
+const getDateStr = (offset: number) => {
+	const d = new Date(dateNow);
+	d.setDate(d.getDate() + offset);
+	return d.toISOString().slice(0, 10);
+};
+
+const getDayName = (offset: number) => {
+	const d = new Date(dateNow);
+	d.setDate(d.getDate() + offset);
+	return d.toLocaleDateString(undefined, { weekday: "long" });
+};
+
+export const monthlySchedule: MonthlyEvent[] = (() => {
+	const list: MonthlyEvent[] = [];
+	let idCounter = 1;
+
+	for (let i = 0; i < 30; i++) {
+		const offset = i;
+		const date = getDateStr(offset);
+		const day = getDayName(offset);
+
+		const base: MonthlyEvent = {
+			id: String(idCounter++),
+			title: `Event ${i + 1}`,
+			description: `Auto-generated event for ${day}, ${date}`,
+			note: "",
+			lecturerName: "Dr. Smith",
+			contact: "events@example.com",
+			category:
+				i % 4 === 0
+					? "Praktikum"
+					: i % 4 === 1
+					? "Kelas"
+					: i % 4 === 2
+					? "Skripsi"
+					: "Other",
+			status: i % 3 === 0 ? "Approved" : i % 3 === 1 ? "Pending" : "Cancelled",
+			date,
+			day,
+			startTime: `${date}T09:00:00`,
+			endTime: `${date}T10:00:00`,
+		};
+
+		list.push(base);
+
+		// Randomly add multiple schedules for this same day
+		// ~30% chance to add 1-2 extra events
+		if (Math.random() < 0.3) {
+			const extraCount = 1 + Math.floor(Math.random() * 2); // 1 or 2 extras
+			for (let j = 0; j < extraCount; j++) {
+				const startHour = 10 + j; // 10:00, 11:00, ...
+				const endHour = startHour + 1;
+				const extra: MonthlyEvent = {
+					id: String(idCounter++),
+					title: `Event ${i + 1} (Part ${j + 2})`,
+					description: `Additional auto-generated event for ${day}, ${date}`,
+					note: "",
+					lecturerName:
+						i % 4 === 0
+							? "Dr. Smith"
+							: i % 4 === 1
+							? "Prof. Johnson"
+							: i % 4 === 2
+							? "Dr. Burhan"
+							: "Yatno",
+					contact: "events@example.com",
+					category:
+						(i + j) % 4 === 0
+							? "Praktikum"
+							: (i + j) % 4 === 1
+							? "Kelas"
+							: (i + j) % 4 === 2
+							? "Skripsi"
+							: "Other",
+					status:
+						(i + j) % 3 === 0
+							? "Approved"
+							: (i + j) % 3 === 1
+							? "Pending"
+							: "Cancelled",
+					date,
+					day,
+					startTime: `${date}T${String(startHour).padStart(2, "0")}:00:00`,
+					endTime: `${date}T${String(endHour).padStart(2, "0")}:00:00`,
+				};
+				list.push(extra);
+			}
+		}
+	}
+
+	return list;
+})();

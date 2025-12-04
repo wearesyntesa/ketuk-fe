@@ -83,7 +83,7 @@ export function RequestForm({
 
 	return (
 		<Card
-			className={`${border ? "border" : "border-0"} ${
+			className={`${border ? "border" : "border-0 shadow-none"} ${
 				className ? className : "w-full"
 			}`}>
 			<CardHeader>
@@ -109,7 +109,7 @@ export function RequestForm({
 									/>
 								</div>
 								<div className="grid gap-2">
-									<Calendar22 />
+									<Calendar22 label />
 								</div>
 								<div className="grid gap-2">
 									<div className="flex items-center">
@@ -247,45 +247,31 @@ export function RequestRegulerForm({
 }) {
 	// Form state
 	const [eventName, setEventName] = useState("");
-	const [startTime, setStartTime] = useState("");
-	const [endTime, setEndTime] = useState("");
-	const [eventType, setEventType] = useState("");
+	const [semester, setSemester] = useState("");
+	const [startDate, setStartDate] = useState("");
+	const [endDate, setEndDate] = useState("");
 	const [lecturer, setLecturer] = useState("");
-	// const [email, setEmail] = useState("");
-	// const [contact, setContact] = useState("");
-	const [description, setDescription] = useState("");
 
 	// Form value change handlers
 	const handleEventNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setEventName(e.target.value);
 	};
-	const handleStartTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setStartTime(e.target.value);
+	const handleSemesterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setSemester(e.target.value);
 	};
-	const handleEndTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setEndTime(e.target.value);
+	const handleStartDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setStartDate(e.target.value);
 	};
-	const handleTypeChange = (value: string) => {
-		setEventType(value);
+	const handleEndDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setEndDate(e.target.value);
 	};
 	const handleLecturerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setLecturer(e.target.value);
 	};
-	// const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-	// 	setEmail(e.target.value);
-	// };
-	// const handleContactChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-	// 	setContact(e.target.value);
-	// };
-	const handleDescriptionChange = (
-		e: React.ChangeEvent<HTMLTextAreaElement>
-	) => {
-		setDescription(e.target.value);
-	};
 
 	return (
 		<Card
-			className={`${border ? "border" : "border-0"} ${
+			className={`${border ? "border" : "border-0 shadow-none"} ${
 				className ? className : "w-full"
 			}`}>
 			<CardHeader>
@@ -309,54 +295,41 @@ export function RequestRegulerForm({
 							/>
 						</div>
 						<div className="grid gap-2">
-							<Calendar22 />
+							<Label htmlFor="semester">Semester</Label>
+							<Input
+								id="semester"
+								type="text"
+								value={semester}
+								onChange={handleSemesterChange}
+								placeholder="Praktikum Pemrograman Dasar"
+								required
+							/>
 						</div>
 						<div className="grid gap-2">
 							<div className="flex items-center">
 								<Label>Waktu</Label>
 							</div>
-							<div className="flex gap-2">
-								<Input
+							<div className="flex items-center gap-2">
+								<Calendar22 />
+								{/* <Input
 									type="time"
 									value={startTime}
 									onChange={handleStartTimeChange}
 									className="bg-background appearance-none w-fit"
 									required
-								/>
+									/> */}
 								<span className="flex items-center">-</span>
-								<Input
+								<Calendar22 />
+								{/* <Input
 									type="time"
 									value={endTime}
 									onChange={handleEndTimeChange}
 									className="bg-background appearance-none w-fit"
 									required
-								/>
+								/> */}
 							</div>
 						</div>
-						<div className="grid gap-2">
-							<div className="flex items-center">
-								<Label htmlFor="event-type">Jenis Kegiatan</Label>
-							</div>
-							<Select onValueChange={setEventType}>
-								<SelectTrigger
-									value={eventType}
-									onChange={(e) =>
-										handleTypeChange((e.target as HTMLSelectElement).value)
-									}
-									id="event-type"
-									className="w-full">
-									<SelectValue placeholder="Pilih jenis kegiatan" />
-								</SelectTrigger>
-								<SelectContent>
-									<SelectGroup>
-										<SelectLabel>Jenis Kegiatan</SelectLabel>
-										<SelectItem value="praktikum">Praktikum</SelectItem>
-										<SelectItem value="kelas">Kelas</SelectItem>
-										<SelectItem value="skripsi">Skripsi</SelectItem>
-									</SelectGroup>
-								</SelectContent>
-							</Select>
-						</div>
+
 						<div className="grid gap-2">
 							<div className="flex items-center">
 								<Label htmlFor="lecturer">Nama Dosen</Label>
@@ -367,17 +340,6 @@ export function RequestRegulerForm({
 								value={lecturer}
 								onChange={handleLecturerChange}
 								placeholder="Nama Dosen"
-								required
-							/>
-						</div>
-						<div className="grid gap-2">
-							<div className="flex items-center">
-								<Label htmlFor="description">Deskripsi Kegiatan</Label>
-							</div>
-							<Textarea
-								value={description}
-								onChange={handleDescriptionChange}
-								id="description"
 								required
 							/>
 						</div>

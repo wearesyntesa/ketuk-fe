@@ -20,7 +20,6 @@ import {
 } from "./ui/dropdown-menu";
 import { auth } from "@/app/auth";
 import Image from "next/image";
-import SignInButton from "./signin-button";
 import { SignOutButton } from "./signout-button";
 
 export default async function NavFooter() {
@@ -29,27 +28,27 @@ export default async function NavFooter() {
 	return (
 		<SidebarFooter className="mt-auto">
 			<SidebarMenu>
-				<SidebarMenuItem>
+				{/* <SidebarMenuItem>
 					<SidebarMenuButton asChild>
 						<Link href="/app/your-requests">
 							<Ticket />
 							<span className="font-semibold">Your Requests</span>
 						</Link>
 					</SidebarMenuButton>
-				</SidebarMenuItem>
+				</SidebarMenuItem> */}
 				<SidebarMenuItem>
 					<SidebarMenuButton asChild>
-						<a href="/help">
-							<HelpCircle />
-							<span className="font-semibold">Support</span>
-						</a>
+						<Link href="/help" className="gap-4">
+							<HelpCircle className="min-w-6 min-h-6" />
+							<span className="font-semibold text-xl">Support</span>
+						</Link>
 					</SidebarMenuButton>
 				</SidebarMenuItem>
 				<SidebarMenuItem>
 					<SidebarMenuButton asChild>
-						<Link href="/app/settings">
-							<SettingsIcon />
-							<span className="font-semibold">Settings</span>
+						<Link href="/app/settings" className="gap-4">
+							<SettingsIcon className="min-w-6 min-h-6" />
+							<span className="font-semibold text-xl">Settings</span>
 						</Link>
 					</SidebarMenuButton>
 				</SidebarMenuItem>
@@ -69,7 +68,7 @@ export default async function NavFooter() {
 									alt="User Avatar"
 									className="w-8 h-8 rounded-full"
 								/>
-								<span className="font-semibold">Account</span>
+								<span className="font-semibold text-xl">Account</span>
 							</div>
 							<div>
 								<DropdownMenu>
@@ -77,7 +76,6 @@ export default async function NavFooter() {
 										<EllipsisVertical className="h-5 w-5 cursor-pointer text-muted-foreground" />
 									</DropdownMenuTrigger>
 									<DropdownMenuContent>
-										<DropdownMenuItem>Edit</DropdownMenuItem>
 										<DropdownMenuItem>
 											<SignOutButton />
 										</DropdownMenuItem>
