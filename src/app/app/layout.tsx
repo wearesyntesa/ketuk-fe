@@ -5,6 +5,7 @@ import { AppSidebar } from "@/components/app-sidebar";
 import WarningEmail from "@/components/warning-email";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { User } from "@/types/user";
 
 export default function AppLayout({
 	children,
@@ -12,7 +13,7 @@ export default function AppLayout({
 	children: React.ReactNode;
 }>) {
 	const router = useRouter();
-	const [user, setUser] = useState<any>(null);
+	const [user, setUser] = useState<User | null>(null);
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
