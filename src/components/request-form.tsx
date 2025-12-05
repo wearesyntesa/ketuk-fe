@@ -35,6 +35,7 @@ export function RequestForm({
 	// Form state
 	const [eventName, setEventName] = useState("");
 	const [startTime, setStartTime] = useState("");
+	const [date, setDate] = useState<Date | undefined>(undefined);
 	const [endTime, setEndTime] = useState("");
 	const [eventType, setEventType] = useState("");
 	const [lecturer, setLecturer] = useState("");
@@ -72,9 +73,13 @@ export function RequestForm({
 
 	// Pagination state
 	const [page, setPage] = useState(1);
+	const [buttonDisabled, setButtonDisabled] = useState(true);
 
 	const handleNext = () => {
-		setPage(page + 1);
+		if (eventName && date && startTime && endTime && eventType) {
+			setPage(page + 1);
+			setButtonDisabled(false);
+		}
 	};
 
 	const handleBack = () => {
@@ -88,152 +93,120 @@ export function RequestForm({
 			}`}>
 			<CardHeader>
 				<CardTitle>Request Lab</CardTitle>
-				<CardDescription>
-					Masukkan informasi kegiatan Anda di bawah ini.
-				</CardDescription>
+				<CardDescription>Insert your event information bellow.</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<form>
-					<div className="flex flex-col gap-6">
-						{page === 1 ? (
-							<>
-								<div className="grid gap-2">
-									<Label htmlFor="event-name">Nama Kegiatan</Label>
+				<div>
+					{page === 1 ? (
+						<form className="flex flex-col gap-6">
+							<div className="grid gap-2">
+								<Label htmlFor="event-name">Event Name</Label>
+								<Input
+									id="event-name"
+									type="text"
+									value={eventName}
+									onChange={handleEventNameChange}
+									placeholder="Praktikum Pemrograman Dasar"
+									required
+								/>
+							</div>
+							<div className="grid gap-2">
+								<Calendar22 label setDateState={setDate} valDateState={date} />
+							</div>
+							<div className="grid gap-2">
+								<div className="flex items-center">
+									<Label>Time</Label>
+								</div>
+								<div className="flex gap-2">
 									<Input
-										id="event-name"
-										type="text"
-										value={eventName}
-										onChange={handleEventNameChange}
-										placeholder="Praktikum Pemrograman Dasar"
+										type="time"
+										value={startTime}
+										onChange={handleStartTimeChange}
+										className="bg-background appearance-none w-fit"
 										required
 									/>
-								</div>
-								<div className="grid gap-2">
-									<Calendar22 label />
-								</div>
-								<div className="grid gap-2">
-									<div className="flex items-center">
-										<Label>Waktu</Label>
-									</div>
-									<div className="flex gap-2">
-										<Input
-											type="time"
-											value={startTime}
-											onChange={handleStartTimeChange}
-											className="bg-background appearance-none w-fit"
-											required
-										/>
-										<span className="flex items-center">-</span>
-										<Input
-											type="time"
-											value={endTime}
-											onChange={handleEndTimeChange}
-											className="bg-background appearance-none w-fit"
-											required
-										/>
-									</div>
-								</div>
-								<div className="grid gap-2">
-									<div className="flex items-center">
-										<Label htmlFor="event-type">Jenis Kegiatan</Label>
-									</div>
-									<Select onValueChange={setEventType}>
-										<SelectTrigger
-											value={eventType}
-											onChange={(e) =>
-												handleTypeChange((e.target as HTMLSelectElement).value)
-											}
-											id="event-type"
-											className="w-full">
-											<SelectValue placeholder="Pilih jenis kegiatan" />
-										</SelectTrigger>
-										<SelectContent>
-											<SelectGroup>
-												<SelectLabel>Jenis Kegiatan</SelectLabel>
-												<SelectItem value="praktikum">Praktikum</SelectItem>
-												<SelectItem value="kelas">Kelas</SelectItem>
-												<SelectItem value="skripsi">Skripsi</SelectItem>
-											</SelectGroup>
-										</SelectContent>
-									</Select>
-								</div>
-							</>
-						) : (
-							<>
-								<div className="grid gap-2">
-									<div className="flex items-center">
-										<Label htmlFor="lecturer">Nama Dosen</Label>
-									</div>
+									<span className="flex items-center">-</span>
 									<Input
-										id="lecturer"
-										type="text"
-										value={lecturer}
-										onChange={handleLecturerChange}
-										placeholder="Nama Dosen"
+										type="time"
+										value={endTime}
+										onChange={handleEndTimeChange}
+										className="bg-background appearance-none w-fit"
 										required
 									/>
 								</div>
-								{/* <div className="grid gap-2">
-									<div className="flex items-center">
-										<Label htmlFor="email">Email Unesa</Label>
-									</div>
-									<Input
-										id="email"
-										type="email"
-										value={email}
-										onChange={handleEmailChange}
-										placeholder="Email Unesa"
-										required
-									/>
+							</div>
+							<div className="grid gap-2">
+								<div className="flex items-center">
+									<Label htmlFor="event-type">Event Type</Label>
 								</div>
-								<div className="grid gap-2">
-									<div className="flex items-center">
-										<Label htmlFor="contact">Nomor Telepon</Label>
-									</div>
-									<Input
-										id="contact"
-										type="text"
-										value={contact}
-										onChange={handleContactChange}
-										placeholder="Nomor Telepon"
-										required
-									/>
-								</div> */}
-								<div className="grid gap-2">
-									<div className="flex items-center">
-										<Label htmlFor="description">Deskripsi Kegiatan</Label>
-									</div>
-									<Textarea
-										value={description}
-										onChange={handleDescriptionChange}
-										id="description"
-										required
-									/>
+								<Select onValueChange={setEventType}>
+									<SelectTrigger
+										value={eventType}
+										onChange={(e) =>
+											handleTypeChange((e.target as HTMLSelectElement).value)
+										}
+										id="event-type"
+										className="w-full">
+										<SelectValue placeholder="Pilih jenis kegiatan" />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectGroup>
+											<SelectLabel>Event Type</SelectLabel>
+											<SelectItem value="praktikum">Praktikum</SelectItem>
+											<SelectItem value="kelas">Class</SelectItem>
+											<SelectItem value="skripsi">Skripsi</SelectItem>
+										</SelectGroup>
+									</SelectContent>
+								</Select>
+							</div>
+							<div className="w-full flex justify-end">
+								<Button
+									variant={"secondary"}
+									className={`w-fit ${
+										buttonDisabled ? "cursor-not-allowed" : ""
+									}`}
+									disabled={buttonDisabled}
+									onClick={handleNext}>
+									Next <ArrowRight className="ml-2" />
+								</Button>
+							</div>
+						</form>
+					) : (
+						<form className="flex flex-col gap-6">
+							<div className="grid gap-2">
+								<div className="flex items-center">
+									<Label htmlFor="lecturer">Lecture Name</Label>
 								</div>
-							</>
-						)}
-					</div>
-				</form>
+								<Input
+									id="lecturer"
+									type="text"
+									value={lecturer}
+									onChange={handleLecturerChange}
+									placeholder="Nama Dosen"
+									required
+								/>
+							</div>
+							<div className="grid gap-2">
+								<div className="flex items-center">
+									<Label htmlFor="description">Event Description</Label>
+								</div>
+								<Textarea
+									value={description}
+									onChange={handleDescriptionChange}
+									id="description"
+									required
+								/>
+							</div>
+							<div className="flex justify-end w-full gap-2">
+								<Button variant={"outline"} onClick={handleBack}>
+									<ArrowLeft /> Back
+								</Button>
+								<Button type="submit">Submit Request</Button>
+							</div>
+						</form>
+					)}
+				</div>
 			</CardContent>
-			<CardFooter className="flex-col gap-2">
-				{page === 1 ? (
-					<div className="w-full flex justify-end">
-						<Button
-							variant={"secondary"}
-							className="w-fit"
-							onClick={handleNext}>
-							Next <ArrowRight className="ml-2" />
-						</Button>
-					</div>
-				) : (
-					<div className="flex justify-end w-full gap-2">
-						<Button variant={"outline"} onClick={handleBack}>
-							<ArrowLeft /> Back
-						</Button>
-						<Button type="submit">Submit Request</Button>
-					</div>
-				)}
-			</CardFooter>
 		</Card>
 	);
 }

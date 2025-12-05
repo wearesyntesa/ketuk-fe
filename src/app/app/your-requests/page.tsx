@@ -12,8 +12,9 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MenuIcon } from "lucide-react";
+import { useState } from "react";
 
-const tableHeader: ColumnDef<EventRequest>[] = [
+const tableHeaderAdmin: ColumnDef<EventRequest>[] = [
 	{
 		accessorKey: "title",
 		header: "Title Event",
@@ -84,7 +85,63 @@ const tableHeader: ColumnDef<EventRequest>[] = [
 	},
 ];
 
+const tableHeaderUser: ColumnDef<EventRequest>[] = [
+	{
+		accessorKey: "title",
+		header: "Title Event",
+		cell: ({ row }) => <InitialIcon title={row.original.title} />,
+	},
+	{
+		accessorKey: "date",
+		header: "Date",
+	},
+	{
+		accessorKey: "time",
+		header: "Time",
+	},
+	{
+		accessorKey: "description",
+		header: "Description",
+	},
+	{
+		accessorKey: "pic",
+		header: "Person In Charge",
+		cell: ({ row }) => <InitialIcon title={row.original.pic} />,
+	},
+	{
+		accessorKey: "contact",
+		header: "Contact",
+	},
+	{
+		accessorKey: "category",
+		header: "Category",
+		cell: ({ row }) => <EventTypeCell category={row.original.category} />,
+	},
+	{
+		accessorKey: "note",
+		header: "Note",
+	},
+	{
+		accessorKey: "status",
+		header: "Status",
+		cell: ({ row }) => {
+			const status = row.original.status || "Pending";
+			const statusColor =
+				status === "Approved"
+					? "text-green-500"
+					: status === "Cancelled"
+					? "text-red-500"
+					: "text-yellow-500";
+			return <span className={statusColor}>{status}</span>;
+		},
+	},
+];
+
 export default function YourRequestsPage() {
+	const [role, setRole] = useState("admin");
+
+	const header = role === "admin" ? tableHeaderAdmin : tableHeaderUser;
+
 	return (
 		<>
 			<AppHeader title="Requests History" />
@@ -93,7 +150,7 @@ export default function YourRequestsPage() {
 				<div className="px-4 gap-4 lg:px-6 flex flex-col">
 					{/* <ChartAreaInteractive /> */}
 					{/* <RequestsList items={eventRequestItem} /> */}
-					<RequestsTable columns={tableHeader} data={eventRequestItem} />
+					<RequestsTable columns={header} data={eventRequestItem} />
 				</div>
 			</div>
 		</>

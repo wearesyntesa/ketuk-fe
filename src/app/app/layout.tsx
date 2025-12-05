@@ -14,6 +14,7 @@ export default function AppLayout({
 	const router = useRouter();
 	const [user, setUser] = useState<any>(null);
 	const [loading, setLoading] = useState(true);
+	const [role, setRole] = useState<string>("admin");
 
 	useEffect(() => {
 		// Check if user is authenticated
@@ -54,7 +55,7 @@ export default function AppLayout({
 				} as React.CSSProperties
 			}
 			className="bg-sidebar">
-			<AppSidebar variant="inset" />
+			<AppSidebar role={role} variant="inset" />
 			<SidebarInset>
 				<div className="flex flex-1 flex-col">
 					<div className="@container/main flex flex-1 flex-col gap-2">
