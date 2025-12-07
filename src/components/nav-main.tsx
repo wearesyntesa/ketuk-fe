@@ -1,6 +1,12 @@
 "use client";
 
-import { Archive, BookCheck, CalendarDays, Ticket } from "lucide-react";
+import {
+	Archive,
+	BookCheck,
+	CalendarDays,
+	Ticket,
+	UserCog2,
+} from "lucide-react";
 import { SideBarItem } from "./type";
 import {
 	SidebarGroup,
@@ -41,6 +47,13 @@ const itemsAdmin: SideBarItem[] = [
 		child: [],
 		bgGradient: "bg-linear-to-r from-violet-300 to-violet-50",
 	},
+	{
+		title: "User Management",
+		url: "/app/user-management",
+		icon: UserCog2,
+		child: [],
+		bgGradient: "bg-linear-to-r from-violet-300 to-violet-50",
+	},
 ];
 
 const itemsUser: SideBarItem[] = [
@@ -60,7 +73,7 @@ const itemsUser: SideBarItem[] = [
 	},
 	{
 		title: "Requests History",
-		url: "/app/your-requests",
+		url: "/app/user-management",
 		icon: Ticket,
 		child: [],
 		bgGradient: "bg-linear-to-r from-lime-300 to-lime-50",

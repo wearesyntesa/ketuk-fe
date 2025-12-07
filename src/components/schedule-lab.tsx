@@ -52,12 +52,20 @@ export default function ScheduleLab() {
 
 	return (
 		<div>
-			<div className="flex justify-between items-center mb-4">
-				<h1 className="text-2xl font-bold">This {scheduleType === 'week' ? 'Week' : scheduleType === 'month' ? 'Month' : 'List'} Schedule</h1>
+			<div className="flex md:flex-row flex-col justify-between mb-4">
+				<h1 className="text-2xl font-bold">
+					This{" "}
+					{scheduleType === "week"
+						? "Week"
+						: scheduleType === "month"
+						? "Month"
+						: "List"}{" "}
+					Schedule
+				</h1>
 				{/* <Button className="bg-blue-400">Request Lab +</Button> */}
-				<div className="flex gap-4">
+				<div className="flex justify-end gap-4">
 					<Select onValueChange={handleScheduleTypeChange} defaultValue="week">
-						<SelectTrigger className="w-[180px]" value={scheduleType}>
+						<SelectTrigger className="sm:w-[180px] w-full" value={scheduleType}>
 							{/* <SelectValue placeholder="This Week" /> */}
 							<SelectValue placeholder="Schedule Type" />
 						</SelectTrigger>
@@ -71,13 +79,9 @@ export default function ScheduleLab() {
 				</div>
 			</div>
 
-			{scheduleType === 'week' && (
-				<ScheduleWeek />
-			)}
-			{scheduleType === 'month' && (
-				<ScheduleMonth />
-			)}
-			{scheduleType === 'list' && (
+			{scheduleType === "week" && <ScheduleWeek />}
+			{scheduleType === "month" && <ScheduleMonth />}
+			{scheduleType === "list" && (
 				<ScheduleList columns={tableHeader} data={monthlySchedule} />
 			)}
 		</div>

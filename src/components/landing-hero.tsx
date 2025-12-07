@@ -4,7 +4,7 @@ import { SignInButton } from "./signin-button";
 
 export default function LandingHero(isLogin: { isLogin: boolean }) {
 	return (
-		<section className="relative min-h-screen bg-gradient-to-b from-background to-muted/20 flex items-center justify-center">
+		<section className="relative min-h-screen bg-linear-to-b from-background to-muted/20 flex items-center justify-center">
 			<div className="bg-green-500/10 absolute top-50 right-1/2 aspect-square w-[24rem] rounded-full blur-3xl mix-blend-multiply"></div>
 			<div className="bg-blue-400/15 absolute top-80 right-1/3 aspect-square w-[30rem] rounded-full blur-2xl mix-blend-multiply"></div>
 			<div
@@ -22,7 +22,7 @@ export default function LandingHero(isLogin: { isLogin: boolean }) {
 					<h1 className="text-5xl md:text-7xl font-bold tracking-tight text-foreground">
 						Take control of
 						<br />
-						<span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+						<span className="bg-linear-to-r from-primary to-primary/60 bg-clip-text text-transparent">
 							Lab Management
 						</span>
 					</h1>

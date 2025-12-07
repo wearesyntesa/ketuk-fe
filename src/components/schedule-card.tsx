@@ -79,7 +79,7 @@ export default function ScheduleCard({
 	);
 }
 
-function InitialIcon(title: string) {
+export function InitialIcon(title: string) {
 	const initial = title
 		.split(" ")
 		.filter((_, index) => index < 2)

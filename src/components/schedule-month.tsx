@@ -86,8 +86,11 @@ export default function ScheduleMonth() {
 			</div>
 			<div className="grid grid-cols-7 gap-2">
 				{baseDays.map((day) => (
-					<div key={day} className="font-semibold text-center">
-						{day}
+					<div
+						key={day}
+						className="font-semibold text-center md:text-base text-xs">
+						<div className="md:hidden block">{day.slice(0, 3)}</div>
+						<div className="md:block hidden">{day}</div>
 					</div>
 				))}
 			</div>
@@ -118,19 +121,24 @@ export default function ScheduleMonth() {
 
 						return (
 							<Dialog key={`day-${dayNum}`}>
-								<DialogTrigger className="min-h-28 p-2 border rounded items-start flex flex-col hover:bg-accent cursor-pointer">
+								<DialogTrigger className="md:min-h-28 min-h-12 p-2 border rounded items-start flex flex-col hover:bg-accent cursor-pointer">
 									<div className="text-sm font-medium">{dayNum}</div>
 									{eventsForDay.slice(0, 2).map((ev, id) => (
 										<div
 											key={id}
-											className="mt-1 text-xs rounded px-1 w-full text-left flex gap-2 items-center">
+											className="mt-1 text-xs rounded px-1 w-full text-left gap-2 items-center md:flex hidden">
 											<span className="flex h-2 w-2 bg-blue-200 rounded-full" />
 											{ev.title}
 										</div>
 									))}
 									{eventsForDay.length > 2 && (
-										<div className="mt-1 text-xs bg-blue-200 rounded-full p-1">
+										<div className="mt-1 text-xs bg-blue-200 rounded-full p-1 md:block hidden">
 											+{eventsForDay.length - 2}
+										</div>
+									)}
+									{eventsForDay.length && (
+										<div className="mt-1 text-xs bg-blue-200 rounded-full p-1 md:hidden block">
+											{eventsForDay.length}
 										</div>
 									)}
 								</DialogTrigger>
@@ -184,8 +192,8 @@ export function ScheduleMonthLanding() {
 	];
 
 	return (
-		<div className="max-w-6xl w-full  bg-white p-4 border rounded-lg shadow-xl relative">
-			<div className="absolute top-30 -left-30 z-10 rotate-12 w-96 h-96 bg-amber-200 p-8">
+		<div className="max-w-6xl w-full  bg-white p-4 border rounded-lg shadow-xl relative overflow-hidden">
+			<div className="absolute top-30 -left-7 z-10 rotate-12 w-72 h-72 bg-amber-200 p-8 border border-amber-400">
 				<h3
 					className={`${shadowIntoLight.className} md:text-4xl text-xl font-bold`}>
 					Event Today
@@ -195,7 +203,7 @@ export function ScheduleMonthLanding() {
 					<li>Data bases class 24F</li>
 				</ul>
 			</div>
-			<div className="absolute bottom-10 -right-10 z-10 -rotate-12 w-96 h-96 bg-amber-200 p-8">
+			<div className="absolute bottom-10 -right-10 z-10 -rotate-12 w-72 h-72 bg-amber-200 p-8 border border-amber-400">
 				<h3
 					className={`${nothingYouCouldDo.className} md:text-4xl text-xl font-bold`}>
 					Event Tomorrow
@@ -205,8 +213,8 @@ export function ScheduleMonthLanding() {
 					<li>Web Development Class 25C</li>
 				</ul>
 			</div>
-			<div className="absolute top-35 -left-25 rotate-6 w-[370px] h-96 bg-slate-200/50"></div>
-			<div className="absolute bottom-4 -right-2 -rotate-6 w-[370px] h-96 bg-slate-200/50"></div>
+			<div className="absolute top-35 left-6 rotate-6 w-[250px] h-72 bg-slate-200/50"></div>
+			<div className="absolute bottom-4 right-2 -rotate-6 w-[250px] h-72 bg-slate-200/50"></div>
 			<div className="grid grid-cols-7 gap-2">
 				<div className="flex gap-2 py-4 font-semibold w-full items-center">
 					{/*6 <span className="flex text-nowrap">
@@ -228,8 +236,11 @@ export function ScheduleMonthLanding() {
 			</div>
 			<div className="grid grid-cols-7 gap-2">
 				{baseDays.map((day) => (
-					<div key={day} className="font-semibold text-center">
-						{day}
+					<div
+						key={day}
+						className="font-semibold text-center md:text-base text-xs">
+						<div className="md:hidden block">{day.slice(0, 3)}</div>
+						<div className="md:block hidden">{day}</div>
 					</div>
 				))}
 			</div>
@@ -247,7 +258,7 @@ export function ScheduleMonthLanding() {
 						// empty cells before the month starts or after it ends (to keep 6 rows)
 						if (i < firstDayIndex || i >= firstDayIndex + daysInMonth) {
 							return (
-								<div key={`empty-${i}`} className="min-h-[80px] p-1">
+								<div key={`empty-${i}`} className="min-h-20 p-1">
 									{/* <span className="text-gray-400">Empty</span> */}
 								</div>
 							);
