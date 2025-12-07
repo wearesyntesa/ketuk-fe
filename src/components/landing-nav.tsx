@@ -9,8 +9,7 @@ import {
 } from "./ui/dropdown-menu";
 import { SignOutButton } from "./signout-button";
 import { InitialIcon } from "./schedule-card";
-import { useEffect, useState } from "react";
-import { UserType } from "./type";
+import { useEffect } from "react";
 import { useUser } from "@/hooks/use-user";
 import Link from "next/link";
 import { Button } from "./ui/button";

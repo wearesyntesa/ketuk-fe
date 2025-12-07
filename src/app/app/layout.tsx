@@ -5,7 +5,6 @@ import { AppSidebar } from "@/components/app-sidebar";
 import WarningEmail from "@/components/warning-email";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { UserType } from "@/components/type";
 import { useUser } from "@/hooks/use-user";
 
 export default function AppLayout({

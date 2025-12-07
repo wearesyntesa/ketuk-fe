@@ -1,10 +1,4 @@
-import {
-	CalendarDays,
-	BookCheck,
-	Archive,
-	DoorOpen,
-	Ticket,
-} from "lucide-react";
+import { DoorOpen } from "lucide-react";
 
 import {
 	Sidebar,

@@ -2,30 +2,8 @@
 
 import AppHeader from "@/components/app-header";
 import InventoryTable from "@/components/inventory-table";
-import { inventoryItem } from "../data";
 import { ColumnDef } from "@tanstack/react-table";
-import {
-	InventoryDetailItem,
-	InventoryItem,
-	ItemCategories,
-	ItemDetail,
-} from "@/components/type";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { MenuIcon } from "lucide-react";
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogTitle,
-	DialogTrigger,
-} from "@/components/ui/dialog";
-import { AlertDialogHeader } from "@/components/ui/alert-dialog";
-import InventoryDetailTable from "@/components/inventory-detail-table";
+import { ItemCategories } from "@/components/type";
 import { useItems } from "@/hooks/use-items";
 import { useEffect } from "react";
 import DetailItemCategories from "@/components/detail-item-categories";

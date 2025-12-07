@@ -4,14 +4,9 @@ import AppHeader from "@/components/app-header";
 import { AllUser } from "@/components/type";
 import { ColumnDef } from "@tanstack/react-table";
 // import { InitialIcon } from "@/app/app/your-requests/page";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { AlertDialogHeader } from "@/components/ui/alert-dialog";
 import UserTable from "@/components/user-table";
 import { useUser } from "@/hooks/use-user";
 import { useEffect } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import DetailUser from "@/components/detail-user";
 
 const tableHeader: ColumnDef<AllUser>[] = [

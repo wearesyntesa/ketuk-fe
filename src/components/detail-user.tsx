@@ -11,7 +11,6 @@ export default function DetailUser(id: {id: number}) {
     const user = useUser();
     const [userDetail, setUserDetail] = useState<UserType | null>(null);
     const [userName, setUserName] = useState<string>("");
-    const date = new Date();
 
     const fetchUser = () => {
         if (token) {

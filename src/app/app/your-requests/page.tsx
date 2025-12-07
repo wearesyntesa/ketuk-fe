@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MenuIcon } from "lucide-react";
 import { useState } from "react";
+import { useUser } from "@/hooks/use-user";
 
 const tableHeaderAdmin: ColumnDef<EventRequest>[] = [
 	{
@@ -138,9 +139,10 @@ const tableHeaderUser: ColumnDef<EventRequest>[] = [
 ];
 
 export default function YourRequestsPage() {
-	const [role, setRole] = useState("admin");
+	const user = useUser();
 
-	const header = role === "admin" ? tableHeaderAdmin : tableHeaderUser;
+	const header =
+		user.user?.role === "admin" ? tableHeaderAdmin : tableHeaderUser;
 
 	return (
 		<>

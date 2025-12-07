@@ -1,7 +1,7 @@
 'use client';
 
 import { ItemCategories, ItemDetail } from "@/components/type";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081";
 

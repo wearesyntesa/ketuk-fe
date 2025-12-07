@@ -6,8 +6,7 @@ import { ScheduleMonthLanding } from "@/components/schedule-month";
 import FeatureList from "@/components/feature-list";
 import ReviewUser from "@/components/review-user";
 import Footer from "@/components/footer";
-import { useEffect, useState } from "react";
-import { UserType } from "@/components/type";
+import { useEffect } from "react";
 import { useUser } from "@/hooks/use-user";
 
 export default function Home() {
