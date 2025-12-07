@@ -12,7 +12,6 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MenuIcon } from "lucide-react";
-import { useState } from "react";
 import { useUser } from "@/hooks/use-user";
 
 const tableHeaderAdmin: ColumnDef<EventRequest>[] = [
