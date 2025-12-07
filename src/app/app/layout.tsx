@@ -5,6 +5,8 @@ import { AppSidebar } from "@/components/app-sidebar";
 import WarningEmail from "@/components/warning-email";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { UserType } from "@/components/type";
+import { useUser } from "@/hooks/use-user";
 
 export default function AppLayout({
 	children,
@@ -12,9 +14,8 @@ export default function AppLayout({
 	children: React.ReactNode;
 }>) {
 	const router = useRouter();
-	const [user, setUser] = useState<any>(null);
 	const [loading, setLoading] = useState(true);
-	const [role, setRole] = useState<string>("admin");
+	const user = useUser();
 
 	useEffect(() => {
 		// Check if user is authenticated
@@ -23,16 +24,18 @@ export default function AppLayout({
 
 		if (!token || !userData) {
 			// Not authenticated, redirect to login
-			window.location.href = "/auth/login";
+			// window.location.href = "/auth/login";
+			router.push("/auth/login");
 			return;
 		}
 
 		try {
-			setUser(JSON.parse(userData));
+			user.setUser(JSON.parse(userData));
 		} catch (error) {
 			console.error("Failed to parse user data:", error);
-			window.location.href = "/auth/login";
-			return;
+			// window.location.href = "/auth/login";
+			// return;
+			router.push("/auth/login");
 		}
 
 		setLoading(false);
@@ -55,14 +58,14 @@ export default function AppLayout({
 				} as React.CSSProperties
 			}
 			className="bg-sidebar">
-			<AppSidebar role={role} variant="inset" />
+			<AppSidebar role={user.user?.role || ""} variant="inset" />
 			<SidebarInset>
 				<div className="flex flex-1 flex-col">
 					<div className="@container/main flex flex-1 flex-col gap-2">
 						<div className="flex flex-col gap-4 md:gap-6">
 							{children}
 							{/* <Toaster position="bottom-right" /> */}
-							<WarningEmail email={user?.email || ""} />
+							<WarningEmail email={user.user?.email || ""} />
 						</div>
 					</div>
 				</div>

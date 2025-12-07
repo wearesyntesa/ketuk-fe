@@ -1,18 +1,29 @@
+"use client";
+
 import LandingNav from "@/components/landing-nav";
 import LandingHero from "@/components/landing-hero";
-import { auth } from "./auth";
 import { ScheduleMonthLanding } from "@/components/schedule-month";
 import FeatureList from "@/components/feature-list";
 import ReviewUser from "@/components/review-user";
 import Footer from "@/components/footer";
+import { useEffect, useState } from "react";
+import { UserType } from "@/components/type";
+import { useUser } from "@/hooks/use-user";
 
-export default async function Home() {
-	const session = await auth();
+export default function Home() {
+	const user = useUser();
+
+	useEffect(() => {
+		const userData = localStorage.getItem("user");
+		if (userData) {
+			user.setUser(JSON.parse(userData));
+		}
+	}, []);
 
 	return (
 		<div className="min-h-screen">
-			<LandingNav isLogin={session ? true : false} />
-			<LandingHero isLogin={session ? true : false} />
+			<LandingNav isLogin={user.user?.email ? true : false} />
+			<LandingHero isLogin={user.user?.email ? true : false} />
 			<div className="px-4 gap-4 lg:px-6 flex flex-col mb-20 mt-10">
 				<div>
 					<h2 className="text-2xl font-bold text-center w-full mb-4">
