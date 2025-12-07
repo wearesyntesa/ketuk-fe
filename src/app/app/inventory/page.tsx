@@ -4,7 +4,12 @@ import AppHeader from "@/components/app-header";
 import InventoryTable from "@/components/inventory-table";
 import { inventoryItem } from "../data";
 import { ColumnDef } from "@tanstack/react-table";
-import { InventoryDetailItem, InventoryItem } from "@/components/type";
+import {
+	InventoryDetailItem,
+	InventoryItem,
+	ItemCategories,
+	ItemDetail,
+} from "@/components/type";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -21,67 +26,23 @@ import {
 } from "@/components/ui/dialog";
 import { AlertDialogHeader } from "@/components/ui/alert-dialog";
 import InventoryDetailTable from "@/components/inventory-detail-table";
-import { Badge } from "@/components/ui/badge";
+import { useItems } from "@/hooks/use-items";
+import { useEffect } from "react";
+import DetailItemCategories from "@/components/detail-item-categories";
 
-const tableDetail: ColumnDef<InventoryDetailItem>[] = [
+const tableHeader: ColumnDef<ItemCategories>[] = [
 	{
-		accessorKey: "serialNumber",
-		header: "Serial Number",
+		accessorKey: "id",
+		header: "ID",
 	},
 	{
-		accessorKey: "procurementYear",
-		header: "Procurement Year",
-	},
-	{
-		accessorKey: "condition",
-		header: "Condition",
-	},
-	{
-		accessorKey: "note",
-		header: "Note",
-	},
-	{
-		header: "Action",
-		cell: () => {
-			return (
-				<DropdownMenu>
-					<DropdownMenuTrigger asChild>
-						<MenuIcon className="cursor-pointer" />
-					</DropdownMenuTrigger>
-					<DropdownMenuContent>
-						<DropdownMenuItem>Edit</DropdownMenuItem>
-						<DropdownMenuItem>Delete</DropdownMenuItem>
-					</DropdownMenuContent>
-				</DropdownMenu>
-			);
-		},
-	},
-];
-
-const tableHeader: ColumnDef<InventoryItem>[] = [
-	{
-		accessorKey: "nameItem",
+		accessorKey: "categoryName",
 		header: "Name",
 		cell: ({ row }) => (
-			<Dialog>
-				<DialogTrigger className="cursor-pointer">
-					{row.getValue("nameItem")}
-				</DialogTrigger>
-				<DialogContent className="min-w-4xl">
-					<AlertDialogHeader>
-						<DialogTitle>{row.getValue("nameItem")}</DialogTitle>
-						<DialogDescription>
-							Detail information about the item can be displayed here.
-						</DialogDescription>
-					</AlertDialogHeader>
-					<InventoryDetailTable
-						columns={tableDetail}
-						data={row.original.items}
-					/>
-					{/* <div className="h-96">
-					</div> */}
-				</DialogContent>
-			</Dialog>
+			<DetailItemCategories
+				name={row.getValue("categoryName")}
+				id={row.getValue("id")}
+			/>
 		),
 	},
 	{
@@ -92,50 +53,44 @@ const tableHeader: ColumnDef<InventoryItem>[] = [
 		accessorKey: "quantity",
 		header: "Quantity",
 	},
-	{
-		header: "Condition",
-		cell: ({ row }) => {
-			return (
-				<div className="flex flex-col gap-2 w-14">
-					<Badge className="mr-2 bg-green-100 text-green-800 w-full">
-						Good: {row.original.goodCondition}
-					</Badge>
-					<Badge className="bg-yellow-100 text-yellow-800 w-full">
-						Poor: {row.original.poorCondition}
-					</Badge>
-				</div>
-			);
-		},
-	},
+	// {
+	// 	header: "Condition",
+	// 	cell: ({ row }) => {
+	// 		return (
+	// 			<div className="flex flex-col gap-2 w-14">
+	// 				<Badge className="mr-2 bg-green-100 text-green-800 w-full">
+	// 					Good: {row.original.goodCondition}
+	// 				</Badge>
+	// 				<Badge className="bg-yellow-100 text-yellow-800 w-full">
+	// 					Poor: {row.original.poorCondition}
+	// 				</Badge>
+	// 			</div>
+	// 		);
+	// 	},
+	// },
 	{
 		header: "Action",
 		cell: ({ row }) => {
 			return (
-				<Dialog>
-					<DialogTrigger className="cursor-pointer hover:font-semibold">
-						Detail
-					</DialogTrigger>
-					<DialogContent className="min-w-4xl">
-						<AlertDialogHeader>
-							<DialogTitle>{row.getValue("nameItem")}</DialogTitle>
-							<DialogDescription>
-								Detail information about the item can be displayed here.
-							</DialogDescription>
-						</AlertDialogHeader>
-						<InventoryDetailTable
-							columns={tableDetail}
-							data={row.original.items}
-						/>
-						{/* <div className="h-96">
-						</div> */}
-					</DialogContent>
-				</Dialog>
+				<DetailItemCategories
+					name={row.getValue("categoryName")}
+					id={row.getValue("id")}
+				/>
 			);
 		},
 	},
 ];
 
 export default function InventoryPage() {
+	const token = localStorage.getItem("access_token");
+	const item = useItems();
+
+	useEffect(() => {
+		item.handleGetAllInventory(token || "").then((data) => {
+			item.setItemsCategories(data);
+		});
+	}, []);
+
 	return (
 		<>
 			<AppHeader title="Inventory" />
@@ -143,7 +98,7 @@ export default function InventoryPage() {
 				{/* <SectionCards /> */}
 				<div className="px-4 lg:gap-2 lg:px-6 flex flex-col gap-4">
 					{/* <ChartAreaInteractive /> */}
-					<InventoryTable columns={tableHeader} data={inventoryItem} />
+					<InventoryTable columns={tableHeader} data={item.itemsCategories} />
 				</div>
 			</div>
 		</>

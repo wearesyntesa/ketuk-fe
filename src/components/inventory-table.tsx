@@ -49,8 +49,6 @@ export default function InventoryTable<TData, TValue>({
 		},
 	});
 
-	console.log(table.getColumn("nameItem")?.getFilterValue());
-
 	return (
 		<div className="overflow-hidden rounded-md flex flex-col gap-4">
 			<Card className="p-2">
@@ -61,10 +59,13 @@ export default function InventoryTable<TData, TValue>({
 						placeholder="Search inventory..."
 						className="flex-1"
 						value={
-							(table.getColumn("nameItem")?.getFilterValue() as string) ?? ""
+							(table.getColumn("categoryName")?.getFilterValue() as string) ??
+							""
 						}
 						onChange={(event) => {
-							table.getColumn("nameItem")?.setFilterValue(event.target.value);
+							table
+								.getColumn("categoryName")
+								?.setFilterValue(event.target.value);
 						}}
 					/>
 					<InventoryDialog />
