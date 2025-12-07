@@ -39,15 +39,18 @@ export function LoginForm({
 				// Save tokens to localStorage
 				localStorage.setItem("access_token", data.data.token);
 				localStorage.setItem("refresh_token", data.data.refresh_token);
-				localStorage.setItem("user", JSON.stringify({
-					id: data.data.user.id,
-					email: data.data.user.email,
-					name: data.data.user.name,
-					role: data.data.user.role,
-				}));
+				localStorage.setItem(
+					"user",
+					JSON.stringify({
+						id: data.data.user.id,
+						email: data.data.user.email,
+						name: data.data.user.name,
+						role: data.data.user.role,
+					})
+				);
 
 				// Redirect to dashboard
-				window.location.href = "/app/dashboard";
+				window.location.href = "/app/";
 			} else {
 				setError(data.error || "Login failed");
 			}
@@ -85,8 +88,10 @@ export function LoginForm({
 	return (
 		<div className={cn("flex flex-col gap-6", className)} {...props}>
 			<Card className="overflow-hidden p-0">
-				<CardContent className="grid p-0 md:grid-cols-2">
-					<form className="p-6 md:p-8" onSubmit={handleEmailLogin}>
+				<CardContent className="grid p-0 md:grid-cols-2 h-[500px]">
+					<form
+						className="p-6 md:p-8 flex justify-center items-center"
+						onSubmit={handleEmailLogin}>
 						<div className="flex flex-col gap-6">
 							<div className="flex flex-col items-center text-center">
 								<h1 className="text-2xl font-bold">Welcome back</h1>
@@ -173,21 +178,23 @@ export function LoginForm({
 								{loading ? "Loading..." : "Continue with Google"}
 							</Button>
 
-							<div className="text-center text-sm">
+							{/* <div className="text-center text-sm">
 								Don&apos;t have an account?{" "}
-								<a href="/auth/register" className="underline underline-offset-4">
+								<a
+									href="/auth/register"
+									className="underline underline-offset-4">
 									Sign up
 								</a>
-							</div>
+							</div> */}
 						</div>
 					</form>
 					<div className="bg-muted relative hidden md:block">
 						<Image
-							src="/placeholder.svg"
+							src="/banner-login.svg"
 							alt="Image"
-							className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-							width={64}
-							height={64}
+							className="absolute h-full w-full object-cover object-right"
+							width={400}
+							height={400}
 						/>
 					</div>
 				</CardContent>
