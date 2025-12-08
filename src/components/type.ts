@@ -64,6 +64,11 @@ export interface UserType {
 	role: string;
 }
 
+export interface CategoryPost {
+	name: string;
+	specification: string;
+}
+
 export interface ItemCategories {
 	id: number;
 	categoryName: string;
@@ -84,48 +89,6 @@ export interface ItemDetail {
 	createdAt: string;
 	updatedAt: string;
 }
-
-// {
-//   "success": true,
-//   "message": "Users retrieved successfully",
-//   "data": [
-//     {
-//       "id": 1,
-//       "google_sub": "116165663391178858009",
-//       "name": "006_NaufalFarrasPratama _TIA22",
-//       "email": "naufalfarras.22006@mhs.unesa.ac.id",
-//       "role": "user",
-//       "created_at": "2025-11-28T03:05:45.886879Z",
-//       "updated_at": "2025-11-28T03:06:56.48308Z"
-//     },
-//     {
-//       "id": 2,
-//       "name": "John Doe",
-//       "email": "user@example.com",
-//       "role": "admin",
-//       "created_at": "2025-12-04T08:20:02.377043Z",
-//       "updated_at": "2025-12-06T12:27:02.777603Z"
-//     },
-//     {
-//       "id": 3,
-//       "google_sub": "116743729582255832004",
-//       "name": "Ahmd Mufahras Li Alfazh Assardew",
-//       "email": "alfazh291@gmail.com",
-//       "role": "user",
-//       "created_at": "2025-12-04T08:24:12.391076Z",
-//       "updated_at": "2025-12-07T04:57:46.853155Z"
-//     },
-//     {
-//       "id": 4,
-//       "google_sub": "101582276453371839021",
-//       "name": "Ahmd Mufahras Li Alfazh Assardew",
-//       "email": "alfazh.work@gmail.com",
-//       "role": "admin",
-//       "created_at": "2025-12-06T06:04:27.173377Z",
-//       "updated_at": "2025-12-07T15:48:42.825312Z"
-//     }
-//   ]
-// }
 
 export interface AllUser {
 	id: number;

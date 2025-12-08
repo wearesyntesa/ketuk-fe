@@ -7,6 +7,7 @@ import {
 	ColumnFiltersState,
 	getFilteredRowModel,
 	getPaginationRowModel,
+	getSortedRowModel,
 } from "@tanstack/react-table";
 import {
 	Table,
@@ -40,6 +41,7 @@ export default function InventoryTable<TData, TValue>({
 		columns,
 		getCoreRowModel: getCoreRowModel(),
 		onSortingChange: setSorting,
+		getSortedRowModel: getSortedRowModel(),
 		onColumnFiltersChange: setColumnFilters,
 		getFilteredRowModel: getFilteredRowModel(),
 		getPaginationRowModel: getPaginationRowModel(),
@@ -103,8 +105,10 @@ export default function InventoryTable<TData, TValue>({
 											className={`px-4 ${
 												header.column.columnDef.header === "Action" ||
 												header.column.columnDef.header === "Quantity" ||
-												header.column.columnDef.header === "Good Condition" ||
-												header.column.columnDef.header === "Poor Condition"
+												header.column.columnDef.header === "Condition" ||
+												header.column.columnDef.header
+													?.toString()
+													.includes("ID")
 													? "text-center"
 													: ""
 											}`}>
@@ -134,8 +138,9 @@ export default function InventoryTable<TData, TValue>({
 												cell.column.columnDef.header === "Quantity" ||
 												cell.column.columnDef.header === "Good Condition" ||
 												cell.column.columnDef.header === "Poor Condition" ||
-												cell.column.columnDef.header === "Action"
-													? "align-middle text-center"
+												cell.column.columnDef.header === "Action" ||
+												cell.column.columnDef.header?.toString().includes("ID")
+													? "align-middle text-center place-items-center"
 													: ""
 											}`}>
 											{flexRender(
