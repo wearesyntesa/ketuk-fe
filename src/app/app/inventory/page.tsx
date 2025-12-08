@@ -4,24 +4,45 @@ import AppHeader from "@/components/app-header";
 import InventoryTable from "@/components/inventory-table";
 import { ColumnDef } from "@tanstack/react-table";
 import { ItemCategories } from "@/components/type";
-import { useItems } from "@/hooks/use-items";
+import { useCategories } from "@/hooks/use-categories";
 import { useEffect } from "react";
 import DetailItemCategories from "@/components/detail-item-categories";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ArrowUpDown, EllipsisVertical } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const tableHeader: ColumnDef<ItemCategories>[] = [
 	{
 		accessorKey: "id",
-		header: "ID",
+		header: ({ column }) => {
+			return (
+				<Button
+					variant="ghost"
+					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+					ID
+				</Button>
+			);
+		},
+		cell: ({ row }) => <div>{row.getValue("id")}</div>,
 	},
 	{
 		accessorKey: "categoryName",
-		header: "Name",
-		cell: ({ row }) => (
-			<DetailItemCategories
-				name={row.getValue("categoryName")}
-				id={row.getValue("id")}
-			/>
-		),
+		header: ({ column }) => {
+			return (
+				<Button
+					variant="ghost"
+					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+					Name
+					<ArrowUpDown />
+				</Button>
+			);
+		},
+		cell: ({ row }) => <div>{row.getValue("categoryName")}</div>,
 	},
 	{
 		accessorKey: "specification",
@@ -30,6 +51,11 @@ const tableHeader: ColumnDef<ItemCategories>[] = [
 	{
 		accessorKey: "quantity",
 		header: "Quantity",
+		cell: ({ row }) => (
+			<div className="flex justify-center">
+				{row.getValue("quantity") ? row.getValue("quantity") : 0}
+			</div>
+		),
 	},
 	// {
 	// 	header: "Condition",
@@ -50,10 +76,20 @@ const tableHeader: ColumnDef<ItemCategories>[] = [
 		header: "Action",
 		cell: ({ row }) => {
 			return (
-				<DetailItemCategories
-					name={row.getValue("categoryName")}
-					id={row.getValue("id")}
-				/>
+				<DropdownMenu>
+					<DropdownMenuTrigger asChild>
+						<EllipsisVertical className="cursor-pointer" />
+					</DropdownMenuTrigger>
+					<DropdownMenuContent>
+						<div className="flex justify-start w-full text-sm">
+							<DetailItemCategories
+								name={row.getValue("categoryName")}
+								id={row.getValue("id")}
+								qty={row.getValue("quantity") ?? 0}
+							/>
+						</div>
+					</DropdownMenuContent>
+				</DropdownMenu>
 			);
 		},
 	},
@@ -61,11 +97,11 @@ const tableHeader: ColumnDef<ItemCategories>[] = [
 
 export default function InventoryPage() {
 	const token = localStorage.getItem("access_token");
-	const item = useItems();
+	const categories = useCategories();
 
 	useEffect(() => {
-		item.handleGetAllInventory(token || "").then((data) => {
-			item.setItemsCategories(data);
+		categories.handleGetAllInventory(token || "").then((data) => {
+			categories.setItemsCategories(data);
 		});
 	}, []);
 
@@ -76,7 +112,10 @@ export default function InventoryPage() {
 				{/* <SectionCards /> */}
 				<div className="px-4 lg:gap-2 lg:px-6 flex flex-col gap-4">
 					{/* <ChartAreaInteractive /> */}
-					<InventoryTable columns={tableHeader} data={item.itemsCategories} />
+					<InventoryTable
+						columns={tableHeader}
+						data={categories.itemsCategories}
+					/>
 				</div>
 			</div>
 		</>
