@@ -34,8 +34,8 @@ export default function FeatureList() {
 			{features.map((feature, id) => (
 				<div
 					key={id}
-					className={`lg:${
-						id === 0 ? "-rotate-6" : id === 1 ? "rotate-0" : "rotate-6"
+					className={`${
+						id === 0 ? "md:-rotate-6" : id === 1 ? "md:rotate-0" : "md:rotate-6"
 					} group hover:rotate-0 hover:z-10 transition-transform hover:scale-125 duration-500`}>
 					<div className="border rounded-lg shadow-sm hover:shadow-md transition-shadow h-full lg:w-60 w-55">
 						<div

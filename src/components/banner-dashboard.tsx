@@ -33,7 +33,7 @@ export default function BannerDashboard() {
 	const backgroundClasses = {
 		morning: "from-blue-700 via-blue-500 to-cyan-400",
 		afternoon: "from-yellow-500 via-orange-400 to-red-400",
-		evening: "from-orange-600 via-red-500 to-purple-600",
+		evening: "from-amber-500 to-indigo-700",
 		night: "from-slate-900 via-slate-800 to-blue-900",
 	};
 

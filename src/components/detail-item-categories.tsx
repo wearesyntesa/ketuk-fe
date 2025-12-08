@@ -1,13 +1,32 @@
 'use client';
 
-import { MenuIcon } from "lucide-react";
+import { EllipsisVertical, MenuIcon } from "lucide-react";
 import InventoryDetailTable from "./inventory-detail-table";
 import { AlertDialogHeader } from "./ui/alert-dialog";
-import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "./ui/dialog";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
-import { useItems } from "@/hooks/use-items";
+import {
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "./ui/dialog";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { useCategories } from "@/hooks/use-categories";
 import { ColumnDef } from "@tanstack/react-table";
 import { ItemDetail } from "./type";
+import { useState } from "react";
+import { Button } from "./ui/button";
+import { Label } from "./ui/label";
+import { Input } from "./ui/input";
+import { useItems } from "@/hooks/use-items";
+import DetailItem from "./detail-item";
 
 const tableDetail: ColumnDef<ItemDetail>[] = [
 	{
@@ -28,15 +47,14 @@ const tableDetail: ColumnDef<ItemDetail>[] = [
 	},
 	{
 		header: "Action",
-		cell: () => {
+		cell: ({ row }) => {
 			return (
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
-						<MenuIcon className="cursor-pointer" />
+						<EllipsisVertical className="cursor-pointer" />
 					</DropdownMenuTrigger>
 					<DropdownMenuContent>
-						<DropdownMenuItem>Edit</DropdownMenuItem>
-						<DropdownMenuItem>Delete</DropdownMenuItem>
+						<DetailItem id={row.getValue("id")} />
 					</DropdownMenuContent>
 				</DropdownMenu>
 			);
@@ -45,40 +63,167 @@ const tableDetail: ColumnDef<ItemDetail>[] = [
 ];
 
 interface DetailItemCategoriesProps {
-    name: string;
-    id: number;
+	name: string;
+	id: number;
+	qty: number;
 }
 
-export default function DetailItemCategories({name, id}: DetailItemCategoriesProps) {
-    const token = localStorage.getItem("access_token");
-    const item = useItems();
+export default function DetailItemCategories({
+	name,
+	id,
+	qty,
+}: DetailItemCategoriesProps) {
+	const token = localStorage.getItem("access_token");
+	const categories = useCategories();
+	const items = useItems();
+	const [categoryData, setCategoryData] = useState({
+		name: "",
+		specification: "",
+	});
 
-    const fetchItem = () => {
-        if (token) {
-            item.handleGetItemCategory(token, id).then((data) => {
-                item.setItemCategories(data);
-            });
-        }
-    }
-    return (
-        <Dialog>
-            <DialogTrigger className="cursor-pointer hover:font-semibold" onClick={() => fetchItem()}>
-                Detail
-            </DialogTrigger>
-            <DialogContent>
-                <AlertDialogHeader>
-                    <DialogTitle>{name}</DialogTitle>
-                    <DialogDescription>
-                        Detail information about the item can be displayed here.
-                    </DialogDescription>
-                </AlertDialogHeader>
-                <InventoryDetailTable
-                    columns={tableDetail}
-                    data={item.itemCategories || []}
-                />
-                {/* <div className="h-96">
-                </div> */}
-            </DialogContent>
-        </Dialog>
-    )
+	const fetchItemsCategory = () => {
+		if (token) {
+			items.handleGetItemCategory(token, id).then((data) => {
+				categories.setItemCategories(data);
+			});
+		}
+	};
+
+	const getCategory = () => {
+		if (token) {
+			categories.handleGetCategory(token, id).then((data) => {
+				setCategoryData({
+					name: data.categoryName,
+					specification: data.specification,
+				});
+			});
+		}
+	};
+
+	const updateCategory = () => {
+		if (token) {
+			categories.handleUpdateCategory(token, categoryData, id).then((data) => {
+				console.log(data);
+			});
+		}
+	};
+
+	const deleteCategory = () => {
+		console.log("Deleting category with ID:", id);
+		if (token) {
+			categories.handleDeleteCategory(token, id).then((data) => {});
+		}
+	};
+
+	return (
+		<div className="flex flex-col w-full gap-4 px-2 justify-start items-start">
+			<Dialog>
+				<DialogTrigger
+					className="cursor-pointer hover:font-semibold w-full"
+					onClick={() => fetchItemsCategory()}>
+					Detail
+				</DialogTrigger>
+				<DialogContent>
+					<AlertDialogHeader>
+						<DialogTitle>{name}</DialogTitle>
+						<DialogDescription>
+							Detail information about the item can be displayed here.
+						</DialogDescription>
+					</AlertDialogHeader>
+					<InventoryDetailTable
+						columns={tableDetail}
+						data={categories.itemCategories || []}
+					/>
+				</DialogContent>
+			</Dialog>
+
+			{/* Update data */}
+			<Dialog>
+				<DialogTrigger
+					className="cursor-pointer hover:font-semibold w-full"
+					onClick={() => getCategory()}>
+					Update
+				</DialogTrigger>
+				<DialogContent>
+					<AlertDialogHeader>
+						<DialogTitle>{name}</DialogTitle>
+						<DialogDescription>
+							Detail information about the item can be displayed here.
+						</DialogDescription>
+					</AlertDialogHeader>
+					<div>
+						<form
+							onSubmit={(e) => {
+								e.preventDefault();
+								updateCategory();
+							}}>
+							<div className="flex flex-col gap-6">
+								<div className="grid gap-2">
+									<Label htmlFor="item-name">Nama Item</Label>
+									<Input
+										id="item-name"
+										type="text"
+										placeholder="Lemari"
+										value={categoryData.name}
+										onChange={(e) =>
+											setCategoryData({ ...categoryData, name: e.target.value })
+										}
+										required
+									/>
+								</div>
+								<div className="grid gap-2">
+									<Label htmlFor="specification">Specification</Label>
+									<Input
+										id="specification"
+										type="text"
+										placeholder="Azko"
+										value={categoryData.specification}
+										onChange={(e) =>
+											setCategoryData({
+												...categoryData,
+												specification: e.target.value,
+											})
+										}
+										required
+									/>
+								</div>
+
+								<div className="w-full gap-4 grid grid-cols-2">
+									<DialogClose className="flex-1 p-1 border rounded-md">
+										Cancel
+									</DialogClose>
+									<Button>Submit</Button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</DialogContent>
+			</Dialog>
+
+			{/* Delete Data */}
+			{qty === 0 && (
+				<Dialog>
+					<DialogTrigger className="cursor-pointer hover:font-semibold w-full">
+						Delete
+					</DialogTrigger>
+					<DialogContent>
+						<DialogHeader>
+							<DialogTitle>{name}</DialogTitle>
+							<DialogDescription>
+								Are you sure you want to delete this item?
+							</DialogDescription>
+							<div className="flex gap-2">
+								<DialogClose className="flex-1 p-1 border rounded-md">
+									Cancel
+								</DialogClose>
+								<Button onClick={() => deleteCategory()} className="flex-1">
+									Confirm
+								</Button>
+							</div>
+						</DialogHeader>
+					</DialogContent>
+				</Dialog>
+			)}
+		</div>
+	);
 }

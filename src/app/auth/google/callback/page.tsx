@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://192.168.10.184:8081";
 
 export default function GoogleCallbackPage() {
 	const searchParams = useSearchParams();
