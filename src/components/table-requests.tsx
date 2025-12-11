@@ -1,13 +1,14 @@
+"use client"
+
 import {
 	ColumnDef,
+	ColumnFiltersState,
 	flexRender,
 	getCoreRowModel,
-	useReactTable,
-	SortingState,
-	ColumnFiltersState,
 	getFilteredRowModel,
 	getPaginationRowModel,
-	getSortedRowModel,
+	SortingState,
+	useReactTable,
 } from "@tanstack/react-table";
 import {
 	Table,
@@ -19,17 +20,24 @@ import {
 } from "./ui/table";
 import { Card } from "./ui/card";
 import { Input } from "./ui/input";
-import InventoryDialog from "./inventory-dialog";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "./ui/select";
 import { useState } from "react";
+import { EventRequest } from "./type";
 import { Button } from "./ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-interface DataTableProps<TData, TValue> {
+interface DataTableProps<TData extends EventRequest, TValue> {
 	columns: ColumnDef<TData, TValue>[];
 	data: TData[];
 }
 
-export default function InventoryTable<TData, TValue>({
+export default function RequestsTable<TData extends EventRequest, TValue>({
 	columns,
 	data,
 }: DataTableProps<TData, TValue>) {
@@ -41,7 +49,6 @@ export default function InventoryTable<TData, TValue>({
 		columns,
 		getCoreRowModel: getCoreRowModel(),
 		onSortingChange: setSorting,
-		getSortedRowModel: getSortedRowModel(),
 		onColumnFiltersChange: setColumnFilters,
 		getFilteredRowModel: getFilteredRowModel(),
 		getPaginationRowModel: getPaginationRowModel(),
@@ -54,23 +61,34 @@ export default function InventoryTable<TData, TValue>({
 	return (
 		<div className="overflow-hidden rounded-md flex flex-col gap-4">
 			<Card className="p-2">
-				<div className="flex items-center">
+				<div className="flex items-center gap-4">
 					<Input
-						id="search-inventory"
-						type="text"
-						placeholder="Search inventory..."
+						placeholder="Search history..."
 						className="flex-1"
-						value={
-							(table.getColumn("categoryName")?.getFilterValue() as string) ??
-							""
+						value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
+						onChange={(event) =>
+							table.getColumn("title")?.setFilterValue(event.target.value)
 						}
-						onChange={(event) => {
-							table
-								.getColumn("categoryName")
-								?.setFilterValue(event.target.value);
-						}}
 					/>
-					<InventoryDialog />
+					<Select
+						onValueChange={(value: string) =>
+							table
+								.getColumn("status")
+								?.setFilterValue(value !== "all" ? value : "")
+						}
+						defaultValue="all">
+						<SelectTrigger
+							className="w-48"
+							value={table.getColumn("status")?.getFilterValue() as string}>
+							<SelectValue placeholder="Filter by status" />
+						</SelectTrigger>
+						<SelectContent>
+							<SelectItem value="all">All</SelectItem>
+							<SelectItem value="Pending">Pending</SelectItem>
+							<SelectItem value="Approved">Approved</SelectItem>
+							<SelectItem value="Cancelled">Cancelled</SelectItem>
+						</SelectContent>
+					</Select>
 				</div>
 			</Card>
 			<div className="flex justify-between items-center px-2">
@@ -103,12 +121,7 @@ export default function InventoryTable<TData, TValue>({
 										<TableHead
 											key={header.id}
 											className={`px-4 ${
-												header.column.columnDef.header === "Action" ||
-												header.column.columnDef.header === "Quantity" ||
-												header.column.columnDef.header === "Condition" ||
-												header.column.columnDef.header
-													?.toString()
-													.includes("ID")
+												header.column.columnDef.header === "Action"
 													? "text-center"
 													: ""
 											}`}>
@@ -135,13 +148,8 @@ export default function InventoryTable<TData, TValue>({
 										<TableCell
 											key={cell.id}
 											className={`px-4 ${
-												cell.column.columnDef.header === "Quantity" ||
-												cell.column.columnDef.header === "Good Condition" ||
-												cell.column.columnDef.header === "Poor Condition" ||
-												cell.column.columnDef.header === "Action" ||
-												cell.column.columnDef.header?.toString().includes("ID")
-													? "align-middle text-center place-items-center"
-													: ""
+												cell.column.columnDef.header === "Actions" &&
+												"text-center"
 											}`}>
 											{flexRender(
 												cell.column.columnDef.cell,

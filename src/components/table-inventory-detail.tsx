@@ -3,16 +3,18 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from ".
 import { Card } from "./ui/card";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import ItemDialog from "./item-dialog";
+import AddItemDialog from "./add-item-dialog";
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
 	data: TData[];
+	id: number;
 }
 
 export default function InventoryDetailTable<TData, TValue>({
 	columns,
 	data,
+	id,
 }: DataTableProps<TData, TValue>) {
 	const table = useReactTable({
 		data,
@@ -29,7 +31,7 @@ export default function InventoryDetailTable<TData, TValue>({
 						className="ml-2 bg-linear-to-br from-blue-500 via-blue-400 to-blue-300 text-white">
 						Add Item +
 					</Button> */}
-					<ItemDialog />
+					<AddItemDialog id={id} />
 				</div>
 			</Card>
 			<Card className="p-0 max-h-96">
