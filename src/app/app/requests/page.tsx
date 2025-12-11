@@ -14,7 +14,6 @@ export default function RequestsPage() {
 
 	return (
 		<>
-			<AppHeader title="Request Schedule" />
 			<div className="@container/main flex flex-col gap-4 py-4 md:gap-6 md:py-6">
 				{/* <SectionCards /> */}
 				<div className="px-4 lg:gap-2 lg:px-6">

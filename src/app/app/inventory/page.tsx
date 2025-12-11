@@ -1,7 +1,6 @@
 "use client"
 
-import AppHeader from "@/components/app-header";
-import InventoryTable from "@/components/inventory-table";
+import InventoryTable from "@/components/table-inventory";
 import { ColumnDef } from "@tanstack/react-table";
 import { ItemCategories } from "@/components/type";
 import { useCategories } from "@/hooks/use-categories";
@@ -10,7 +9,6 @@ import DetailItemCategories from "@/components/detail-item-categories";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
-	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ArrowUpDown, EllipsisVertical } from "lucide-react";
@@ -107,7 +105,6 @@ export default function InventoryPage() {
 
 	return (
 		<>
-			<AppHeader title="Inventory" />
 			<div className="@container/main flex flex-col gap-4 py-4 md:gap-6 md:py-6">
 				{/* <SectionCards /> */}
 				<div className="px-4 lg:gap-2 lg:px-6 flex flex-col gap-4">
