@@ -1,7 +1,7 @@
 'use client';
 
-import { EllipsisVertical, MenuIcon } from "lucide-react";
-import InventoryDetailTable from "./inventory-detail-table";
+import { EllipsisVertical } from "lucide-react";
+import InventoryDetailTable from "./table-inventory-detail";
 import { AlertDialogHeader } from "./ui/alert-dialog";
 import {
 	Dialog,
@@ -133,6 +133,7 @@ export default function DetailItemCategories({
 					<InventoryDetailTable
 						columns={tableDetail}
 						data={categories.itemCategories || []}
+						id={id}
 					/>
 				</DialogContent>
 			</Dialog>

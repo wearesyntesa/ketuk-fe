@@ -4,6 +4,7 @@ import {
 	Archive,
 	BookCheck,
 	CalendarDays,
+	FlagTriangleRightIcon,
 	Ticket,
 	UserCog2,
 } from "lucide-react";
@@ -52,7 +53,14 @@ const itemsAdmin: SideBarItem[] = [
 		url: "/app/user-management",
 		icon: UserCog2,
 		child: [],
-		bgGradient: "bg-linear-to-r from-violet-300 to-violet-50",
+		bgGradient: "bg-linear-to-r from-teal-300 to-teal-50",
+	},
+	{
+		title: "Unblocking",
+		url: "/app/unblocking",
+		icon: FlagTriangleRightIcon,
+		child: [],
+		bgGradient: "bg-linear-to-r from-rose-300 to-rose-50",
 	},
 ];
 
