@@ -18,8 +18,8 @@ export function Calendar22({
 	valDateState,
 }: {
 	label?: boolean;
-	setDateState?: React.Dispatch<React.SetStateAction<Date | undefined>>;
-	valDateState?: Date | undefined;
+	setDateState: React.Dispatch<React.SetStateAction<Date | undefined>>;
+	valDateState: Date | undefined;
 }) {
 	const [open, setOpen] = React.useState(false);
 

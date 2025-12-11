@@ -221,8 +221,8 @@ export function RequestRegulerForm({
 	// Form state
 	const [eventName, setEventName] = useState("");
 	const [semester, setSemester] = useState("");
-	const [startDate, setStartDate] = useState("");
-	const [endDate, setEndDate] = useState("");
+	const [startDate, setStartDate] = useState<Date>();
+	const [endDate, setEndDate] = useState<Date>();
 	const [lecturer, setLecturer] = useState("");
 
 	// Form value change handlers
@@ -231,12 +231,6 @@ export function RequestRegulerForm({
 	};
 	const handleSemesterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setSemester(e.target.value);
-	};
-	const handleStartDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setStartDate(e.target.value);
-	};
-	const handleEndDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setEndDate(e.target.value);
 	};
 	const handleLecturerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setLecturer(e.target.value);
@@ -283,7 +277,11 @@ export function RequestRegulerForm({
 								<Label>Waktu</Label>
 							</div>
 							<div className="flex items-center gap-2">
-								<Calendar22 />
+								<Calendar22
+									label={false}
+									setDateState={setStartDate}
+									valDateState={startDate ? new Date(startDate) : undefined}
+								/>
 								{/* <Input
 									type="time"
 									value={startTime}
@@ -292,7 +290,11 @@ export function RequestRegulerForm({
 									required
 									/> */}
 								<span className="flex items-center">-</span>
-								<Calendar22 />
+								<Calendar22
+									label={false}
+									setDateState={setEndDate}
+									valDateState={endDate ? new Date(endDate) : undefined}
+								/>
 								{/* <Input
 									type="time"
 									value={endTime}
