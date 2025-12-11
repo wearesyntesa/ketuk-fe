@@ -1,6 +1,11 @@
 'use client';
 
-import { CategoryPost, ItemCategories, ItemDetail } from "@/components/type";
+import {
+	CategoryPost,
+	ItemCategories,
+	ItemDetail,
+	ItemDialogProps,
+} from "@/components/type";
 import { useState } from "react";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://192.168.10.184:8081";
@@ -37,6 +42,72 @@ export const useItems = () => {
 		return data.data;
 	};
 
+	const handlePostItem = async (token: string, itemData: ItemDialogProps) => {
+		try {
+			const response = await fetch(`${API_URL}/api/items/v1`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify({
+					categoryId: itemData.categoryId,
+					name: itemData.name,
+					note: itemData.note,
+					kondisi: itemData.condition,
+					year: itemData.year,
+				}),
+			});
+
+			const data = await response.json();
+
+			if (data.success) {
+				// Save tokens to localStorage
+				window.location.reload();
+			} else {
+				console.error("Failed to post item:", data.message);
+			}
+		} catch (err) {
+			console.error("Login error:", err);
+		} finally {
+			console.log("Post request completed");
+		}
+	};
+
+	const handleUpdateItem = async (
+		token: string,
+		itemData: ItemDialogProps,
+		item_id: number
+	) => {
+		try {
+			const response = await fetch(`${API_URL}/api/items/v1/${item_id}`, {
+				method: "PUT",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify({
+					name: itemData.name,
+					note: itemData.note,
+					kondisi: itemData.condition,
+				}),
+			});
+
+			const data = await response.json();
+
+			if (data.success) {
+				// Save tokens to localStorage
+				window.location.reload();
+			} else {
+				console.error("Failed to update item:", data.message);
+			}
+		} catch (err) {
+			console.error("Login error:", err);
+		} finally {
+			console.log("Update request completed");
+		}
+	};
+
 	const handleDeleteItem = async (token: string, item_id: number) => {
 		try {
 			const response = await fetch(`${API_URL}/api/items/v1/${item_id}`, {
@@ -66,6 +137,8 @@ export const useItems = () => {
 		handleGetItemCategory,
 		handleGetItem,
 		handleDeleteItem,
+		handlePostItem,
+		handleUpdateItem,
 		setItemCategories,
 		itemCategories,
 	};
