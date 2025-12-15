@@ -15,7 +15,7 @@ export default function AddItemDialog({id}: {id: number}) {
 		categoryId: id,
 		name: "",
 		note: "",
-		condition: "Baik",
+		condition: "Good",
 		year: new Date().getFullYear(),
 	});
 	const token = localStorage.getItem("access_token") || "";
@@ -41,9 +41,10 @@ export default function AddItemDialog({id}: {id: number}) {
 					<DialogDescription>
 						Fill in the details for the new inventory item.
 					</DialogDescription>
-					<form onSubmit={(e) => {
-						e.preventDefault();
-						postItem();
+					<form
+						onSubmit={(e) => {
+							e.preventDefault();
+							postItem();
 						}}>
 						<div className="flex flex-col gap-6">
 							<div className="grid gap-2">
@@ -82,12 +83,21 @@ export default function AddItemDialog({id}: {id: number}) {
 									placeholder="2025"
 									value={categoryData.year}
 									onChange={(e) =>
-										setCategoryData({ ...categoryData, year: Number(e.target.value) })
+										setCategoryData({
+											...categoryData,
+											year: Number(e.target.value),
+										})
 									}
 									required
 								/>
 							</div>
-							<Select>
+							<Select
+								onValueChange={(value) =>
+									setCategoryData({
+										...categoryData,
+										condition: value as "Good" | "Poor",
+									})
+								}>
 								<SelectTrigger className="w-full">
 									<SelectValue placeholder="Select Condition" />
 								</SelectTrigger>

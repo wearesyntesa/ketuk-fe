@@ -1,64 +1,80 @@
 "use client"
 
-import AppHeader from "@/components/app-header";
-import { eventRequestItem } from "../data";
-import RequestsTable from "@/components/requests-table";
+import RequestsTable from "@/components/table-requests";
 import { ColumnDef } from "@tanstack/react-table";
-import { EventRequest } from "@/components/type";
+import { MergeSchedultType } from "@/components/type";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MenuIcon } from "lucide-react";
+import { EllipsisVertical } from "lucide-react";
 import { useUser } from "@/hooks/use-user";
+import { useEffect, useState } from "react";
+import { useSchedule } from "@/hooks/use-schedule";
 
-const tableHeaderAdmin: ColumnDef<EventRequest>[] = [
+const tableHeaderAdmin: ColumnDef<MergeSchedultType>[] = [
 	{
 		accessorKey: "title",
 		header: "Title Event",
 		cell: ({ row }) => <InitialIcon title={row.original.title} />,
 	},
 	{
-		accessorKey: "date",
+		accessorKey: "startDate",
 		header: "Date",
+		cell: ({ row }) => {
+			return new Date(row.original.startDate).toLocaleDateString();
+		},
 	},
 	{
-		accessorKey: "time",
 		header: "Time",
+		cell: ({ row }) => {
+			return (
+				<span>
+					{new Date(row.original.startDate).toLocaleTimeString([], {
+						hour: "2-digit",
+						minute: "2-digit",
+					})}{" "}
+					-{" "}
+					{new Date(row.original.endDate).toLocaleTimeString([], {
+						hour: "2-digit",
+						minute: "2-digit",
+					})}
+				</span>
+			);
+		},
 	},
 	{
 		accessorKey: "description",
 		header: "Description",
 	},
 	{
-		accessorKey: "pic",
+		id: "personInCharge",
 		header: "Person In Charge",
-		cell: ({ row }) => <InitialIcon title={row.original.pic} />,
+		cell: ({ row }) => <InitialIcon title={row.original.user.name} />,
 	},
 	{
-		accessorKey: "contact",
+		id: "contact",
 		header: "Contact",
+		cell: ({ row }) => <InitialIcon title={row.original.user.email} />,
 	},
 	{
-		accessorKey: "category",
+		accessorKey: "kategori",
 		header: "Category",
-		cell: ({ row }) => <EventTypeCell category={row.original.category} />,
-	},
-	{
-		accessorKey: "note",
-		header: "Note",
+		cell: ({ row }) => <EventTypeCell category={row.original.kategori} />,
 	},
 	{
 		accessorKey: "status",
 		header: "Status",
 		cell: ({ row }) => {
-			const status = row.original.status || "Pending";
+			const status =
+				row.original.status.charAt(0).toUpperCase() +
+					row.original.status.slice(1) || "Pending";
 			const statusColor =
-				status === "Approved"
+				status === "Accepted"
 					? "text-green-500"
-					: status === "Cancelled"
+					: status === "Rejected"
 					? "text-red-500"
 					: "text-yellow-500";
 			return <span className={statusColor}>{status}</span>;
@@ -71,9 +87,13 @@ const tableHeaderAdmin: ColumnDef<EventRequest>[] = [
 				<DropdownMenu>
 					<DropdownMenuTrigger
 						className={`btn btn-sm ${
-							row.original.status === "Pending" ? "" : "hidden"
+							row.original.status.charAt(0).toUpperCase() +
+								row.original.status.slice(1) ===
+							"Pending"
+								? ""
+								: "hidden"
 						}`}>
-						<MenuIcon size={16} />
+						<EllipsisVertical size={16} />
 					</DropdownMenuTrigger>
 					<DropdownMenuContent>
 						<DropdownMenuItem>Approve</DropdownMenuItem>
@@ -85,73 +105,134 @@ const tableHeaderAdmin: ColumnDef<EventRequest>[] = [
 	},
 ];
 
-const tableHeaderUser: ColumnDef<EventRequest>[] = [
+const tableHeaderUser: ColumnDef<MergeSchedultType>[] = [
 	{
 		accessorKey: "title",
 		header: "Title Event",
 		cell: ({ row }) => <InitialIcon title={row.original.title} />,
 	},
 	{
-		accessorKey: "date",
+		accessorKey: "startDate",
 		header: "Date",
 	},
 	{
-		accessorKey: "time",
 		header: "Time",
+		cell: ({ row }) => {
+			return (
+				<span>
+					{new Date(row.original.startDate).toLocaleTimeString([], {
+						hour: "2-digit",
+						minute: "2-digit",
+					})}{" "}
+					-{" "}
+					{new Date(row.original.endDate).toLocaleTimeString([], {
+						hour: "2-digit",
+						minute: "2-digit",
+					})}
+				</span>
+			);
+		},
 	},
 	{
 		accessorKey: "description",
 		header: "Description",
 	},
 	{
-		accessorKey: "pic",
+		id: "personInCharge",
 		header: "Person In Charge",
-		cell: ({ row }) => <InitialIcon title={row.original.pic} />,
+		cell: ({ row }) => <InitialIcon title={row.original.user.name} />,
 	},
 	{
-		accessorKey: "contact",
+		id: "contact",
 		header: "Contact",
+		cell: ({ row }) => <InitialIcon title={row.original.user.email} />,
 	},
 	{
-		accessorKey: "category",
+		accessorKey: "kategori",
 		header: "Category",
-		cell: ({ row }) => <EventTypeCell category={row.original.category} />,
-	},
-	{
-		accessorKey: "note",
-		header: "Note",
+		cell: ({ row }) => <EventTypeCell category={row.original.kategori} />,
 	},
 	{
 		accessorKey: "status",
 		header: "Status",
 		cell: ({ row }) => {
-			const status = row.original.status || "Pending";
+			const status = row.original.status || "pending";
 			const statusColor =
-				status === "Approved"
+				status === "accepted"
 					? "text-green-500"
-					: status === "Cancelled"
+					: status === "rejected"
 					? "text-red-500"
 					: "text-yellow-500";
-			return <span className={statusColor}>{status}</span>;
+			return (
+				<span className={statusColor}>{status.charAt(0).toUpperCase()}</span>
+			);
 		},
 	},
 ];
 
 export default function YourRequestsPage() {
+	const token = localStorage.getItem("access_token") || "";
 	const user = useUser();
+	const schedules = useSchedule(token);
+	const [tickets, setTickets] = useState<any>();
+	const [regulers, setRegulers] = useState<any>();
+	const mergedSchedules: MergeSchedultType[] = [];
+
+	useEffect(() => {
+		// schedules.handleGetAllSchedules();
+		// console.log("Schedules fetched:", schedules.schedules);
+		const fetchData = async () => {
+			schedules.handleGetAllRegulerSchedules();
+			schedules.handleGetAllTicketSchedules();
+		};
+		fetchData();
+	}, [mergedSchedules.length]);
+
+	schedules.ticketSchedules.forEach((ticketSchedule) => {
+		mergedSchedules.push({
+			idSchedule: ticketSchedule.idSchedule,
+			title: ticketSchedule.title,
+			startDate: ticketSchedule.startDate,
+			endDate: ticketSchedule.endDate,
+			userId: ticketSchedule.userId,
+			kategori: ticketSchedule.kategori,
+			description: ticketSchedule.description,
+			createdAt: ticketSchedule.createdAt,
+			updatedAt: ticketSchedule.updatedAt,
+			user: ticketSchedule.user,
+			tickets: ticketSchedule.tickets,
+			status: ticketSchedule.tickets?.[0].status || "Pending",
+			isReguler: false,
+		});
+	});
+	schedules.regulerSchedules.forEach((regulerSchedule) => {
+		mergedSchedules.push({
+			idSchedule: regulerSchedule.idSchedule,
+			title: regulerSchedule.title,
+			startDate: regulerSchedule.startDate,
+			endDate: regulerSchedule.endDate,
+			userId: regulerSchedule.userId,
+			kategori: regulerSchedule.kategori,
+			description: regulerSchedule.description,
+			createdAt: regulerSchedule.createdAt,
+			updatedAt: regulerSchedule.updatedAt,
+			user: regulerSchedule.user,
+			status: "Accepted",
+			isReguler: true,
+		});
+	});
 
 	const header =
 		user.user?.role === "admin" ? tableHeaderAdmin : tableHeaderUser;
 
 	return (
 		<>
-			<AppHeader title="Requests History" />
 			<div className="@container/main flex flex-col gap-4 py-4 md:gap-6 md:py-6">
 				{/* <SectionCards /> */}
 				<div className="px-4 gap-4 lg:px-6 flex flex-col">
 					{/* <ChartAreaInteractive /> */}
 					{/* <RequestsList items={eventRequestItem} /> */}
-					<RequestsTable columns={header} data={eventRequestItem} />
+					<RequestsTable columns={header} data={mergedSchedules} />
 				</div>
 			</div>
 		</>
