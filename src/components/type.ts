@@ -22,7 +22,7 @@ export interface EventRequest {
 	note?: string;
 	contact: string;
 	category: "praktikum" | "skripsi" | "kelas" | string;
-	status?: "Pending" | "Approved" | "Cancelled";
+	status?: "Pending" | "Accepted" | "Cancelled";
 }
 
 export interface InventoryItem {
@@ -50,12 +50,12 @@ export interface MonthlyEvent {
 	lecturerName: string;
 	contact?: string;
 	category: "Praktikum" | "Skripsi" | "Kelas" | string;
-	status: "Pending" | "Approved" | "Cancelled" | string;
+	status: "Pending" | "Accepted" | "Cancelled" | string;
 	startTime: string;
 	endTime: string;
 	date: string; // YYYY-MM-DD
 	day: string; // weekday name
-};
+}
 
 export interface UserType {
 	email: string;
@@ -103,7 +103,7 @@ export interface ItemDialogProps {
 	categoryId: number;
 	name: string;
 	note: string;
-	condition: "Baik" | "Good" | "Poor";
+	condition: "Good" | "Poor";
 	year?: number;
 }
 
@@ -113,7 +113,7 @@ export interface Ticket {
 	user: UserType;
 	title: string;
 	description: string;
-	status: "pending" | "approved" | "rejected" | string;
+	status: "pending" | "accepted" | "rejected" | string;
 	createdAt: string;
 	updatedAt: string;
 	reason: string;
@@ -134,36 +134,6 @@ export interface UnblockingResponse {
 	tahun: number;
 	userId: number;
 	id: number;
-}
-
-export interface AuditLogTicket {
-	id: number;
-	ticketId: number;
-	userId: number;
-	action: string;
-	newValue: string;
-	oldValue?: string;
-	changes?: string;
-	createdAt: string;
-	user: UserType;
-}
-
-export interface AuditLogUser {
-	id: number;
-	userId: number;
-	action: string;
-	newValue: string;
-	oldValue?: string;
-	changes?: string;
-	createdAt: string;
-	user: UserType;
-	title: string;
-	description: string;
-	status: string;
-	reason: string;
-	createdAtTicket: string;
-	updatedAtTicket?: string;
-	approvedAt?: string;
 }
 
 export interface ScheduleTicket {
@@ -204,6 +174,31 @@ export interface MergeSchedultType {
 	createdAt: string;
 	updatedAt: string;
 	user: UserType;
+	status: "pending" | "accepted" | "rejected" | string;
 	tickets?: Ticket[];
 	isReguler: boolean;
+}
+
+export interface AuditLogByUser {
+	id: number;
+	ticketId: number;
+	userId: number;
+	action: string;
+	newValue: string;
+	oldValue?: string;
+	changes?: string;
+	createdAt: string;
+	ticket: Ticket;
+}
+
+export interface AuditLogByTicket {
+	id: number;
+	ticketId: number;
+	userId: number;
+	action: string;
+	newValue: string;
+	oldValue?: string;
+	changes?: string;
+	createdAt: string;
+	user: UserType;
 }
