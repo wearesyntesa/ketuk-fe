@@ -1,4 +1,3 @@
-import AppHeader from "@/components/app-header";
 import ScheduleLab from "@/components/schedule-lab";
 import BannerDashboard from "@/components/banner-dashboard";
 import DashboardChart from "@/components/dashboard-chart";

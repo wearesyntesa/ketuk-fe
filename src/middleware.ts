@@ -5,7 +5,7 @@ import type { NextRequest } from "next/server";
 const publicPaths = ["/auth/login", "/auth/register", "/auth/google/callback", "/"];
 
 // Paths that require authentication
-const protectedPaths = ["/app"];
+// const protectedPaths = ["/app"];
 
 export function middleware(request: NextRequest) {
 	const { pathname } = request.nextUrl;
@@ -14,9 +14,9 @@ export function middleware(request: NextRequest) {
 	const isPublicPath = publicPaths.some((path) => pathname.startsWith(path));
 
 	// Check if path is protected
-	const isProtectedPath = protectedPaths.some((path) =>
-		pathname.startsWith(path)
-	);
+	// const isProtectedPath = protectedPaths.some((path) =>
+	// 	pathname.startsWith(path)
+	// );
 
 	// Allow public paths
 	if (isPublicPath) {

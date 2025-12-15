@@ -364,7 +364,7 @@ export const eventRequestItem: EventRequest[] = [
 		note: "Important stakeholders invited.",
 		contact: "john.doe@example.com",
 		category: "kelas",
-		status: "Approved",
+		status: "Accepted",
 	},
 	{
 		id: "3",
@@ -412,7 +412,7 @@ export const eventRequestItem: EventRequest[] = [
 		note: "",
 		contact: "teamlead@example.com",
 		category: "kelas",
-		status: "Approved",
+		status: "Accepted",
 	},
 	{
 		id: "7",
@@ -460,7 +460,7 @@ export const eventRequestItem: EventRequest[] = [
 		note: "",
 		contact: "product@example.com",
 		category: "lainnya",
-		status: "Approved",
+		status: "Accepted",
 	},
 	{
 		id: "11",
@@ -496,7 +496,7 @@ export const eventRequestItem: EventRequest[] = [
 		note: "Board members only.",
 		contact: "board@example.com",
 		category: "kelas",
-		status: "Approved",
+		status: "Accepted",
 	},
 	{
 		id: "14",
@@ -544,7 +544,7 @@ export const eventRequestItem: EventRequest[] = [
 		note: "Invite all stakeholders.",
 		contact: "launch@example.com",
 		category: "lainnya",
-		status: "Approved",
+		status: "Accepted",
 	},
 	{
 		id: "18",
@@ -580,7 +580,7 @@ export const eventRequestItem: EventRequest[] = [
 		note: "All employees must attend.",
 		contact: "admin@example.com",
 		category: "kelas",
-		status: "Approved",
+		status: "Accepted",
 	},
 ];
 
@@ -622,7 +622,7 @@ export const monthlySchedule: MonthlyEvent[] = (() => {
 					: i % 4 === 2
 					? "Skripsi"
 					: "Other",
-			status: i % 3 === 0 ? "Approved" : i % 3 === 1 ? "Pending" : "Cancelled",
+			status: i % 3 === 0 ? "Accepted" : i % 3 === 1 ? "Pending" : "Cancelled",
 			date,
 			day,
 			startTime: `${date}T09:00:00`,
@@ -662,7 +662,7 @@ export const monthlySchedule: MonthlyEvent[] = (() => {
 							: "Other",
 					status:
 						(i + j) % 3 === 0
-							? "Approved"
+							? "Accepted"
 							: (i + j) % 3 === 1
 							? "Pending"
 							: "Cancelled",

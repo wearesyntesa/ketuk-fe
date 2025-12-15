@@ -1,32 +1,32 @@
 import { CalendarClock, PencilRuler, ScrollText } from "lucide-react";
 import { eventRequestItem } from "@/app/app/data";
-import { InitialIcon } from "@/app/app/your-requests/page";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
+import { InitialIcon } from "./schedule-card";
 
 const features = [
-    {
-        title: 'Request Schedule',
-        description: 'Easily request lab schedules with our intuitive interface.',
-        icon: CalendarClock,
-        background: 'bg-radial-[at_40%_80%] from-blue-400 to-blue-200',
-        component: ChildRequestCard
-    },
-    {
-        title: 'Manage Inventory',
-        description: 'Keep track of lab equipment and supplies efficiently.',
-        icon: PencilRuler,
-        background: 'bg-radial from-fuchsia-400 to-fuchsia-200',
-        component: ChildManageCard
-    },
-    {
-        title: 'History Logs',
-        description: 'Access detailed logs of past lab activities and schedules.',
-        icon: ScrollText,
-        background: 'bg-radial-[at_25%_75%] from-emerald-400 to-emerald-200',
-        component: ChildHistoryCard
-    }
-]
+	{
+		title: "Request Schedule",
+		description: "Easily request lab schedules with our intuitive interface.",
+		icon: CalendarClock,
+		background: "bg-radial-[at_40%_80%] from-blue-400 to-blue-200",
+		component: ChildRequestCard,
+	},
+	{
+		title: "Manage Inventory",
+		description: "Keep track of lab equipment and supplies efficiently.",
+		icon: PencilRuler,
+		background: "bg-radial from-fuchsia-400 to-fuchsia-200",
+		component: ChildManageCard,
+	},
+	{
+		title: "History Logs",
+		description: "Access detailed logs of past lab activities and schedules.",
+		icon: ScrollText,
+		background: "bg-radial-[at_25%_75%] from-emerald-400 to-emerald-200",
+		component: ChildHistoryCard,
+	},
+];
 
 export default function FeatureList() {
 	return (
@@ -180,7 +180,7 @@ export function ChildHistoryCard() {
 				{eventRequestItem.slice(0, 3).map((item, id) => (
 					<div key={id} className="grid grid-cols-4 gap-8 py-2 border-b">
 						<span className="min-w-64 flex items-center gap-2">
-							<InitialIcon title={item.title} />
+							{InitialIcon(item.title)}
 						</span>
 						{/* <span>{item.date}</span> */}
 					</div>

@@ -20,11 +20,11 @@ export const useTickets = (token: string) => {
         return data.data;
     }
 
-    useEffect(() =>{
-        handleGetAllTickets().then((data) => {
-            setTickets(data);
-        });
-    }, [])
+    useEffect(() => {
+			handleGetAllTickets().then((data) => {
+				setTickets(data);
+			});
+		}, []);
 
     return {
         tickets,

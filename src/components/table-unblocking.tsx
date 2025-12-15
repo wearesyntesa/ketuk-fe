@@ -21,7 +21,7 @@ import {
 import { Card } from "./ui/card";
 import { Input } from "./ui/input";
 import { useState } from "react";
-import { EventRequest, UnblockingResponse } from "./type";
+import { UnblockingResponse } from "./type";
 import { Button } from "./ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 

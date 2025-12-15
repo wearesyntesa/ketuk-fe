@@ -2,7 +2,6 @@ import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table"
 import { Card } from "./ui/card";
 import { Input } from "./ui/input";
-import { Button } from "./ui/button";
 import AddItemDialog from "./add-item-dialog";
 
 interface DataTableProps<TData, TValue> {

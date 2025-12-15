@@ -28,7 +28,7 @@ import {
 	SelectValue,
 } from "./ui/select";
 import { useState } from "react";
-import { EventRequest, MergeSchedultType } from "./type";
+import { MergeSchedultType } from "./type";
 import { Button } from "./ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 

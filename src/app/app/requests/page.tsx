@@ -1,10 +1,9 @@
 "use client";
 
 import { RequestForm, RequestRegulerForm } from "@/components/request-form";
-import { UserType } from "@/components/type";
 import { Switch } from "@/components/ui/switch";
 import { useUser } from "@/hooks/use-user";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function RequestsPage() {
 	const [isReguler, setIsRegular] = useState(false);

@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { EllipsisVertical } from "lucide-react";
 import { useUser } from "@/hooks/use-user";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useSchedule } from "@/hooks/use-schedule";
 
 const tableHeaderAdmin: ColumnDef<MergeSchedultType>[] = [
@@ -52,12 +52,12 @@ const tableHeaderAdmin: ColumnDef<MergeSchedultType>[] = [
 	{
 		id: "personInCharge",
 		header: "Person In Charge",
-		cell: ({ row }) => <InitialIcon title={row.original.user.name} />,
+		// cell: ({ row }) => <InitialIcon title={row.original.user.name} />,
 	},
 	{
 		id: "contact",
 		header: "Contact",
-		cell: ({ row }) => <InitialIcon title={row.original.user.email} />,
+		// cell: ({ row }) => <InitialIcon title={row.original.user.email} />,
 	},
 	{
 		accessorKey: "kategori",
@@ -140,12 +140,12 @@ const tableHeaderUser: ColumnDef<MergeSchedultType>[] = [
 	{
 		id: "personInCharge",
 		header: "Person In Charge",
-		cell: ({ row }) => <InitialIcon title={row.original.user.name} />,
+		// cell: ({ row }) => <InitialIcon title={row.original.user.name} />,
 	},
 	{
 		id: "contact",
 		header: "Contact",
-		cell: ({ row }) => <InitialIcon title={row.original.user.email} />,
+		// cell: ({ row }) => <InitialIcon title={row.original.user.email} />,
 	},
 	{
 		accessorKey: "kategori",
@@ -174,8 +174,6 @@ export default function YourRequestsPage() {
 	const token = localStorage.getItem("access_token") || "";
 	const user = useUser();
 	const schedules = useSchedule(token);
-	const [tickets, setTickets] = useState<any>();
-	const [regulers, setRegulers] = useState<any>();
 	const mergedSchedules: MergeSchedultType[] = [];
 
 	useEffect(() => {
@@ -239,7 +237,7 @@ export default function YourRequestsPage() {
 	);
 }
 
-export function InitialIcon({ title }: { title: string }) {
+function InitialIcon({ title }: { title: string }) {
 	const initial = title
 		.split(" ")
 		.filter((_, index) => index < 2)

@@ -1,11 +1,6 @@
 'use client';
 
-import {
-	CategoryPost,
-	ItemCategories,
-	ItemDetail,
-	ItemDialogProps,
-} from "@/components/type";
+import { ItemDetail, ItemDialogProps } from "@/components/type";
 import { useState } from "react";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://192.168.10.184:8081";

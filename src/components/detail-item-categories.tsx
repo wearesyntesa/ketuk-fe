@@ -15,7 +15,6 @@ import {
 import {
 	DropdownMenu,
 	DropdownMenuContent,
-	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { useCategories } from "@/hooks/use-categories";
@@ -112,7 +111,7 @@ export default function DetailItemCategories({
 	const deleteCategory = () => {
 		console.log("Deleting category with ID:", id);
 		if (token) {
-			categories.handleDeleteCategory(token, id).then((data) => {});
+			categories.handleDeleteCategory(token, id);
 		}
 	};
 

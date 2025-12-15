@@ -178,7 +178,7 @@ export default function ScheduleMonth() {
 }
 
 export function ScheduleMonthLanding() {
-	const [displayDate, setDisplayDate] = useState(new Date());
+	const displayDate = new Date();
 	const currentMonth = displayDate.getMonth();
 	const currentYear = displayDate.getFullYear();
 	const baseDays = [
