@@ -23,7 +23,6 @@ export function Calendar22({
 }) {
 	const [open, setOpen] = React.useState(false);
 
-	console.log("valDateState", valDateState);
 	return (
 		<div className="flex flex-col gap-3">
 			<Label htmlFor="date" className={`px-1 ${label ? "visible" : "hidden"}`}>

@@ -5,6 +5,7 @@ import {
 	BookCheck,
 	CalendarDays,
 	FlagTriangleRightIcon,
+	Logs,
 	Ticket,
 	UserCog2,
 } from "lucide-react";
@@ -62,6 +63,13 @@ const itemsAdmin: SideBarItem[] = [
 		child: [],
 		bgGradient: "bg-linear-to-r from-rose-300 to-rose-50",
 	},
+	{
+		title: "Audit Logs",
+		url: "/app/audit",
+		icon: Logs,
+		child: [],
+		bgGradient: "bg-linear-to-r from-amber-300 to-amber-50",
+	},
 ];
 
 const itemsUser: SideBarItem[] = [
@@ -81,7 +89,7 @@ const itemsUser: SideBarItem[] = [
 	},
 	{
 		title: "Requests History",
-		url: "/app/user-management",
+		url: "/app/your-requests",
 		icon: Ticket,
 		child: [],
 		bgGradient: "bg-linear-to-r from-lime-300 to-lime-50",
