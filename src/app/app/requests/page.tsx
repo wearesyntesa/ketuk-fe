@@ -1,12 +1,14 @@
 "use client";
 
-import AppHeader from "@/components/app-header";
 import { RequestForm, RequestRegulerForm } from "@/components/request-form";
+import { UserType } from "@/components/type";
 import { Switch } from "@/components/ui/switch";
-import { useState } from "react";
+import { useUser } from "@/hooks/use-user";
+import { useEffect, useState } from "react";
 
 export default function RequestsPage() {
 	const [isReguler, setIsRegular] = useState(false);
+	const user = useUser();
 
 	const handleToggle = () => {
 		setIsRegular(!isReguler);
@@ -19,12 +21,18 @@ export default function RequestsPage() {
 				<div className="px-4 lg:gap-2 lg:px-6">
 					{/* <ChartAreaInteractive /> */}
 					<div className="border">
-						<div className="md:w-3/4 w-full flex justify-end items-center gap-4 p-4 m-auto">
-							<span>Check if you want to request a regular schedule</span>
-							<Switch checked={isReguler} onCheckedChange={handleToggle} />
-						</div>
-						{isReguler ? (
-							<RequestRegulerForm className="md:w-3/4 w-full px-4 m-auto" />
+						{user.user?.role === "admin" ? (
+							<>
+								<div className="md:w-3/4 w-full flex justify-end items-center gap-4 p-4 m-auto">
+									<span>Check if you want to request a regular schedule</span>
+									<Switch checked={isReguler} onCheckedChange={handleToggle} />
+								</div>
+								{isReguler ? (
+									<RequestRegulerForm className="md:w-3/4 w-full px-4 m-auto" />
+								) : (
+									<RequestForm className="md:w-3/4 w-full px-4 m-auto" />
+								)}
+							</>
 						) : (
 							<RequestForm className="md:w-3/4 w-full px-4 m-auto" />
 						)}

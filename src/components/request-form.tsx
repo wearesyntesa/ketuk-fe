@@ -39,8 +39,6 @@ export function RequestForm({
 	const [endTime, setEndTime] = useState("");
 	const [eventType, setEventType] = useState("");
 	const [lecturer, setLecturer] = useState("");
-	// const [email, setEmail] = useState("");
-	// const [contact, setContact] = useState("");
 	const [description, setDescription] = useState("");
 
 	// Form value change handlers
@@ -59,12 +57,6 @@ export function RequestForm({
 	const handleLecturerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setLecturer(e.target.value);
 	};
-	// const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-	// 	setEmail(e.target.value);
-	// };
-	// const handleContactChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-	// 	setContact(e.target.value);
-	// };
 	const handleDescriptionChange = (
 		e: React.ChangeEvent<HTMLTextAreaElement>
 	) => {
