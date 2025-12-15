@@ -27,6 +27,7 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { useItems } from "@/hooks/use-items";
 import DetailItem from "./detail-item";
+import Link from "next/link";
 
 const tableDetail: ColumnDef<ItemDetail>[] = [
 	{
@@ -54,7 +55,7 @@ const tableDetail: ColumnDef<ItemDetail>[] = [
 						<EllipsisVertical className="cursor-pointer" />
 					</DropdownMenuTrigger>
 					<DropdownMenuContent>
-						<DetailItem id={row.getValue("id")} />
+						<DetailItem itemId={row.getValue("id")} />
 					</DropdownMenuContent>
 				</DropdownMenu>
 			);
@@ -117,26 +118,39 @@ export default function DetailItemCategories({
 
 	return (
 		<div className="flex flex-col w-full gap-4 px-2 justify-start items-start">
-			<Dialog>
-				<DialogTrigger
-					className="cursor-pointer hover:font-semibold w-full"
-					onClick={() => fetchItemsCategory()}>
+			{/* Detail data */}
+			{qty > 0 ? (
+				<Link
+					onClick={() => fetchItemsCategory()}
+					href={{
+						pathname: `/app/inventory/category`,
+						query: { categoryId: id },
+					}}
+					className="cursor-pointer hover:font-semibold w-full items-center justify-center flex">
 					Detail
-				</DialogTrigger>
-				<DialogContent>
-					<AlertDialogHeader>
-						<DialogTitle>{name}</DialogTitle>
-						<DialogDescription>
-							Detail information about the item can be displayed here.
-						</DialogDescription>
-					</AlertDialogHeader>
-					<InventoryDetailTable
-						columns={tableDetail}
-						data={categories.itemCategories || []}
-						id={id}
-					/>
-				</DialogContent>
-			</Dialog>
+				</Link>
+			) : (
+				<Dialog>
+					<DialogTrigger
+						className="cursor-pointer hover:font-semibold w-full"
+						onClick={() => fetchItemsCategory()}>
+						Detail
+					</DialogTrigger>
+					<DialogContent>
+						<AlertDialogHeader>
+							<DialogTitle>{name}</DialogTitle>
+							<DialogDescription>
+								Detail information about the item can be displayed here.
+							</DialogDescription>
+						</AlertDialogHeader>
+						<InventoryDetailTable
+							columns={tableDetail}
+							data={categories.itemCategories || []}
+							id={id}
+						/>
+					</DialogContent>
+				</Dialog>
+			)}
 
 			{/* Update data */}
 			<Dialog>

@@ -9,24 +9,25 @@ import { useItems } from "@/hooks/use-items";
 import { Textarea } from "./ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { ItemDialogProps } from "./type";
+import Link from "next/link";
 
 interface DetailItemProps {
-	id: number;
+	itemId: number;
 }
 
-export default function DetailItem({ id }: DetailItemProps) {
+export default function DetailItem({ itemId }: DetailItemProps) {
 	const [categoryData, setCategoryData] = useState<ItemDialogProps>({
 		categoryId: 0,
 		name: "",
 		note: "",
-		condition: "Baik",
+		condition: "Good",
 	});
 	const token = localStorage.getItem("access_token") || "";
 
 	const items = useItems();
 
 	useEffect(() => {
-		items.handleGetItem(token, id).then((data) => {
+		items.handleGetItem(token, itemId).then((data) => {
 			setCategoryData({
 				categoryId: data.category_id,
 				name: data.name,
@@ -38,7 +39,7 @@ export default function DetailItem({ id }: DetailItemProps) {
 
 	const updateItem = () => {
 		if (token) {
-			items.handleUpdateItem(token, categoryData, id).then(() => {
+			items.handleUpdateItem(token, categoryData, itemId).then(() => {
 				console.log("Item updated");
 			});
 		}
@@ -46,7 +47,7 @@ export default function DetailItem({ id }: DetailItemProps) {
 
 	const deleteItem = () => {
 		if (token) {
-			items.handleDeleteItem(token, id).then(() => {
+			items.handleDeleteItem(token, itemId).then(() => {
 				console.log("Item deleted");
 			});
 		}
@@ -54,6 +55,14 @@ export default function DetailItem({ id }: DetailItemProps) {
 
 	return (
 		<div className="flex flex-col w-full gap-4 px-2 justify-start items-start">
+			<Link
+				href={{
+					pathname: `/app/inventory/category/item`,
+					query: { itemId: itemId },
+				}}
+				className="cursor-pointer flex justify-center hover:font-semibold w-full">
+				Detail Item
+			</Link>
 			<Dialog>
 				<DialogTrigger className="cursor-pointer hover:font-semibold w-full">
 					Update Item
@@ -98,7 +107,7 @@ export default function DetailItem({ id }: DetailItemProps) {
 								onValueChange={(value) =>
 									setCategoryData({
 										...categoryData,
-										condition: value as "Baik" | "Good" | "Poor",
+										condition: value as "Good" | "Poor",
 									})
 								}>
 								<SelectTrigger className="w-full">
