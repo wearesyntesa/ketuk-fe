@@ -21,14 +21,6 @@ export default function AppLayout({
 
 	useEffect(() => {
 		// Check if user is authenticated
-		setHeader(() => {
-			if (pathname.includes("/app/requests")) return "Request Schedule";
-			if (pathname.includes("/app/your-requests")) return "Requests History";
-			if (pathname.includes("/app/inventory")) return "Inventory";
-			if (pathname.includes("/app/user-management")) return "User Management";
-			if (pathname.includes("/app/unblocking")) return "Unblocking";
-			return "Dashboard";
-		});
 		const token = localStorage.getItem("access_token");
 		const userData = localStorage.getItem("user");
 
@@ -49,7 +41,43 @@ export default function AppLayout({
 		}
 
 		setLoading(false);
-	}, [router, pathname]);
+	}, [router]);
+
+	const userNotAllowedRoutes = [
+		"/app/inventory",
+		"/app/audit",
+		"/app/user-management",
+		"/app/unblocking",
+	];
+
+	useEffect(() => {
+		if (
+			user.user?.role !== "admin" &&
+			userNotAllowedRoutes.includes(pathname)
+		) {
+			window.location.href = "/app";
+		}
+		setHeader(() => {
+			if (pathname.includes("/app/requests")) return "Request Schedule";
+			if (pathname.includes("/app/inventory")) return "Inventory";
+			if (pathname.includes("/app/user-management")) return "User Management";
+			if (pathname.includes("/app/unblocking")) return "Unblocking";
+			if (pathname.includes("/app/audit")) return "Audit Logs";
+			return "Dashboard";
+		});
+		if (
+			user.user?.role === "admin" &&
+			pathname.includes("/app/your-requests")
+		) {
+			setHeader("Requests List");
+		}
+		if (
+			user.user?.role !== "admin" &&
+			pathname.includes("/app/your-requests")
+		) {
+			setHeader("Requests History");
+		}
+	}, [pathname]);
 
 	if (loading) {
 		return (
