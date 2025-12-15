@@ -28,16 +28,16 @@ import {
 	SelectValue,
 } from "./ui/select";
 import { useState } from "react";
-import { EventRequest } from "./type";
+import { EventRequest, MergeSchedultType } from "./type";
 import { Button } from "./ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-interface DataTableProps<TData extends EventRequest, TValue> {
+interface DataTableProps<TData extends MergeSchedultType, TValue> {
 	columns: ColumnDef<TData, TValue>[];
 	data: TData[];
 }
 
-export default function RequestsTable<TData extends EventRequest, TValue>({
+export default function RequestsTable<TData extends MergeSchedultType, TValue>({
 	columns,
 	data,
 }: DataTableProps<TData, TValue>) {
@@ -85,8 +85,8 @@ export default function RequestsTable<TData extends EventRequest, TValue>({
 						<SelectContent>
 							<SelectItem value="all">All</SelectItem>
 							<SelectItem value="Pending">Pending</SelectItem>
-							<SelectItem value="Approved">Approved</SelectItem>
-							<SelectItem value="Cancelled">Cancelled</SelectItem>
+							<SelectItem value="Accepted">Accepted</SelectItem>
+							<SelectItem value="Rejected">Rejected</SelectItem>
 						</SelectContent>
 					</Select>
 				</div>
@@ -118,13 +118,7 @@ export default function RequestsTable<TData extends EventRequest, TValue>({
 							<TableRow key={headerGroup.id}>
 								{headerGroup.headers.map((header) => {
 									return (
-										<TableHead
-											key={header.id}
-											className={`px-4 ${
-												header.column.columnDef.header === "Action"
-													? "text-center"
-													: ""
-											}`}>
+										<TableHead key={header.id} className={`px-4`}>
 											{header.isPlaceholder
 												? null
 												: flexRender(
@@ -145,12 +139,7 @@ export default function RequestsTable<TData extends EventRequest, TValue>({
 									className={`hover:bg-muted/50`}
 									data-state={row.getIsSelected() && "selected"}>
 									{row.getVisibleCells().map((cell) => (
-										<TableCell
-											key={cell.id}
-											className={`px-4 ${
-												cell.column.columnDef.header === "Actions" &&
-												"text-center"
-											}`}>
+										<TableCell key={cell.id} className={`px-4`}>
 											{flexRender(
 												cell.column.columnDef.cell,
 												cell.getContext()
