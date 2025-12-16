@@ -202,3 +202,19 @@ export interface AuditLogByTicket {
 	createdAt: string;
 	user: UserType;
 }
+
+export interface ScheduleDataTicket {
+	description: string;
+	endDate: Date;
+	startDate: Date;
+	category: "Kelas" | "Praktikum" | "Skripsi" | string;
+	title: string;
+	userId: number;
+}
+
+export interface ScheduleRegulerDataTicket {
+	endDate: Date;
+	startDate: Date;
+	title: string;
+	userId: number;
+}

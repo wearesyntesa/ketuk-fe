@@ -6,7 +6,7 @@ import { useEffect, useState } from "react"
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://192.168.10.184:8081";
 
 export const useUser = () => {
-    const [user, setUser] = useState<UserType | null>(null);
+    const [user, setUser] = useState<UserType>();
     const [allUsers, setAllUsers] = useState<AllUser[]>();
 
 		useEffect(() => {
