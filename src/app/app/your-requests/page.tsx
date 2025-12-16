@@ -11,8 +11,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { EllipsisVertical } from "lucide-react";
 import { useUser } from "@/hooks/use-user";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSchedule } from "@/hooks/use-schedule";
+import { useTickets } from "@/hooks/use-tickets";
 
 const tableHeaderAdmin: ColumnDef<MergeSchedultType>[] = [
 	{
@@ -52,12 +53,12 @@ const tableHeaderAdmin: ColumnDef<MergeSchedultType>[] = [
 	{
 		id: "personInCharge",
 		header: "Person In Charge",
-		// cell: ({ row }) => <InitialIcon title={row.original.user.name} />,
+		cell: ({ row }) => <InitialIcon title={row.original.user.name} />,
 	},
 	{
 		id: "contact",
 		header: "Contact",
-		// cell: ({ row }) => <InitialIcon title={row.original.user.email} />,
+		cell: ({ row }) => <InitialIcon title={row.original.user.email} />,
 	},
 	{
 		accessorKey: "kategori",
@@ -140,12 +141,12 @@ const tableHeaderUser: ColumnDef<MergeSchedultType>[] = [
 	{
 		id: "personInCharge",
 		header: "Person In Charge",
-		// cell: ({ row }) => <InitialIcon title={row.original.user.name} />,
+		cell: ({ row }) => <InitialIcon title={row.original.user.name} />,
 	},
 	{
 		id: "contact",
 		header: "Contact",
-		// cell: ({ row }) => <InitialIcon title={row.original.user.email} />,
+		cell: ({ row }) => <InitialIcon title={row.original.user.email} />,
 	},
 	{
 		accessorKey: "kategori",
@@ -156,35 +157,56 @@ const tableHeaderUser: ColumnDef<MergeSchedultType>[] = [
 		accessorKey: "status",
 		header: "Status",
 		cell: ({ row }) => {
-			const status = row.original.status || "pending";
+			const status =
+				row.original.status.charAt(0).toUpperCase() +
+					row.original.status.slice(1) || "Pending";
 			const statusColor =
-				status === "accepted"
+				status === "Accepted"
 					? "text-green-500"
-					: status === "rejected"
+					: status === "Rejected"
 					? "text-red-500"
 					: "text-yellow-500";
 			return (
-				<span className={statusColor}>{status.charAt(0).toUpperCase()}</span>
+				<span className={statusColor}>{status}</span>
 			);
 		},
 	},
 ];
 
 export default function YourRequestsPage() {
-	const token = localStorage.getItem("access_token") || "";
+	const [token, setToken] = useState<string>(localStorage.getItem("access_token") || "");
 	const user = useUser();
-	const schedules = useSchedule(token);
 	const mergedSchedules: MergeSchedultType[] = [];
-
+	
+	useEffect(() => {
+		const storedToken = localStorage.getItem("access_token") || "";
+		setToken(storedToken);
+		const userData = localStorage.getItem("user");
+		if (userData) {
+			try {
+				user.setUser(JSON.parse(userData));
+			} catch (error) {
+				console.error("Failed to parse user data:", error);
+			}
+		}
+	}, []);
+	
+	const schedules = useSchedule(token);
 	useEffect(() => {
 		// schedules.handleGetAllSchedules();
 		// console.log("Schedules fetched:", schedules.schedules);
+		const userData = localStorage.getItem("user") || "";
 		const fetchData = async () => {
-			schedules.handleGetAllRegulerSchedules();
-			schedules.handleGetAllTicketSchedules();
+			if (JSON.parse(userData).role === "admin") {
+				schedules.handleGetAllRegulerSchedules();
+				schedules.handleGetAllTicketSchedules();
+			} else {
+				schedules.handleScheduleByUserId(JSON.parse(userData).id || 0);
+			}
 		};
 		fetchData();
-	}, [mergedSchedules.length]);
+	}, [mergedSchedules.length, ]);
+
 
 	schedules.ticketSchedules.forEach((ticketSchedule) => {
 		mergedSchedules.push({
@@ -203,22 +225,24 @@ export default function YourRequestsPage() {
 			isReguler: false,
 		});
 	});
-	schedules.regulerSchedules.forEach((regulerSchedule) => {
-		mergedSchedules.push({
-			idSchedule: regulerSchedule.idSchedule,
-			title: regulerSchedule.title,
-			startDate: regulerSchedule.startDate,
-			endDate: regulerSchedule.endDate,
-			userId: regulerSchedule.userId,
-			kategori: regulerSchedule.kategori,
-			description: regulerSchedule.description,
-			createdAt: regulerSchedule.createdAt,
-			updatedAt: regulerSchedule.updatedAt,
-			user: regulerSchedule.user,
-			status: "Accepted",
-			isReguler: true,
+	if(user.user?.role === "admin") {
+		schedules.regulerSchedules.forEach((regulerSchedule) => {
+			mergedSchedules.push({
+				idSchedule: regulerSchedule.idSchedule,
+				title: regulerSchedule.title,
+				startDate: regulerSchedule.startDate,
+				endDate: regulerSchedule.endDate,
+				userId: regulerSchedule.userId,
+				kategori: regulerSchedule.kategori,
+				description: regulerSchedule.description,
+				createdAt: regulerSchedule.createdAt,
+				updatedAt: regulerSchedule.updatedAt,
+				user: regulerSchedule.user,
+				status: "Accepted",
+				isReguler: true,
+			});
 		});
-	});
+	}
 
 	const header =
 		user.user?.role === "admin" ? tableHeaderAdmin : tableHeaderUser;

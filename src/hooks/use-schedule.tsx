@@ -88,6 +88,41 @@ export const useSchedule = (token: string) => {
 		}
 	};
 
+	const handleScheduleByUserId = async (userId: number) => {
+		try {
+			const response = await fetch(`${API_URL}/api/schedules/tickets/v1/user/${userId}`, {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+			});
+			const data = await response.json();
+			if (data.success) {
+				const dataRes: ScheduleTicket[] = data.data;
+				setTicketSchedules(dataRes.map((item: ScheduleTicket) => ({
+						idSchedule: item.idSchedule,
+						title: item.title,
+						startDate: item.startDate,
+						endDate: item.endDate,
+						userId: item.userId,
+						kategori: item.kategori,
+						description: item.description,
+						createdAt: item.createdAt,
+						updatedAt: item.updatedAt,
+						user: item.user,
+						tickets: item.tickets,
+					})));
+			} else {
+				console.error("Failed to fetch schedules by user ID:", data.message);
+			}
+		} catch (err) {
+			console.error("Fetch schedules by user ID error:", err);
+		} finally {
+			console.log("Fetch schedules by user ID completed");
+		}
+	}
+
 	return {
 		schedules,
 		ticketSchedules,
@@ -97,5 +132,6 @@ export const useSchedule = (token: string) => {
 		setRegulerSchedules,
 		handleGetAllRegulerSchedules,
 		handleGetAllTicketSchedules,
+		handleScheduleByUserId,
 	};
 };
