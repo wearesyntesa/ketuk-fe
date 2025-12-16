@@ -43,20 +43,8 @@ export default function AppLayout({
 		setLoading(false);
 	}, [router]);
 
-	const userNotAllowedRoutes = [
-		"/app/inventory",
-		"/app/audit",
-		"/app/user-management",
-		"/app/unblocking",
-	];
-
 	useEffect(() => {
-		if (
-			user.user?.role !== "admin" &&
-			userNotAllowedRoutes.includes(pathname)
-		) {
-			window.location.href = "/app";
-		}
+		const userData = localStorage.getItem("user") || "{}";
 		setHeader(() => {
 			if (pathname.includes("/app/requests")) return "Request Schedule";
 			if (pathname.includes("/app/inventory")) return "Inventory";
@@ -66,17 +54,18 @@ export default function AppLayout({
 			return "Dashboard";
 		});
 		if (
-			user.user?.role === "admin" &&
+			JSON.parse(userData).role === "admin" &&
 			pathname.includes("/app/your-requests")
 		) {
 			setHeader("Requests List");
 		}
 		if (
-			user.user?.role !== "admin" &&
+			JSON.parse(userData).role !== "admin" &&
 			pathname.includes("/app/your-requests")
 		) {
 			setHeader("Requests History");
 		}
+		console.log("Pathname changed:", user.user?.role);
 	}, [pathname]);
 
 	if (loading) {

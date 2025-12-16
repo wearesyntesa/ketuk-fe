@@ -1,7 +1,6 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { RequestDialog } from "./request-dialog";
 import ScheduleMonth from "./schedule-month";
 import ScheduleWeek from "./schedule-week";
 import { MonthlyEvent } from "./type";
@@ -15,6 +14,8 @@ import {
 import ScheduleList from "./schedule-list";
 import { monthlySchedule } from "@/app/app/data";
 import { useState } from "react";
+import { Button } from "./ui/button";
+import Link from "next/link";
 
 const tableHeader: ColumnDef<MonthlyEvent>[] = [
 	{
@@ -75,7 +76,10 @@ export default function ScheduleLab() {
 							<SelectItem value="list">List</SelectItem>
 						</SelectContent>
 					</Select>
-					<RequestDialog />
+					<Link href="/app/requests">
+					<Button className="bg-blue-400">Request Schedule +</Button>
+					</Link>
+					{/* <RequestDialog /> */}
 				</div>
 			</div>
 

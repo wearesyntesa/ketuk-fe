@@ -12,7 +12,7 @@ import {
 } from "./ui/card";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 
 export function UnblockingForm({
@@ -25,12 +25,17 @@ export function UnblockingForm({
     userId: number;
 }) {
     // Form state
-    const token = localStorage.getItem("access_token");
+    const [token, setToken] = useState("")
     const [startDate, setStartDate] = useState<Date | undefined>();
     const [endDate, setEndDate] = useState<Date | undefined>();
     const [year, setYear] = useState<number>(new Date().getFullYear());
     const [semester, setSemester] = useState("Ganjil");
     const unblocking = useUnblocking();
+
+    useEffect(() => {
+        const storedToken = localStorage.getItem("access_token") || "";
+        setToken(storedToken);
+    }, [])
 
     const handleYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setYear(parseInt(e.target.value));
@@ -75,9 +80,9 @@ export function UnblockingForm({
                 className ? className : "w-full"
             }`}>
             <CardHeader>
-                <CardTitle>Request Lab</CardTitle>
+                <CardTitle>Unblocking Form</CardTitle>
                 <CardDescription>
-                    Masukkan informasi kegiatan Anda di bawah ini.
+                    Fill the form below to request unblocking.
                 </CardDescription>
             </CardHeader>
             <CardContent>

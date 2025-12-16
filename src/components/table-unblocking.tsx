@@ -79,7 +79,7 @@ export default function UnblockingTable<TData extends UnblockingResponse, TValue
                     {table.getState().pagination.pageSize}
                 </div>
                 <div className="flex gap-4">
-                    <Button
+                    {/* <Button
                         variant="outline"
                         onClick={() => table.previousPage()}
                         disabled={!table.getCanPreviousPage()}>
@@ -90,7 +90,7 @@ export default function UnblockingTable<TData extends UnblockingResponse, TValue
                         onClick={() => table.nextPage()}
                         disabled={!table.getCanNextPage()}>
                         <ChevronRight size={16} />
-                    </Button>
+                    </Button> */}
                 </div>
             </div>
             <Card className="p-0">

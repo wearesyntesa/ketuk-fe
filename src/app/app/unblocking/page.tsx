@@ -63,14 +63,21 @@ const tableHeader: ColumnDef<UnblockingResponse>[] = [
 ];
 
 export default function UnblockingPage() {
-    const token = localStorage.getItem("access_token") || "";
+    // const token = localStorage.getItem("access_token") || "";
+	// const [token, setToken] = useState("");
     const unblocking = useUnblocking();
     const user = useUser();
 
-    useEffect(() => {
-        unblocking.handleGetUnblocking(token)
-        console.log("unblocking", unblocking.dataUnblocking);
-    }, [])
+	useEffect(() => {
+		const storedToken = localStorage.getItem("access_token") || "";
+		// setToken(storedToken);
+		unblocking.handleGetUnblocking(storedToken || "");
+	}, [])
+
+    // useEffect(() => {
+	// 	// if (token) {
+	// 	// }
+    // }, [])
 
     if (unblocking.unblocking) {
         return (
