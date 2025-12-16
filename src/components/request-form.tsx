@@ -210,7 +210,6 @@ export function RequestRegulerForm({
 	className?: string;
 }) {
 	const user = useUser();
-	const tickets = useTickets();
 	const [token, setToken] = useState(localStorage.getItem("access_token") || "");
 
 	useEffect(() => {

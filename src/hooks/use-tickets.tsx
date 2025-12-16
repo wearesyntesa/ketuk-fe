@@ -1,8 +1,6 @@
 "use client";
 
-import { POST } from "@/app/api/tickets/create/route";
 import { Ticket, ScheduleDataTicket, ScheduleRegulerDataTicket } from "@/components/type";
-import { NextRequest } from "next/server";
 import { useState } from "react"
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://192.168.10.184:8081";

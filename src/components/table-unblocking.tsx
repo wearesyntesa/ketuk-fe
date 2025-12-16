@@ -22,8 +22,6 @@ import { Card } from "./ui/card";
 import { Input } from "./ui/input";
 import { useState } from "react";
 import { UnblockingResponse } from "./type";
-import { Button } from "./ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface DataTableProps<TData extends UnblockingResponse, TValue> {
     columns: ColumnDef<TData, TValue>[];

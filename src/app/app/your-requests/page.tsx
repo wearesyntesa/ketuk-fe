@@ -13,7 +13,6 @@ import { EllipsisVertical } from "lucide-react";
 import { useUser } from "@/hooks/use-user";
 import { useEffect, useState } from "react";
 import { useSchedule } from "@/hooks/use-schedule";
-import { useTickets } from "@/hooks/use-tickets";
 
 const tableHeaderAdmin: ColumnDef<MergeSchedultType>[] = [
 	{
