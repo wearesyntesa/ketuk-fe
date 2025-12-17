@@ -23,9 +23,10 @@ import {
 } from "./ui/select";
 import React, { useEffect, useState } from "react";
 import { useTickets } from "@/hooks/use-tickets";
-import { ScheduleDataTicket, ScheduleRegulerDataTicket } from "./type";
+import { MergeSchedultType, ScheduleDataTicket, ScheduleRegulerDataTicket } from "./type";
 import { useUser } from "@/hooks/use-user";
 import { useReguler } from "@/hooks/use-reguler";
+import { useSchedule } from "@/hooks/use-schedule";
 
 export function RequestForm({
 	border,
@@ -36,8 +37,23 @@ export function RequestForm({
 }) {
 	const user = useUser();
 	const tickets = useTickets();
-	const [token, setToken] = useState("");
+	const [token, setToken] = useState(localStorage.getItem("access_token") || "");
+	const schedules = useSchedule(token);
+	const mergedSchedules: MergeSchedultType[] = [];
 
+	useEffect(() => {
+		const fetchData = async () => {
+			schedules.handleGetAllRegulerSchedules();
+			schedules.handleGetAllTicketSchedules();
+		};
+		fetchData();
+	}, [])
+
+	schedules.handleGetAllAcceptedSchedules(
+		schedules.ticketSchedules,
+		schedules.regulerSchedules
+	).forEach((item) => mergedSchedules.push(item));
+	
 	useEffect(() => {
 		const storedToken = localStorage.getItem("access_token") || "";
 		setToken(storedToken);
@@ -45,54 +61,64 @@ export function RequestForm({
 
 	const postTicket = (data: ScheduleDataTicket) => {
 		// console.log("Submitting ticket:", data);
+		if (mergedSchedules.length != 0) {
+			const hasConflict = mergedSchedules.some((schedule) => {
+				return (
+					data.startDate.getDate() === new Date(schedule.startDate).getDate() &&
+					data.startDate.getHours() < new Date(schedule.endDate).getHours() &&
+					data.endDate.getHours() > new Date(schedule.startDate).getHours()
+				);
+			});
+			if (hasConflict) {
+				alert("Jadwal bertabrakan dengan jadwal lain. Silakan pilih hari lain.");
+				return;
+			} else {
+				console.log("No conflicts found, submitting ticket.", data);
+				return tickets.handlePostTicket(data, token);
+			}
+		}
+
 		return tickets.handlePostTicket(data, token);
 	}
-	// Form state
-	const [eventName, setEventName] = useState("");
-	const [startTime, setStartTime] = useState("");
-	const [date, setDate] = useState<Date | undefined>(undefined);
-	const [endTime, setEndTime] = useState("");
-	const [eventType, setEventType] = useState("");
-	const [lecturer, setLecturer] = useState("");
-	const [description, setDescription] = useState("");
 
-	// Form value change handlers
-	const handleEventNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setEventName(e.target.value);
-	};
-	const handleStartTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setStartTime(e.target.value);
-	};
-	const handleEndTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setEndTime(e.target.value);
-	};
-	const handleTypeChange = (value: string) => {
-		setEventType(value);
-	};
-	const handleLecturerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setLecturer(e.target.value);
-	};
-	const handleDescriptionChange = (
-		e: React.ChangeEvent<HTMLTextAreaElement>
-	) => {
-		setDescription(e.target.value);
-	};
+	// const checkConflict = (data: ScheduleDataTicket) => {
+	// 	const hasConflict = mergedSchedules.some((schedule) => {
+	// 		return (
+	// 			data.startDate.getDate() === new Date(schedule.startDate).getDate() &&
+	// 			data.startDate.getHours() < new Date(schedule.endDate).getHours() &&
+	// 			data.endDate.getHours() > new Date(schedule.startDate).getHours()
+	// 		);
+	// 	});
+
+	// 	return hasConflict;
+	// }
+
+	// Form state
+	const [form, setForm] = useState({
+		eventName: "",
+		startTime: "",
+		endTime: "",
+		eventType: "",
+		lecturer: "",
+		description: "",
+	})
+	const [date, setDate] = useState<Date | undefined>(undefined);
 
 	const ticketData: ScheduleDataTicket = {
-		description: description,
-		title: eventName,
+		description: form.description,
+		title: form.eventName,
 		userId: user.user?.id || 0,
 		startDate: date
 			? new Date(
-					`${date.toISOString().split("T")[0]}T${startTime}:00`
+					`${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}T${form.startTime}:00.000Z`
 			  )
 			: new Date(),
 		endDate: date
 			? new Date(
-					`${date.toISOString().split("T")[0]}T${endTime}:00`
+					`${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}T${form.endTime}:00.000Z`
 			  )
 			: new Date(),
-		category: eventType,
+		category: form.eventType,
 	}
 
 	return (
@@ -114,8 +140,8 @@ export function RequestForm({
 								<Input
 									id="event-name"
 									type="text"
-									value={eventName}
-									onChange={handleEventNameChange}
+									value={form.eventName}
+									onChange={(e) => setForm({...form, eventName: e.target.value})}
 									placeholder="Praktikum Pemrograman Dasar"
 									required
 								/>
@@ -130,16 +156,16 @@ export function RequestForm({
 								<div className="flex gap-2">
 									<Input
 										type="time"
-										value={startTime}
-										onChange={handleStartTimeChange}
+										value={form.startTime}
+										onChange={(e) => setForm({...form, startTime: e.target.value})}
 										className="bg-background appearance-none w-fit"
 										required
 									/>
 									<span className="flex items-center">-</span>
 									<Input
 										type="time"
-										value={endTime}
-										onChange={handleEndTimeChange}
+										value={form.endTime}
+										onChange={(e) => setForm({...form, endTime: e.target.value})}
 										className="bg-background appearance-none w-fit"
 										required
 									/>
@@ -149,9 +175,9 @@ export function RequestForm({
 								<div className="flex items-center">
 									<Label htmlFor="event-type">Event Type</Label>
 								</div>
-								<Select onValueChange={(value) =>{handleTypeChange(value); console.log(value)}}>
+								<Select onValueChange={(value) =>{setForm({...form, eventType: value}); console.log(value)}}>
 									<SelectTrigger
-										value={eventType}
+										value={form.eventType}
 										id="event-type"
 										className="w-full">
 										<SelectValue placeholder="Pilih jenis kegiatan" />
@@ -173,8 +199,8 @@ export function RequestForm({
 								<Input
 									id="lecturer"
 									type="text"
-									value={lecturer}
-									onChange={handleLecturerChange}
+									value={form.lecturer}
+									onChange={(e) => setForm({...form, lecturer: e.target.value})}
 									placeholder="Nama Dosen"
 									required
 								/>
@@ -184,8 +210,8 @@ export function RequestForm({
 									<Label htmlFor="description">Event Description</Label>
 								</div>
 								<Textarea
-									value={description}
-									onChange={handleDescriptionChange}
+									value={form.description}
+									onChange={(e) => setForm({...form, description: e.target.value})}
 									id="description"
 									required
 								/>
@@ -197,6 +223,8 @@ export function RequestForm({
 						{/* <div className="flex flex-col gap-6">
 						</div> */}
 				</form>
+								{/* <Button onClick={() => console.log(checkConflict(ticketData))}>Submit Request</Button> */}
+
 			</CardContent>
 		</Card>
 	);
