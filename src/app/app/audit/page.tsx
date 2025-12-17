@@ -12,6 +12,7 @@ import {
 import { EllipsisVertical } from "lucide-react";
 import DetailAuditUser from "@/components/detail-audit-user";
 import AuditUserTable from "@/components/table-audit";
+import { InitialIconWithName } from "@/components/initial-icon";
 
 const tableHeader: ColumnDef<AllUser>[] = [
 	{
@@ -23,8 +24,8 @@ const tableHeader: ColumnDef<AllUser>[] = [
 		header: "Name",
 		cell: ({ row }) => (
 			<>
-				{/* <InitialIcon title={row.getValue("name")} /> */}
-				{row.getValue("name")}
+				<InitialIconWithName title={row.getValue("name")} />
+				{/* {row.getValue("name")} */}
 			</>
 		),
 	},

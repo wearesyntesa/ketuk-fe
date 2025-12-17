@@ -17,8 +17,8 @@ import {
 } from "./ui/dropdown-menu";
 import { SignOutButton } from "./signout-button";
 import { useEffect } from "react";
-import { InitialIcon } from "./schedule-card";
 import { useUser } from "@/hooks/use-user";
+import { InitialIcon } from "./initial-icon";
 
 export default function NavFooter() {
 	const user = useUser();

@@ -12,6 +12,7 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { EllipsisVertical } from "lucide-react";
+import { InitialIconWithName } from "@/components/initial-icon";
 
 const tableHeader: ColumnDef<AllUser>[] = [
 	{
@@ -23,8 +24,8 @@ const tableHeader: ColumnDef<AllUser>[] = [
 		header: "Name",
 		cell: ({ row }) => (
 			<>
-				{/* <InitialIcon title={row.getValue("name")} /> */}
-				{row.getValue("name")}
+				<InitialIconWithName title={row.getValue("name")} />
+				{/* {row.getValue("name")} */}
 			</>
 		),
 	},

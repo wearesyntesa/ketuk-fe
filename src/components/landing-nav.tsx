@@ -8,11 +8,11 @@ import {
 	DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { SignOutButton } from "./signout-button";
-import { InitialIcon } from "./schedule-card";
 import { useEffect } from "react";
 import { useUser } from "@/hooks/use-user";
 import Link from "next/link";
 import { Button } from "./ui/button";
+import { InitialIcon } from "./initial-icon";
 
 export default function LandingNav(isLogin: { isLogin: boolean }) {
 	const user = useUser();

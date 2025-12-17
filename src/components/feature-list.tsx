@@ -2,7 +2,7 @@ import { CalendarClock, PencilRuler, ScrollText } from "lucide-react";
 import { eventRequestItem } from "@/app/app/data";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
-import { InitialIcon } from "./schedule-card";
+import { InitialIconWithName } from "./initial-icon";
 
 const features = [
 	{
@@ -180,7 +180,8 @@ export function ChildHistoryCard() {
 				{eventRequestItem.slice(0, 3).map((item, id) => (
 					<div key={id} className="grid grid-cols-4 gap-8 py-2 border-b">
 						<span className="min-w-64 flex items-center gap-2">
-							{InitialIcon(item.title)}
+							{/* {InitialIcon(item.title)} */}
+							<InitialIconWithName title={item.title} />
 						</span>
 						{/* <span>{item.date}</span> */}
 					</div>
