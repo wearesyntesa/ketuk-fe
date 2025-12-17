@@ -168,6 +168,8 @@ export interface MergeSchedultType {
 	title: string;
 	startDate: string;
 	endDate: string;
+	date: Date;
+	day: string;
 	userId: number;
 	kategori: string;
 	description: string;
