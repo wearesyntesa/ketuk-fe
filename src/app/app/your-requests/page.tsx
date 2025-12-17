@@ -13,7 +13,8 @@ import { EllipsisVertical } from "lucide-react";
 import { useUser } from "@/hooks/use-user";
 import { useEffect, useState } from "react";
 import { useSchedule } from "@/hooks/use-schedule";
-import { InitialIconWithName } from "@/components/initial-icon";
+import { InitialIconEmail, InitialIconWithName } from "@/components/initial-icon";
+import DetailTicketPatch from "@/components/detail-ticket-patch";
 
 const tableHeaderAdmin: ColumnDef<MergeSchedultType>[] = [
 	{
@@ -58,7 +59,7 @@ const tableHeaderAdmin: ColumnDef<MergeSchedultType>[] = [
 	{
 		id: "contact",
 		header: "Contact",
-		cell: ({ row }) => <InitialIconWithName title={row.original.user.email} />,
+		cell: ({ row }) => <InitialIconEmail email={row.original.user.email} />,
 	},
 	{
 		accessorKey: "kategori",
@@ -97,8 +98,7 @@ const tableHeaderAdmin: ColumnDef<MergeSchedultType>[] = [
 						<EllipsisVertical size={16} />
 					</DropdownMenuTrigger>
 					<DropdownMenuContent>
-						<DropdownMenuItem>Approve</DropdownMenuItem>
-						<DropdownMenuItem>Reject</DropdownMenuItem>
+						<DetailTicketPatch id={row.original.tickets?.[0].id || 0} />
 					</DropdownMenuContent>
 				</DropdownMenu>
 			);
@@ -146,7 +146,7 @@ const tableHeaderUser: ColumnDef<MergeSchedultType>[] = [
 	{
 		id: "contact",
 		header: "Contact",
-		cell: ({ row }) => <InitialIconWithName title={row.original.user.email} />,
+		cell: ({ row }) => <InitialIconEmail email={row.original.user.email} />,
 	},
 	{
 		accessorKey: "kategori",

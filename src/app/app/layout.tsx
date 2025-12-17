@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useUser } from "@/hooks/use-user";
 import AppHeader from "@/components/app-header";
+import { Toaster } from "sonner";
 
 export default function AppLayout({
 	children,
@@ -94,6 +95,7 @@ export default function AppLayout({
 							{children}
 							{/* <Toaster position="bottom-right" /> */}
 							<WarningEmail email={user.user?.email || ""} />
+							<Toaster richColors position="bottom-right" />
 						</div>
 					</div>
 				</div>
