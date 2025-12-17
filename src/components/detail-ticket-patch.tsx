@@ -6,7 +6,7 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, Di
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
-import { ItemDialogProps, PatchTicketStatus, UserType } from "./type";
+import { PatchTicketStatus, UserType } from "./type";
 import { useTickets } from "@/hooks/use-tickets";
 
 interface DetailItemProps {

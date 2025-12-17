@@ -12,11 +12,9 @@ import {
 	SelectValue,
 } from "./ui/select";
 import ScheduleList from "./schedule-list";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "./ui/button";
 import Link from "next/link";
-import { useUser } from "@/hooks/use-user";
-import { useSchedule } from "@/hooks/use-schedule";
 import { InitialIconWithName } from "./initial-icon";
 
 const tableHeader: ColumnDef<MergeSchedultType>[] = [
