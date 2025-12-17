@@ -71,15 +71,17 @@ export default function UnblockingPage() {
 	useEffect(() => {
 		const storedToken = localStorage.getItem("access_token") || "";
 		// setToken(storedToken);
-		unblocking.handleGetUnblocking(storedToken || "");
+		unblocking.handleGetUnblocking(storedToken);
 	}, [])
+
+	console.log("unblocking data:", unblocking.dataUnblocking);
 
     // useEffect(() => {
 	// 	// if (token) {
 	// 	// }
     // }, [])
 
-    if (unblocking.unblocking) {
+    if (unblocking.dataUnblocking != undefined) {
         return (
             <>
                 <div className="@container/main flex flex-col gap-4 py-4 md:gap-6 md:py-6">
