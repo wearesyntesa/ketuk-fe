@@ -1,6 +1,6 @@
 "use client";
 
-import { MergeSchedultType, ScheduleReguler, ScheduleTicket } from "@/components/type";
+import { CategoryChartData, MergeSchedultType, ScheduleReguler, ScheduleTicket } from "@/components/type";
 import { useState } from "react";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://192.168.10.184:8081";
@@ -21,9 +21,12 @@ export const useSchedule = (token: string) => {
 					Authorization: `Bearer ${token}`,
 				},
 			});
+
+			console.log("aa")
 			const data = await response.json();
 
 			if (data.success) {
+				console.log("Fetched Ticket Schedules:", data.data);
 				const dataRes: ScheduleTicket[] = data.data;
 				setTicketSchedules(
 					dataRes.map((item: ScheduleTicket) => ({
@@ -179,6 +182,26 @@ export const useSchedule = (token: string) => {
 		return merged;
 	}
 
+	const handlePieChartData = (schedules: ScheduleTicket[], regulerSchedule: ScheduleReguler[]) => {
+		const pieData: CategoryChartData[] = [];
+		const merged = handleMergeSchedules(schedules, regulerSchedule, true);
+		const fill = [
+			"var(--chart-3)",
+			"var(--chart-4)",
+			"var(--chart-1)",
+		]
+		merged.forEach((item) => {
+			const existingCategory = pieData.find((data) => data.category === item.kategori);
+			if (existingCategory) {
+				existingCategory.totalRequest += 1;
+			} else {
+				pieData.push({ category: item.kategori, totalRequest: 1, fill: fill[pieData.length % fill.length] } );
+			}
+		});
+
+		return pieData;
+	}
+
 	return {
 		schedules,
 		ticketSchedules,
@@ -191,5 +214,6 @@ export const useSchedule = (token: string) => {
 		handleScheduleByUserId,
 		handleMergeSchedules,
 		handleGetAllAcceptedSchedules,
+		handlePieChartData,
 	};
 };

@@ -27,6 +27,7 @@ import { MergeSchedultType, ScheduleDataTicket, ScheduleRegulerDataTicket } from
 import { useUser } from "@/hooks/use-user";
 import { useReguler } from "@/hooks/use-reguler";
 import { useSchedule } from "@/hooks/use-schedule";
+import { toast } from "sonner";
 
 export function RequestForm({
 	border,
@@ -54,6 +55,8 @@ export function RequestForm({
 		schedules.regulerSchedules
 	).forEach((item) => mergedSchedules.push(item));
 	
+	console.log("Merged Schedules:", mergedSchedules);
+
 	useEffect(() => {
 		const storedToken = localStorage.getItem("access_token") || "";
 		setToken(storedToken);
@@ -70,7 +73,8 @@ export function RequestForm({
 				);
 			});
 			if (hasConflict) {
-				alert("Jadwal bertabrakan dengan jadwal lain. Silakan pilih hari lain.");
+				// alert("Jadwal bertabrakan dengan jadwal lain. Silakan pilih hari lain.");
+				toast.error("Schedule conflicts with another schedule. Please choose another time.");
 				return;
 			} else {
 				console.log("No conflicts found, submitting ticket.", data);
@@ -110,12 +114,12 @@ export function RequestForm({
 		userId: user.user?.id || 0,
 		startDate: date
 			? new Date(
-					`${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}T${form.startTime}:00.000Z`
+					`${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}T${form.startTime}:00`
 			  )
 			: new Date(),
 		endDate: date
 			? new Date(
-					`${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}T${form.endTime}:00.000Z`
+					`${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}T${form.endTime}:00`
 			  )
 			: new Date(),
 		category: form.eventType,
@@ -223,7 +227,9 @@ export function RequestForm({
 						{/* <div className="flex flex-col gap-6">
 						</div> */}
 				</form>
-								{/* <Button onClick={() => console.log(checkConflict(ticketData))}>Submit Request</Button> */}
+				{/* <Button onClick={() => console.log(new Date(
+					`${date?.getFullYear()}-${String(date ? date.getMonth() + 1 : 0).padStart(2, "0")}-${String(date?.getDate()).padStart(2, "0")}T${form.startTime}:00`
+			  ), ticketData)}>Submit Request</Button> */}
 
 			</CardContent>
 		</Card>
