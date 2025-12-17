@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from "react";
-import { monthlySchedule } from "@/app/app/data";
 import {
 	Dialog,
 	DialogContent,
@@ -11,6 +10,7 @@ import {
 } from "./ui/dialog";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Shadows_Into_Light, Nothing_You_Could_Do } from "next/font/google";
+import { MergeSchedultType } from "./type";
 
 const shadowIntoLight = Shadows_Into_Light({
 	subsets: ["latin"],
@@ -24,11 +24,11 @@ const nothingYouCouldDo = Nothing_You_Could_Do({
 	variable: "--font-nothing-you-could-do",
 });
 
-export default function ScheduleMonth() {
+export default function ScheduleMonth({data}: {data: MergeSchedultType[]}) {
 	const [displayDate, setDisplayDate] = useState(new Date());
 	const currentMonth = displayDate.getMonth();
 	const currentYear = displayDate.getFullYear();
-	const events = monthlySchedule.filter((event) => {
+	const events = data.filter((event) => {
 		const eventDate = new Date(event.date);
 		return (
 			eventDate.getMonth() === currentMonth &&
@@ -126,18 +126,18 @@ export default function ScheduleMonth() {
 									{eventsForDay.slice(0, 2).map((ev, id) => (
 										<div
 											key={id}
-											className="mt-1 text-xs rounded px-1 w-full text-left gap-2 items-center md:flex hidden">
+											className="mt-1 text-xs rounded px-1 w-full text-left gap-2 items-center xl:flex hidden">
 											<span className="flex h-2 w-2 bg-blue-200 rounded-full" />
 											{ev.title}
 										</div>
 									))}
 									{eventsForDay.length > 2 && (
-										<div className="mt-1 text-xs bg-blue-200 rounded-full p-1 md:block hidden">
+										<div className="mt-1 text-xs bg-blue-200 rounded-full p-1 xl:block hidden">
 											+{eventsForDay.length - 2}
 										</div>
 									)}
-									{eventsForDay.length && (
-										<div className="mt-1 text-xs bg-blue-200 rounded-full p-1 md:hidden block">
+									{eventsForDay.length !=0 && (
+										<div className="mt-1 text-xs bg-blue-200 rounded-full p-1 xl:hidden block">
 											{eventsForDay.length}
 										</div>
 									)}
@@ -159,7 +159,7 @@ export default function ScheduleMonth() {
 															{event.title}
 														</h3>
 														<p className="text-sm text-muted-foreground">
-															{event.startTime} - {event.endTime}
+															{event.startDate} - {event.endDate}
 														</p>
 														<p className="text-sm">{event.description}</p>
 													</div>

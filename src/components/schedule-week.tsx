@@ -1,11 +1,11 @@
 "use client";
 
-import { monthlySchedule } from "@/app/app/data";
 import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 import ScheduleCard from "./schedule-card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import { MergeSchedultType } from "./type";
 
-export default function ScheduleWeek() {
+export default function ScheduleWeek({data}: {data: MergeSchedultType[]}) {
 	const baseDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 	const todayDay = new Date().getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
 	const startIndex = todayDay === 0 || todayDay === 6 ? 0 : todayDay - 1;
@@ -55,7 +55,7 @@ export default function ScheduleWeek() {
 							value={day}
 							key={id}
 							className="w-full h-[405px] overflow-y-scroll">
-							<ScheduleCard events={monthlySchedule} day={day} id={id} />
+							<ScheduleCard data={data} day={day} id={id} />
 						</TabsContent>
 					))}
 				</Tabs>
