@@ -5,6 +5,7 @@ import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { ChartPieSimple } from "./pie-chart";
 import { ScrollArea, ScrollBar } from "./ui/scroll-area";
+import { CategoryChartData } from "./type";
 
 const chartData = [
 	{ date: "2024-05-01", requests: 30 },
@@ -26,7 +27,7 @@ const chartConfig: ChartConfig = {
 	},
 } satisfies ChartConfig;
 
-export default function DashboardChart() {
+export default function DashboardChart({pieData}: {pieData: CategoryChartData[]}) {
 	return (
 		<div className="grid grid-cols-3 w-full justify-center gap-8">
 			<div className="flex flex-col xl:col-span-2 col-span-3 w-full bg-white border rounded-2xl p-2 shadow-sm">
@@ -75,7 +76,7 @@ export default function DashboardChart() {
 					<ScrollBar orientation="horizontal" />
 				</ScrollArea>
 			</div>
-			<ChartPieSimple />
+			<ChartPieSimple data={pieData} />
 		</div>
 	);
 }
