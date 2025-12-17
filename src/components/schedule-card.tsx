@@ -1,6 +1,7 @@
 "use client";
 
-import { MonthlyEvent } from "./type";
+import { InitialIcon } from "./initial-icon";
+import { MergeSchedultType } from "./type";
 import { Badge } from "./ui/badge";
 import {
 	Dialog,
@@ -11,21 +12,13 @@ import {
 	DialogTrigger,
 } from "./ui/dialog";
 
-export default function ScheduleCard({
-	events,
-	day,
-	id,
-}: {
-	events: MonthlyEvent[];
-	day: string;
-	id: number;
-}) {
+export default function ScheduleCard({data, day, id}: {data: MergeSchedultType[], day: string, id: number}) {
 	const date = new Date().getDate();
 
 	return (
 		<div className="gap-4">
 			{(() => {
-				const dayEvents = events.filter((event) => {
+				const dayEvents = data.filter((event) => {
 					const eventDate = new Date(event.date);
 					return eventDate.getDate() === date + id;
 				});
@@ -50,11 +43,11 @@ export default function ScheduleCard({
 												{event.title}
 											</h3>
 											<p className="text-sm text-muted-foreground text-start">
-												{event.note}
+												{event.description}
 											</p>
 											<p className="text-sm text-start">{event.description}</p>
 											<Badge className="mt-2 bg-green-100 text-green-800">
-												Lecturer: {event.lecturerName}
+												Lecturer: {event.user.name}
 											</Badge>
 										</div>
 									</div>
@@ -64,10 +57,10 @@ export default function ScheduleCard({
 										<DialogTitle className="text-2xl">
 											{event.title}
 										</DialogTitle>
-										<DialogDescription>{event.note}</DialogDescription>
-										<DialogDescription>{event.lecturerName}</DialogDescription>
+										<DialogDescription>{event.status}</DialogDescription>
+										<DialogDescription>{event.user.name}</DialogDescription>
 										<DialogDescription>{event.description}</DialogDescription>
-										<Badge>Category: {event.category}</Badge>
+										<Badge>Category: {event.kategori}</Badge>
 									</DialogHeader>
 								</DialogContent>
 							</Dialog>
@@ -75,41 +68,6 @@ export default function ScheduleCard({
 					</>
 				);
 			})()}
-		</div>
-	);
-}
-
-function InitialIcon(title: string) {
-	const initial = title
-		.split(" ")
-		.filter((_, index) => index < 2)
-		.map((word) => word.charAt(0).toUpperCase())
-		.join("");
-	const colors = [
-		"bg-red-100 text-red-700",
-		"bg-green-100 text-green-700",
-		"bg-blue-100 text-blue-700",
-		"bg-yellow-100 text-yellow-700",
-		"bg-purple-100 text-purple-700",
-		"bg-pink-100 text-pink-700",
-		"bg-indigo-100 text-indigo-700",
-		"bg-teal-100 text-teal-700",
-		"bg-orange-100 text-orange-700",
-	];
-	function hashString(str: string) {
-		let h = 0;
-		for (let i = 0; i < str.length; i++) {
-			h = (h << 5) - h + str.charCodeAt(i);
-			h |= 0;
-		}
-		return Math.abs(h);
-	}
-
-	const colorClass = colors[hashString(title) % colors.length];
-	return (
-		<div
-			className={`w-12 h-12 px-4 rounded-full flex items-center justify-center font-medium ${colorClass}`}>
-			{initial}
 		</div>
 	);
 }

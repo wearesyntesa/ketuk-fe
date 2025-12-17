@@ -1,10 +1,4 @@
-import {
-	CalendarDays,
-	BookCheck,
-	Archive,
-	DoorOpen,
-	Ticket,
-} from "lucide-react";
+import { DoorOpen } from "lucide-react";
 
 import {
 	Sidebar,
@@ -17,12 +11,14 @@ import {
 
 import React from "react";
 import { Separator } from "./ui/separator";
-import { SideBarItem } from "@/components/type";
 import NavMain from "./nav-main";
 import NavFooter from "./nav-footer";
 import Link from "next/link";
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({
+	role,
+	...props
+}: { role: string } & React.ComponentProps<typeof Sidebar>) {
 	return (
 		<Sidebar collapsible="offcanvas" {...props}>
 			{/* <SidebarHeader /> */}
@@ -42,7 +38,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 					</SidebarMenu>
 				</SidebarHeader>
 				<Separator />
-				<NavMain />
+				<NavMain role={role} />
 				<NavFooter />
 			</SidebarContent>
 		</Sidebar>

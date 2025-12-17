@@ -1,35 +1,97 @@
-import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table"
+"use client"
+
+import {
+    ColumnDef,
+    ColumnFiltersState,
+    flexRender,
+    getCoreRowModel,
+    getFilteredRowModel,
+    getPaginationRowModel,
+    SortingState,
+    useReactTable,
+} from "@tanstack/react-table";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "./ui/table";
 import { Card } from "./ui/card";
 import { Input } from "./ui/input";
+import { useState } from "react";
+import { UnblockingResponse } from "./type";
 
-interface DataTableProps<TData, TValue> {
+interface DataTableProps<TData extends UnblockingResponse, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
 }
 
-export default function InventoryDetailTable<TData, TValue>({
+export default function UnblockingTable<TData extends UnblockingResponse, TValue>({
     columns,
     data,
 }: DataTableProps<TData, TValue>) {
+    const [sorting, setSorting] = useState<SortingState>([]);
+    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+
     const table = useReactTable({
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
+        onSortingChange: setSorting,
+        onColumnFiltersChange: setColumnFilters,
+        getFilteredRowModel: getFilteredRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        state: {
+            sorting,
+            columnFilters,
+        },
     });
+
     return (
-        <div className="overflow-hidden rounded-md flex flex-col gap-4 w-full">
+        <div className="overflow-hidden rounded-md flex flex-col gap-4">
             <Card className="p-2">
-                <div className="flex items-center">
-                    <Input placeholder="Search item..." className="flex-1" />
-                    {/* <Button
-                        variant="outline"
-                        className="ml-2 bg-gradient-to-br from-blue-500 via-blue-400 to-blue-300 text-white">
-                        Add Item +
-                    </Button> */}
+                <div className="flex items-center gap-4">
+                    <Input
+                        placeholder="Search inventory..."
+                        className="flex-1"
+                        value={(table.getColumn("startDate")?.getFilterValue() as string) ?? ""}
+                        onChange={(event) =>
+                            table.getColumn("startDate")?.setFilterValue(event.target.value)
+                        }
+                    />
+                    <Input
+                        placeholder="Search inventory..."
+                        className="flex-1"
+                        value={(table.getColumn("endDate")?.getFilterValue() as string) ?? ""}
+                        onChange={(event) =>
+                            table.getColumn("endDate")?.setFilterValue(event.target.value)
+                        }
+                    />
                 </div>
             </Card>
-            <Card className="p-0 max-h-96">
+            <div className="flex justify-between items-center px-2">
+                <div>
+                    Data {table.getState().pagination.pageIndex + 1} of{" "}
+                    {table.getState().pagination.pageSize}
+                </div>
+                <div className="flex gap-4">
+                    {/* <Button
+                        variant="outline"
+                        onClick={() => table.previousPage()}
+                        disabled={!table.getCanPreviousPage()}>
+                        <ChevronLeft size={16} />
+                    </Button>
+                    <Button
+                        variant="outline"
+                        onClick={() => table.nextPage()}
+                        disabled={!table.getCanNextPage()}>
+                        <ChevronRight size={16} />
+                    </Button> */}
+                </div>
+            </div>
+            <Card className="p-0">
                 <Table>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
@@ -38,11 +100,7 @@ export default function InventoryDetailTable<TData, TValue>({
                                     return (
                                         <TableHead
                                             key={header.id}
-                                            className={`px-4 ${
-                                                header.column.columnDef.header === "Procurement Year"
-                                                    ? "text-center"
-                                                    : ""
-                                            }`}>
+                                            className={`px-4`}>
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(
@@ -65,11 +123,7 @@ export default function InventoryDetailTable<TData, TValue>({
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell
                                             key={cell.id}
-                                            className={`px-4 ${
-                                                cell.column.columnDef.header === "Procurement Year"
-                                                    ? "align-middle text-center"
-                                                    : ""
-                                            }`}>
+                                            className={`px-4`}>
                                             {flexRender(
                                                 cell.column.columnDef.cell,
                                                 cell.getContext()

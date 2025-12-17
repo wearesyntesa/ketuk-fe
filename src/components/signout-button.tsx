@@ -1,17 +1,26 @@
-import { signOut } from "@/app/auth"
+"use client";
+
 import { Button } from "./ui/button";
 
 export function SignOutButton() {
+	const handleSignOut = () => {
+		// Clear tokens and user data from localStorage
+		localStorage.removeItem("access_token");
+		localStorage.removeItem("refresh_token");
+		localStorage.removeItem("user");
+		
+		// Redirect to login page
+		window.location.href = "/auth/login";
+	};
+
 	return (
-		<form
-			action={async () => {
-				"use server";
-				await signOut();
-			}}
-			className="w-full">
-			<Button variant={"destructive"} type="submit" className="w-full flex">
-				Sign Out
-			</Button>
-		</form>
+		<Button 
+			variant={"destructive"} 
+			type="button" 
+			className="w-full flex"
+			onClick={handleSignOut}
+		>
+			Sign Out
+		</Button>
 	);
 }

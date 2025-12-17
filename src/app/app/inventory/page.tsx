@@ -1,88 +1,46 @@
 "use client"
 
-import AppHeader from "@/components/app-header";
-import InventoryTable from "@/components/inventory-table";
-import { inventoryItem } from "../data";
+import InventoryTable from "@/components/table-inventory";
 import { ColumnDef } from "@tanstack/react-table";
-import { InventoryDetailItem, InventoryItem } from "@/components/type";
+import { ItemCategories } from "@/components/type";
+import { useCategories } from "@/hooks/use-categories";
+import { useEffect } from "react";
+import DetailItemCategories from "@/components/detail-item-categories";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
-	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MenuIcon } from "lucide-react";
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogTitle,
-	DialogTrigger,
-} from "@/components/ui/dialog";
-import { AlertDialogHeader } from "@/components/ui/alert-dialog";
-import InventoryDetailTable from "@/components/inventory-detail-table";
-import { Badge } from "@/components/ui/badge";
+import { ArrowUpDown, EllipsisVertical } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-const tableDetail: ColumnDef<InventoryDetailItem>[] = [
+const tableHeader: ColumnDef<ItemCategories>[] = [
 	{
-		accessorKey: "serialNumber",
-		header: "Serial Number",
-	},
-	{
-		accessorKey: "procurementYear",
-		header: "Procurement Year",
-	},
-	{
-		accessorKey: "condition",
-		header: "Condition",
-	},
-	{
-		accessorKey: "note",
-		header: "Note",
-	},
-	{
-		header: "Action",
-		cell: () => {
+		accessorKey: "id",
+		header: ({ column }) => {
 			return (
-				<DropdownMenu>
-					<DropdownMenuTrigger asChild>
-						<MenuIcon className="cursor-pointer" />
-					</DropdownMenuTrigger>
-					<DropdownMenuContent>
-						<DropdownMenuItem>Edit</DropdownMenuItem>
-						<DropdownMenuItem>Delete</DropdownMenuItem>
-					</DropdownMenuContent>
-				</DropdownMenu>
+				<Button
+					variant="ghost"
+					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+					ID
+				</Button>
 			);
 		},
+		cell: ({ row }) => <div>{row.getValue("id")}</div>,
 	},
-];
-
-const tableHeader: ColumnDef<InventoryItem>[] = [
 	{
-		accessorKey: "nameItem",
-		header: "Name",
-		cell: ({ row }) => (
-			<Dialog>
-				<DialogTrigger className="cursor-pointer">
-					{row.getValue("nameItem")}
-				</DialogTrigger>
-				<DialogContent className="min-w-4xl">
-					<AlertDialogHeader>
-						<DialogTitle>{row.getValue("nameItem")}</DialogTitle>
-						<DialogDescription>
-							Detail information about the item can be displayed here.
-						</DialogDescription>
-					</AlertDialogHeader>
-					<InventoryDetailTable
-						columns={tableDetail}
-						data={row.original.items}
-					/>
-					{/* <div className="h-96">
-					</div> */}
-				</DialogContent>
-			</Dialog>
-		),
+		accessorKey: "categoryName",
+		header: ({ column }) => {
+			return (
+				<Button
+					variant="ghost"
+					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+					Name
+					<ArrowUpDown />
+				</Button>
+			);
+		},
+		cell: ({ row }) => <div>{row.getValue("categoryName")}</div>,
 	},
 	{
 		accessorKey: "specification",
@@ -91,59 +49,70 @@ const tableHeader: ColumnDef<InventoryItem>[] = [
 	{
 		accessorKey: "quantity",
 		header: "Quantity",
+		cell: ({ row }) => (
+			<div className="flex justify-center">
+				{row.getValue("quantity") ? row.getValue("quantity") : 0}
+			</div>
+		),
 	},
-	{
-		header: "Condition",
-		cell: ({ row }) => {
-			return (
-				<div className="flex flex-col gap-2 w-14">
-					<Badge className="mr-2 bg-green-100 text-green-800 w-full">
-						Good: {row.original.goodCondition}
-					</Badge>
-					<Badge className="bg-yellow-100 text-yellow-800 w-full">
-						Poor: {row.original.poorCondition}
-					</Badge>
-				</div>
-			);
-		},
-	},
+	// {
+	// 	header: "Condition",
+	// 	cell: ({ row }) => {
+	// 		return (
+	// 			<div className="flex flex-col gap-2 w-14">
+	// 				<Badge className="mr-2 bg-green-100 text-green-800 w-full">
+	// 					Good: {row.original.goodCondition}
+	// 				</Badge>
+	// 				<Badge className="bg-yellow-100 text-yellow-800 w-full">
+	// 					Poor: {row.original.poorCondition}
+	// 				</Badge>
+	// 			</div>
+	// 		);
+	// 	},
+	// },
 	{
 		header: "Action",
 		cell: ({ row }) => {
 			return (
-				<Dialog>
-					<DialogTrigger className="cursor-pointer hover:font-semibold">
-						Detail
-					</DialogTrigger>
-					<DialogContent className="min-w-4xl">
-						<AlertDialogHeader>
-							<DialogTitle>{row.getValue("nameItem")}</DialogTitle>
-							<DialogDescription>
-								Detail information about the item can be displayed here.
-							</DialogDescription>
-						</AlertDialogHeader>
-						<InventoryDetailTable
-							columns={tableDetail}
-							data={row.original.items}
-						/>
-						{/* <div className="h-96">
-						</div> */}
-					</DialogContent>
-				</Dialog>
+				<DropdownMenu>
+					<DropdownMenuTrigger asChild>
+						<EllipsisVertical className="cursor-pointer" />
+					</DropdownMenuTrigger>
+					<DropdownMenuContent>
+						<div className="flex justify-start w-full text-sm">
+							<DetailItemCategories
+								name={row.getValue("categoryName")}
+								id={row.getValue("id")}
+								qty={row.getValue("quantity") ?? 0}
+							/>
+						</div>
+					</DropdownMenuContent>
+				</DropdownMenu>
 			);
 		},
 	},
 ];
 
 export default function InventoryPage() {
+	const token = localStorage.getItem("access_token");
+	const categories = useCategories();
+
+	useEffect(() => {
+		categories.handleGetAllInventory(token || "").then((data) => {
+			categories.setItemsCategories(data);
+		});
+	}, []);
+
 	return (
 		<>
-			<AppHeader title="Inventory" />
 			<div className="@container/main flex flex-col gap-4 py-4 md:gap-6 md:py-6">
 				{/* <SectionCards /> */}
 				<div className="px-4 lg:gap-2 lg:px-6 flex flex-col gap-4">
 					{/* <ChartAreaInteractive /> */}
-					<InventoryTable columns={tableHeader} data={inventoryItem} />
+					<InventoryTable
+						columns={tableHeader}
+						data={categories.itemsCategories}
+					/>
 				</div>
 			</div>
 		</>

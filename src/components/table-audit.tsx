@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
 	ColumnDef,
@@ -28,16 +28,15 @@ import {
 	SelectValue,
 } from "./ui/select";
 import { useState } from "react";
-import { EventRequest } from "./type";
 import { Button } from "./ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-interface DataTableProps<TData extends EventRequest, TValue> {
+interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
 	data: TData[];
 }
 
-export default function RequestsTable<TData extends EventRequest, TValue>({
+export default function AuditUserTable<TData, TValue>({
 	columns,
 	data,
 }: DataTableProps<TData, TValue>) {
@@ -65,28 +64,27 @@ export default function RequestsTable<TData extends EventRequest, TValue>({
 					<Input
 						placeholder="Search inventory..."
 						className="flex-1"
-						value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
+						value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
 						onChange={(event) =>
-							table.getColumn("title")?.setFilterValue(event.target.value)
+							table.getColumn("name")?.setFilterValue(event.target.value)
 						}
 					/>
 					<Select
 						onValueChange={(value: string) =>
 							table
-								.getColumn("status")
+								.getColumn("role")
 								?.setFilterValue(value !== "all" ? value : "")
 						}
 						defaultValue="all">
 						<SelectTrigger
 							className="w-48"
-							value={table.getColumn("status")?.getFilterValue() as string}>
-							<SelectValue placeholder="Filter by status" />
+							value={table.getColumn("role")?.getFilterValue() as string}>
+							<SelectValue placeholder="Filter by role" />
 						</SelectTrigger>
 						<SelectContent>
 							<SelectItem value="all">All</SelectItem>
-							<SelectItem value="Pending">Pending</SelectItem>
-							<SelectItem value="Approved">Approved</SelectItem>
-							<SelectItem value="Cancelled">Cancelled</SelectItem>
+							<SelectItem value="admin">Admin</SelectItem>
+							<SelectItem value="user">User</SelectItem>
 						</SelectContent>
 					</Select>
 				</div>

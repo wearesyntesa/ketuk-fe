@@ -1,11 +1,11 @@
 "use client";
 
-import { monthlySchedule } from "@/app/app/data";
 import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 import ScheduleCard from "./schedule-card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import { MergeSchedultType } from "./type";
 
-export default function ScheduleWeek() {
+export default function ScheduleWeek({data}: {data: MergeSchedultType[]}) {
 	const baseDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 	const todayDay = new Date().getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
 	const startIndex = todayDay === 0 || todayDay === 6 ? 0 : todayDay - 1;
@@ -15,13 +15,13 @@ export default function ScheduleWeek() {
 		<ScrollArea className="rounded-lg w-full">
 			<div className="flex flex-col gap-4 w-full">
 				{/* <ScheduleCard events={monthlySchedule} /> */}
-				<Tabs defaultValue={days[0]} className="flex flex-row w-full">
-					<TabsList className="flex flex-col h-[405px]">
+				<Tabs defaultValue={days[0]} className="flex lg:flex-row flex-col w-full">
+					<TabsList className="flex lg:flex-col flex-row lg:h-[405px] h-fit w-full lg:w-fit">
 						{days.map((day, id) => (
 							<TabsTrigger
 								key={id}
 								value={day}
-								className="flex min-h-20 md:w-fit">
+								className="flex min-h-20 lg:w-fit">
 								<div className="flex flex-col items-start">
 									<span className="font-medium">{day}</span>
 									<span className="text-sm text-muted-foreground">
@@ -55,7 +55,7 @@ export default function ScheduleWeek() {
 							value={day}
 							key={id}
 							className="w-full h-[405px] overflow-y-scroll">
-							<ScheduleCard events={monthlySchedule} day={day} id={id} />
+							<ScheduleCard data={data} day={day} id={id} />
 						</TabsContent>
 					))}
 				</Tabs>

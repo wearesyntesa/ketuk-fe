@@ -5,7 +5,6 @@ import {
 	Card,
 	CardContent,
 	CardDescription,
-	CardFooter,
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
@@ -22,8 +21,13 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "./ui/select";
-import React, { useState } from "react";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { useTickets } from "@/hooks/use-tickets";
+import { MergeSchedultType, ScheduleDataTicket, ScheduleRegulerDataTicket } from "./type";
+import { useUser } from "@/hooks/use-user";
+import { useReguler } from "@/hooks/use-reguler";
+import { useSchedule } from "@/hooks/use-schedule";
+import { toast } from "sonner";
 
 export function RequestForm({
 	border,
@@ -32,54 +36,94 @@ export function RequestForm({
 	border?: boolean;
 	className?: string;
 }) {
+	const user = useUser();
+	const tickets = useTickets();
+	const [token, setToken] = useState(localStorage.getItem("access_token") || "");
+	const schedules = useSchedule(token);
+	const mergedSchedules: MergeSchedultType[] = [];
+
+	useEffect(() => {
+		const fetchData = async () => {
+			schedules.handleGetAllRegulerSchedules();
+			schedules.handleGetAllTicketSchedules();
+		};
+		fetchData();
+	}, [])
+
+	schedules.handleGetAllAcceptedSchedules(
+		schedules.ticketSchedules,
+		schedules.regulerSchedules
+	).forEach((item) => mergedSchedules.push(item));
+	
+	console.log("Merged Schedules:", mergedSchedules);
+
+	useEffect(() => {
+		const storedToken = localStorage.getItem("access_token") || "";
+		setToken(storedToken);
+	}, [])
+
+	const postTicket = (data: ScheduleDataTicket) => {
+		// console.log("Submitting ticket:", data);
+		if (mergedSchedules.length != 0) {
+			const hasConflict = mergedSchedules.some((schedule) => {
+				return (
+					data.startDate.getDate() === new Date(schedule.startDate).getDate() &&
+					data.startDate.getHours() < new Date(schedule.endDate).getHours() &&
+					data.endDate.getHours() > new Date(schedule.startDate).getHours()
+				);
+			});
+			if (hasConflict) {
+				// alert("Jadwal bertabrakan dengan jadwal lain. Silakan pilih hari lain.");
+				toast.error("Schedule conflicts with another schedule. Please choose another time.");
+				return;
+			} else {
+				console.log("No conflicts found, submitting ticket.", data);
+				return tickets.handlePostTicket(data, token);
+			}
+		}
+
+		return tickets.handlePostTicket(data, token);
+	}
+
+	// const checkConflict = (data: ScheduleDataTicket) => {
+	// 	const hasConflict = mergedSchedules.some((schedule) => {
+	// 		return (
+	// 			data.startDate.getDate() === new Date(schedule.startDate).getDate() &&
+	// 			data.startDate.getHours() < new Date(schedule.endDate).getHours() &&
+	// 			data.endDate.getHours() > new Date(schedule.startDate).getHours()
+	// 		);
+	// 	});
+
+	// 	return hasConflict;
+	// }
+
 	// Form state
-	const [eventName, setEventName] = useState("");
-	const [startTime, setStartTime] = useState("");
-	const [endTime, setEndTime] = useState("");
-	const [eventType, setEventType] = useState("");
-	const [lecturer, setLecturer] = useState("");
-	// const [email, setEmail] = useState("");
-	// const [contact, setContact] = useState("");
-	const [description, setDescription] = useState("");
+	const [form, setForm] = useState({
+		eventName: "",
+		startTime: "",
+		endTime: "",
+		eventType: "",
+		lecturer: "",
+		description: "",
+	})
+	const [date, setDate] = useState<Date | undefined>(undefined);
 
-	// Form value change handlers
-	const handleEventNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setEventName(e.target.value);
-	};
-	const handleStartTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setStartTime(e.target.value);
-	};
-	const handleEndTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setEndTime(e.target.value);
-	};
-	const handleTypeChange = (value: string) => {
-		setEventType(value);
-	};
-	const handleLecturerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setLecturer(e.target.value);
-	};
-	// const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-	// 	setEmail(e.target.value);
-	// };
-	// const handleContactChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-	// 	setContact(e.target.value);
-	// };
-	const handleDescriptionChange = (
-		e: React.ChangeEvent<HTMLTextAreaElement>
-	) => {
-		setDescription(e.target.value);
-	};
-
-	// Pagination state
-	const [page, setPage] = useState(1);
-
-	const handleNext = () => {
-		setPage(page + 1);
-	};
-
-	const handleBack = () => {
-		setPage(page - 1);
-	};
+	const ticketData: ScheduleDataTicket = {
+		description: form.description,
+		title: form.eventName,
+		userId: user.user?.id || 0,
+		startDate: date
+			? new Date(
+					`${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}T${form.startTime}:00`
+			  )
+			: new Date(),
+		endDate: date
+			? new Date(
+					`${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}T${form.endTime}:00`
+			  )
+			: new Date(),
+		category: form.eventType,
+	}
 
 	return (
 		<Card
@@ -88,152 +132,106 @@ export function RequestForm({
 			}`}>
 			<CardHeader>
 				<CardTitle>Request Lab</CardTitle>
-				<CardDescription>
-					Masukkan informasi kegiatan Anda di bawah ini.
-				</CardDescription>
+				<CardDescription>Insert your event information bellow.</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<form>
-					<div className="flex flex-col gap-6">
-						{page === 1 ? (
-							<>
-								<div className="grid gap-2">
-									<Label htmlFor="event-name">Nama Kegiatan</Label>
+				<form onSubmit={() =>postTicket(
+									ticketData
+								)}>
+						<div className="flex flex-col gap-6">
+							<div className="grid gap-2">
+								<Label htmlFor="event-name">Event Name</Label>
+								<Input
+									id="event-name"
+									type="text"
+									value={form.eventName}
+									onChange={(e) => setForm({...form, eventName: e.target.value})}
+									placeholder="Praktikum Pemrograman Dasar"
+									required
+								/>
+							</div>
+							<div className="grid gap-2">
+								<Calendar22 label setDateState={setDate} valDateState={date} />
+							</div>
+							<div className="grid gap-2">
+								<div className="flex items-center">
+									<Label>Time</Label>
+								</div>
+								<div className="flex gap-2">
 									<Input
-										id="event-name"
-										type="text"
-										value={eventName}
-										onChange={handleEventNameChange}
-										placeholder="Praktikum Pemrograman Dasar"
+										type="time"
+										value={form.startTime}
+										onChange={(e) => setForm({...form, startTime: e.target.value})}
+										className="bg-background appearance-none w-fit"
 										required
 									/>
-								</div>
-								<div className="grid gap-2">
-									<Calendar22 label />
-								</div>
-								<div className="grid gap-2">
-									<div className="flex items-center">
-										<Label>Waktu</Label>
-									</div>
-									<div className="flex gap-2">
-										<Input
-											type="time"
-											value={startTime}
-											onChange={handleStartTimeChange}
-											className="bg-background appearance-none w-fit"
-											required
-										/>
-										<span className="flex items-center">-</span>
-										<Input
-											type="time"
-											value={endTime}
-											onChange={handleEndTimeChange}
-											className="bg-background appearance-none w-fit"
-											required
-										/>
-									</div>
-								</div>
-								<div className="grid gap-2">
-									<div className="flex items-center">
-										<Label htmlFor="event-type">Jenis Kegiatan</Label>
-									</div>
-									<Select onValueChange={setEventType}>
-										<SelectTrigger
-											value={eventType}
-											onChange={(e) =>
-												handleTypeChange((e.target as HTMLSelectElement).value)
-											}
-											id="event-type"
-											className="w-full">
-											<SelectValue placeholder="Pilih jenis kegiatan" />
-										</SelectTrigger>
-										<SelectContent>
-											<SelectGroup>
-												<SelectLabel>Jenis Kegiatan</SelectLabel>
-												<SelectItem value="praktikum">Praktikum</SelectItem>
-												<SelectItem value="kelas">Kelas</SelectItem>
-												<SelectItem value="skripsi">Skripsi</SelectItem>
-											</SelectGroup>
-										</SelectContent>
-									</Select>
-								</div>
-							</>
-						) : (
-							<>
-								<div className="grid gap-2">
-									<div className="flex items-center">
-										<Label htmlFor="lecturer">Nama Dosen</Label>
-									</div>
+									<span className="flex items-center">-</span>
 									<Input
-										id="lecturer"
-										type="text"
-										value={lecturer}
-										onChange={handleLecturerChange}
-										placeholder="Nama Dosen"
+										type="time"
+										value={form.endTime}
+										onChange={(e) => setForm({...form, endTime: e.target.value})}
+										className="bg-background appearance-none w-fit"
 										required
 									/>
 								</div>
-								{/* <div className="grid gap-2">
-									<div className="flex items-center">
-										<Label htmlFor="email">Email Unesa</Label>
-									</div>
-									<Input
-										id="email"
-										type="email"
-										value={email}
-										onChange={handleEmailChange}
-										placeholder="Email Unesa"
-										required
-									/>
+							</div>
+							<div className="grid gap-2">
+								<div className="flex items-center">
+									<Label htmlFor="event-type">Event Type</Label>
 								</div>
-								<div className="grid gap-2">
-									<div className="flex items-center">
-										<Label htmlFor="contact">Nomor Telepon</Label>
-									</div>
-									<Input
-										id="contact"
-										type="text"
-										value={contact}
-										onChange={handleContactChange}
-										placeholder="Nomor Telepon"
-										required
-									/>
-								</div> */}
-								<div className="grid gap-2">
-									<div className="flex items-center">
-										<Label htmlFor="description">Deskripsi Kegiatan</Label>
-									</div>
-									<Textarea
-										value={description}
-										onChange={handleDescriptionChange}
-										id="description"
-										required
-									/>
+								<Select onValueChange={(value) =>{setForm({...form, eventType: value}); console.log(value)}}>
+									<SelectTrigger
+										value={form.eventType}
+										id="event-type"
+										className="w-full">
+										<SelectValue placeholder="Pilih jenis kegiatan" />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectGroup>
+											<SelectLabel>Event Type</SelectLabel>
+											<SelectItem value="Praktikum">Praktikum</SelectItem>
+											<SelectItem value="Kelas">Class</SelectItem>
+											<SelectItem value="Skripsi">Skripsi</SelectItem>
+										</SelectGroup>
+									</SelectContent>
+								</Select>
+							</div>
+							<div className="grid gap-2">
+								<div className="flex items-center">
+									<Label htmlFor="lecturer">Lecture Name</Label>
 								</div>
-							</>
-						)}
-					</div>
+								<Input
+									id="lecturer"
+									type="text"
+									value={form.lecturer}
+									onChange={(e) => setForm({...form, lecturer: e.target.value})}
+									placeholder="Nama Dosen"
+									required
+								/>
+							</div>
+							<div className="grid gap-2">
+								<div className="flex items-center">
+									<Label htmlFor="description">Event Description</Label>
+								</div>
+								<Textarea
+									value={form.description}
+									onChange={(e) => setForm({...form, description: e.target.value})}
+									id="description"
+									required
+								/>
+							</div>
+							<div className="flex justify-end w-full gap-2">
+								<Button type="submit">Submit Request</Button>
+							</div>
+						</div>
+						{/* <div className="flex flex-col gap-6">
+						</div> */}
 				</form>
+				{/* <Button onClick={() => console.log(new Date(
+					`${date?.getFullYear()}-${String(date ? date.getMonth() + 1 : 0).padStart(2, "0")}-${String(date?.getDate()).padStart(2, "0")}T${form.startTime}:00`
+			  ), ticketData)}>Submit Request</Button> */}
+
 			</CardContent>
-			<CardFooter className="flex-col gap-2">
-				{page === 1 ? (
-					<div className="w-full flex justify-end">
-						<Button
-							variant={"secondary"}
-							className="w-fit"
-							onClick={handleNext}>
-							Next <ArrowRight className="ml-2" />
-						</Button>
-					</div>
-				) : (
-					<div className="flex justify-end w-full gap-2">
-						<Button variant={"outline"} onClick={handleBack}>
-							<ArrowLeft /> Back
-						</Button>
-						<Button type="submit">Submit Request</Button>
-					</div>
-				)}
-			</CardFooter>
 		</Card>
 	);
 }
@@ -245,29 +243,63 @@ export function RequestRegulerForm({
 	border?: boolean;
 	className?: string;
 }) {
+	const user = useUser();
+	const [token, setToken] = useState(localStorage.getItem("access_token") || "");
+
+	useEffect(() => {
+		const storedToken = localStorage.getItem("access_token") || "";
+		setToken(storedToken);
+	}, [])
+
+	const reguler = useReguler(token);
+
+	const postReguler = (data: ScheduleRegulerDataTicket[]) => {
+		data.map(async (ticket) => {
+			const response = await reguler.handlePostReguler(ticket);
+			return response;
+		})
+	}
+
 	// Form state
 	const [eventName, setEventName] = useState("");
-	const [semester, setSemester] = useState("");
-	const [startDate, setStartDate] = useState("");
-	const [endDate, setEndDate] = useState("");
-	const [lecturer, setLecturer] = useState("");
+	// const [semester, setSemester] = useState("");
+	const [startTime, setStartTime] = useState("");
+	const [date, setDate] = useState<Date | undefined>(undefined);
+	const [endTime, setEndTime] = useState("");
+	// const [lecturer, setLecturer] = useState("");
 
 	// Form value change handlers
 	const handleEventNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setEventName(e.target.value);
 	};
-	const handleSemesterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setSemester(e.target.value);
+	const handleStartTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setStartTime(e.target.value);
 	};
-	const handleStartDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setStartDate(e.target.value);
+	const handleEndTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setEndTime(e.target.value);
 	};
-	const handleEndDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setEndDate(e.target.value);
-	};
-	const handleLecturerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setLecturer(e.target.value);
-	};
+
+	const ticketData: ScheduleRegulerDataTicket = {
+		title: eventName,
+		userId: user.user?.id || 0,
+		startDate: date
+			? new Date(
+					`${date.toISOString().split("T")[0]}T${startTime}:00`
+			  )
+			: new Date(),
+		endDate: date
+			? new Date(
+					`${date.toISOString().split("T")[0]}T${endTime}:00`
+			  )
+			: new Date()
+	}
+
+	const arrRequest = 
+	Array.from({ length: 16 }, (_, i) => ({
+		...ticketData,
+		startDate: new Date(ticketData.startDate.getTime() + i * 7 * 24 * 60 * 60 * 1000),
+		endDate: new Date(ticketData.endDate.getTime() + i * 7 * 24 * 60 * 60 * 1000),
+	}))
 
 	return (
 		<Card
@@ -275,7 +307,7 @@ export function RequestRegulerForm({
 				className ? className : "w-full"
 			}`}>
 			<CardHeader>
-				<CardTitle>Request Lab</CardTitle>
+				<CardTitle>Request Reguler Schedule</CardTitle>
 				<CardDescription>
 					Masukkan informasi kegiatan Anda di bawah ini.
 				</CardDescription>
@@ -295,62 +327,39 @@ export function RequestRegulerForm({
 							/>
 						</div>
 						<div className="grid gap-2">
-							<Label htmlFor="semester">Semester</Label>
-							<Input
-								id="semester"
-								type="text"
-								value={semester}
-								onChange={handleSemesterChange}
-								placeholder="Praktikum Pemrograman Dasar"
-								required
-							/>
-						</div>
-						<div className="grid gap-2">
-							<div className="flex items-center">
-								<Label>Waktu</Label>
+								<Calendar22 label setDateState={setDate} valDateState={date} />
 							</div>
-							<div className="flex items-center gap-2">
-								<Calendar22 />
-								{/* <Input
-									type="time"
-									value={startTime}
-									onChange={handleStartTimeChange}
-									className="bg-background appearance-none w-fit"
-									required
-									/> */}
-								<span className="flex items-center">-</span>
-								<Calendar22 />
-								{/* <Input
-									type="time"
-									value={endTime}
-									onChange={handleEndTimeChange}
-									className="bg-background appearance-none w-fit"
-									required
-								/> */}
+							<div className="grid gap-2">
+								<div className="flex items-center">
+									<Label>Time</Label>
+								</div>
+								<div className="flex gap-2">
+									<Input
+										type="time"
+										value={startTime}
+										onChange={handleStartTimeChange}
+										className="bg-background appearance-none w-fit"
+										required
+									/>
+									<span className="flex items-center">-</span>
+									<Input
+										type="time"
+										value={endTime}
+										onChange={handleEndTimeChange}
+										className="bg-background appearance-none w-fit"
+										required
+									/>
+								</div>
 							</div>
-						</div>
-
-						<div className="grid gap-2">
-							<div className="flex items-center">
-								<Label htmlFor="lecturer">Nama Dosen</Label>
-							</div>
-							<Input
-								id="lecturer"
-								type="text"
-								value={lecturer}
-								onChange={handleLecturerChange}
-								placeholder="Nama Dosen"
-								required
-							/>
-						</div>
+					</div>
+					<div className="flex justify-end w-full gap-2">
+						<Button type="submit">Submit Request</Button>
 					</div>
 				</form>
 			</CardContent>
-			<CardFooter className="flex-col gap-2">
-				<div className="flex justify-end w-full gap-2">
-					<Button type="submit">Submit Request</Button>
-				</div>
-			</CardFooter>
+			{/* <div className="flex justify-end w-full gap-2">
+				<Button onClick={() => {console.log(arrRequest)}} type="submit">Submit Request</Button>
+			</div> */}
 		</Card>
 	);
 }

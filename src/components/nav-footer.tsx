@@ -1,9 +1,6 @@
-import {
-	EllipsisVertical,
-	HelpCircle,
-	SettingsIcon,
-	Ticket,
-} from "lucide-react";
+"use client";
+
+import { EllipsisVertical, HelpCircle, SettingsIcon } from "lucide-react";
 import {
 	SidebarFooter,
 	SidebarMenu,
@@ -18,24 +15,28 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { auth } from "@/app/auth";
-import Image from "next/image";
 import { SignOutButton } from "./signout-button";
+import { useEffect } from "react";
+import { useUser } from "@/hooks/use-user";
+import { InitialIcon } from "./initial-icon";
 
-export default async function NavFooter() {
-	const session = await auth();
+export default function NavFooter() {
+	const user = useUser();
+
+	useEffect(() => {
+		const userData = localStorage.getItem("user");
+		if (userData) {
+			try {
+				user.setUser(JSON.parse(userData));
+			} catch (error) {
+				console.error("Failed to parse user data:", error);
+			}
+		}
+	}, []);
 
 	return (
 		<SidebarFooter className="mt-auto">
 			<SidebarMenu>
-				{/* <SidebarMenuItem>
-					<SidebarMenuButton asChild>
-						<Link href="/app/your-requests">
-							<Ticket />
-							<span className="font-semibold">Your Requests</span>
-						</Link>
-					</SidebarMenuButton>
-				</SidebarMenuItem> */}
 				<SidebarMenuItem>
 					<SidebarMenuButton asChild>
 						<Link href="/help" className="gap-4">
@@ -57,18 +58,10 @@ export default async function NavFooter() {
 					<SidebarMenuButton asChild>
 						<div className="h-12 flex justify-between items-center px-2">
 							<div className="flex gap-2 justify-center items-center">
-								{/* <div
-									className={`w-10 h-10 px-4 rounded-full flex items-center justify-center font-medium bg-orange-100 text-orange-700`}>
-									U
-								</div> */}
-								<Image
-									src={session?.user?.image ?? "/default-avatar.png"}
-									width={40}
-									height={40}
-									alt="User Avatar"
-									className="w-8 h-8 rounded-full"
-								/>
-								<span className="font-semibold text-xl">Account</span>
+								{InitialIcon(user.user?.name || "User")}
+								<span className="font-semibold text-xl">
+									{user.user?.name.split(" ")[0] || "User"}
+								</span>
 							</div>
 							<div>
 								<DropdownMenu>

@@ -4,9 +4,26 @@ import { Card } from "./ui/card";
 import { Button } from "./ui/button";
 
 export default function RequestCard({item}: {item: EventRequest}) {
-    const icon = item.status === "Approved" ? <CheckCircle className="text-green-500" /> : item.status === "Pending" ? <Hourglass className="text-yellow-500" /> : <XCircle className="text-red-500" />;
-    const backgroundIcon = item.status === "Approved" ? "bg-green-100" : item.status === "Pending" ? "bg-yellow-100" : "bg-red-100";
-    const backgroundCard = item.status === "Approved" ? "bg-green-50" : item.status === "Pending" ? "bg-yellow-50" : "bg-red-50";
+    const icon =
+			item.status === "Accepted" ? (
+				<CheckCircle className="text-green-500" />
+			) : item.status === "Pending" ? (
+				<Hourglass className="text-yellow-500" />
+			) : (
+				<XCircle className="text-red-500" />
+			);
+		const backgroundIcon =
+			item.status === "Accepted"
+				? "bg-green-100"
+				: item.status === "Pending"
+				? "bg-yellow-100"
+				: "bg-red-100";
+		const backgroundCard =
+			item.status === "Accepted"
+				? "bg-green-50"
+				: item.status === "Pending"
+				? "bg-yellow-50"
+				: "bg-red-50";
 
     const iconElement = (
         <div className={`p-2 rounded-full ${backgroundIcon}`}>

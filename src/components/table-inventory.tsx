@@ -7,6 +7,7 @@ import {
 	ColumnFiltersState,
 	getFilteredRowModel,
 	getPaginationRowModel,
+	getSortedRowModel,
 } from "@tanstack/react-table";
 import {
 	Table,
@@ -18,7 +19,7 @@ import {
 } from "./ui/table";
 import { Card } from "./ui/card";
 import { Input } from "./ui/input";
-import InventoryDialog from "./inventory-dialog";
+import AddCategoryDialog from "./add-category-dialog";
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -40,6 +41,7 @@ export default function InventoryTable<TData, TValue>({
 		columns,
 		getCoreRowModel: getCoreRowModel(),
 		onSortingChange: setSorting,
+		getSortedRowModel: getSortedRowModel(),
 		onColumnFiltersChange: setColumnFilters,
 		getFilteredRowModel: getFilteredRowModel(),
 		getPaginationRowModel: getPaginationRowModel(),
@@ -48,8 +50,6 @@ export default function InventoryTable<TData, TValue>({
 			columnFilters,
 		},
 	});
-
-	console.log(table.getColumn("nameItem")?.getFilterValue());
 
 	return (
 		<div className="overflow-hidden rounded-md flex flex-col gap-4">
@@ -61,13 +61,16 @@ export default function InventoryTable<TData, TValue>({
 						placeholder="Search inventory..."
 						className="flex-1"
 						value={
-							(table.getColumn("nameItem")?.getFilterValue() as string) ?? ""
+							(table.getColumn("categoryName")?.getFilterValue() as string) ??
+							""
 						}
 						onChange={(event) => {
-							table.getColumn("nameItem")?.setFilterValue(event.target.value);
+							table
+								.getColumn("categoryName")
+								?.setFilterValue(event.target.value);
 						}}
 					/>
-					<InventoryDialog />
+					<AddCategoryDialog />
 				</div>
 			</Card>
 			<div className="flex justify-between items-center px-2">
@@ -102,8 +105,10 @@ export default function InventoryTable<TData, TValue>({
 											className={`px-4 ${
 												header.column.columnDef.header === "Action" ||
 												header.column.columnDef.header === "Quantity" ||
-												header.column.columnDef.header === "Good Condition" ||
-												header.column.columnDef.header === "Poor Condition"
+												header.column.columnDef.header === "Condition" ||
+												header.column.columnDef.header
+													?.toString()
+													.includes("ID")
 													? "text-center"
 													: ""
 											}`}>
@@ -133,8 +138,9 @@ export default function InventoryTable<TData, TValue>({
 												cell.column.columnDef.header === "Quantity" ||
 												cell.column.columnDef.header === "Good Condition" ||
 												cell.column.columnDef.header === "Poor Condition" ||
-												cell.column.columnDef.header === "Action"
-													? "align-middle text-center"
+												cell.column.columnDef.header === "Action" ||
+												cell.column.columnDef.header?.toString().includes("ID")
+													? "align-middle text-center place-items-center"
 													: ""
 											}`}>
 											{flexRender(

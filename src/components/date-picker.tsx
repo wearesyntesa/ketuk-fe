@@ -12,9 +12,16 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
-export function Calendar22({ label }: { label?: boolean }) {
+export function Calendar22({
+	label,
+	setDateState,
+	valDateState,
+}: {
+	label?: boolean;
+	setDateState: React.Dispatch<React.SetStateAction<Date | undefined>>;
+	valDateState: Date | undefined;
+}) {
 	const [open, setOpen] = React.useState(false);
-	const [date, setDate] = React.useState<Date | undefined>(undefined);
 
 	return (
 		<div className="flex flex-col gap-3">
@@ -27,17 +34,17 @@ export function Calendar22({ label }: { label?: boolean }) {
 						variant="outline"
 						id="date"
 						className="w-full justify-between font-normal">
-						{date ? date.toLocaleDateString() : "Select date"}
+						{valDateState ? valDateState.toLocaleDateString() : "Select date"}
 						<ChevronDownIcon />
 					</Button>
 				</PopoverTrigger>
 				<PopoverContent className="w-auto overflow-hidden p-0" align="start">
 					<Calendar
 						mode="single"
-						selected={date}
+						selected={valDateState}
 						captionLayout="dropdown"
-						onSelect={(date) => {
-							setDate(date);
+						onSelect={(valDateState) => {
+							setDateState?.(valDateState);
 							setOpen(false);
 						}}
 					/>

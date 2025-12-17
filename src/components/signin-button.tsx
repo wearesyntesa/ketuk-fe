@@ -1,15 +1,10 @@
+import Link from "next/link";
+import { Button } from "./ui/button";
 
-import { signIn } from "@/app/auth"
-import { Button } from "./ui/button"
- 
 export function SignInButton() {
 	return (
-		<form
-			action={async () => {
-				"use server";
-				await signIn("google", { redirectTo: "/app" });
-			}}>
+		<Link href="/auth/login">
 			<Button type="submit">Get Started</Button>
-		</form>
+		</Link>
 	);
-} 
+}
