@@ -15,13 +15,13 @@ export default function ScheduleWeek({data}: {data: MergeSchedultType[]}) {
 		<ScrollArea className="rounded-lg w-full">
 			<div className="flex flex-col gap-4 w-full">
 				{/* <ScheduleCard events={monthlySchedule} /> */}
-				<Tabs defaultValue={days[0]} className="flex flex-row w-full">
-					<TabsList className="flex flex-col h-[405px]">
+				<Tabs defaultValue={days[0]} className="flex lg:flex-row flex-col w-full">
+					<TabsList className="flex lg:flex-col flex-row lg:h-[405px] h-fit w-full lg:w-fit">
 						{days.map((day, id) => (
 							<TabsTrigger
 								key={id}
 								value={day}
-								className="flex min-h-20 md:w-fit">
+								className="flex min-h-20 lg:w-fit">
 								<div className="flex flex-col items-start">
 									<span className="font-medium">{day}</span>
 									<span className="text-sm text-muted-foreground">

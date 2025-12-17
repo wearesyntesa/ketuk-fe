@@ -59,43 +59,43 @@ const tableHeader: ColumnDef<MergeSchedultType>[] = [
 	}
 ]
 
-export default function ScheduleLab() {
+export default function ScheduleLab({mergedSchedules}: {mergedSchedules: MergeSchedultType[]}) {
 	const [scheduleType, setScheduleType] = useState('week');
 
 	const handleScheduleTypeChange = (value: string) => {
 		setScheduleType(value);
 	};
 
-	const [token, setToken] = useState<string>(localStorage.getItem("access_token") || "");
-	const user = useUser();
-	const mergedSchedules: MergeSchedultType[] = [];
+	// const [token, setToken] = useState<string>(localStorage.getItem("access_token") || "");
+	// const user = useUser();
+	// const mergedSchedules: MergeSchedultType[] = [];
 	
-	useEffect(() => {
-		const storedToken = localStorage.getItem("access_token") || "";
-		setToken(storedToken);
-		const userData = localStorage.getItem("user");
-		if (userData) {
-			try {
-				user.setUser(JSON.parse(userData));
-			} catch (error) {
-				console.error("Failed to parse user data:", error);
-			}
-		}
-	}, []);
+	// useEffect(() => {
+	// 	const storedToken = localStorage.getItem("access_token") || "";
+	// 	setToken(storedToken);
+	// 	const userData = localStorage.getItem("user");
+	// 	if (userData) {
+	// 		try {
+	// 			user.setUser(JSON.parse(userData));
+	// 		} catch (error) {
+	// 			console.error("Failed to parse user data:", error);
+	// 		}
+	// 	}
+	// }, []);
 	
-	const schedules = useSchedule(token);
-	useEffect(() => {
-		const fetchData = async () => {
-			schedules.handleGetAllRegulerSchedules();
-			schedules.handleGetAllTicketSchedules();
-		};
-		fetchData();
-	}, [mergedSchedules.length, ]);
+	// const schedules = useSchedule(token);
+	// useEffect(() => {
+	// 	const fetchData = async () => {
+	// 		schedules.handleGetAllRegulerSchedules();
+	// 		schedules.handleGetAllTicketSchedules();
+	// 	};
+	// 	fetchData();
+	// }, [mergedSchedules.length, ]);
 
-	schedules.handleGetAllAcceptedSchedules(
-		schedules.ticketSchedules,
-		schedules.regulerSchedules
-	).map((item) => mergedSchedules.push(item));
+	// schedules.handleGetAllAcceptedSchedules(
+	// 	schedules.ticketSchedules,
+	// 	schedules.regulerSchedules
+	// ).map((item) => mergedSchedules.push(item));
 
 	// schedules.ticketSchedules.forEach((ticketSchedule) => {
 	// 	mergedSchedules.push({
