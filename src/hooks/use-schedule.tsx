@@ -123,6 +123,62 @@ export const useSchedule = (token: string) => {
 		}
 	}
 
+	const handleMergeSchedules = (schedule: ScheduleTicket[], regulerSchedule: ScheduleReguler[], admin: boolean) => {
+		const merged: MergeSchedultType[] = [];
+
+		schedule.forEach((ticketSchedule) => {
+			merged.push({
+				idSchedule: ticketSchedule.idSchedule,
+				title: ticketSchedule.title,
+				startDate: ticketSchedule.startDate,
+				endDate: ticketSchedule.endDate,
+				date: new Date(ticketSchedule.startDate),
+				day: new Date(ticketSchedule.startDate).toLocaleDateString('en-US', { weekday: 'long' }),
+				userId: ticketSchedule.userId,
+				kategori: ticketSchedule.kategori,
+				description: ticketSchedule.description,
+				createdAt: ticketSchedule.createdAt,
+				updatedAt: ticketSchedule.updatedAt,
+				user: ticketSchedule.user,
+				tickets: ticketSchedule.tickets,
+				status: ticketSchedule.tickets?.[0].status || "Pending",
+				isReguler: false,
+			});
+		});
+		if (admin) {
+			regulerSchedule.forEach((regulerSchedule) => {
+				merged.push({
+					idSchedule: regulerSchedule.idSchedule,
+					title: regulerSchedule.title,
+					startDate: regulerSchedule.startDate,
+					endDate: regulerSchedule.endDate,
+					date: new Date(regulerSchedule.startDate),
+					day: new Date(regulerSchedule.startDate).toLocaleDateString('en-US', { weekday: 'long' }),
+					userId: regulerSchedule.userId,
+					kategori: regulerSchedule.kategori,
+					description: regulerSchedule.description,
+					createdAt: regulerSchedule.createdAt,
+					updatedAt: regulerSchedule.updatedAt,
+					user: regulerSchedule.user,
+					status: "Accepted",
+					isReguler: true,
+				});
+			});
+		}
+
+		return merged;
+	}
+
+	const handleGetAllAcceptedSchedules = (schedule: ScheduleTicket[], regulerSchedule: ScheduleReguler[]) => {
+		const merged: MergeSchedultType[] = [];
+		handleMergeSchedules(schedule, regulerSchedule, true).forEach((item) => {
+			if (item.status.toLowerCase() === "accepted") {
+				merged.push(item);
+			}
+		});
+		return merged;
+	}
+
 	return {
 		schedules,
 		ticketSchedules,
@@ -133,5 +189,7 @@ export const useSchedule = (token: string) => {
 		handleGetAllRegulerSchedules,
 		handleGetAllTicketSchedules,
 		handleScheduleByUserId,
+		handleMergeSchedules,
+		handleGetAllAcceptedSchedules,
 	};
 };
