@@ -82,6 +82,7 @@ const tableHeader: ColumnDef<ItemCategories>[] = [
 						<div className="flex justify-start w-full text-sm">
 							<DetailItemCategories
 								name={row.getValue("categoryName")}
+								specification={row.getValue("specification")}
 								id={row.getValue("id")}
 								qty={row.getValue("quantity") ?? 0}
 							/>

@@ -7,7 +7,7 @@ export default function Footer() {
 					<div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
 						{/* Navigation */}
 						<div>
-							<h2 className="text-lg font-semibold mb-4">Navigation</h2>
+							<h2 className="text-lg font-semibold mb-4">Service</h2>
 							<div className="flex flex-col gap-2">
 								<Link href="/" className="hover:text-blue-400 transition">
 									Landing Page
@@ -24,6 +24,12 @@ export default function Footer() {
 									href="/app/your-requests"
 									className="hover:text-blue-400 transition">
 									Your Requests
+								</Link>
+								<Link
+									href="https://status.ketuk.app/"
+									target="_blank"
+									className="hover:text-blue-400 transition">
+									Service status
 								</Link>
 							</div>
 						</div>
@@ -69,17 +75,17 @@ export default function Footer() {
 							<div>
 								<h3 className="font-semibold mb-1">Phone</h3>
 								<Link
-									href="https://wa.me/62XXXXXXXXX"
+									href="https://wa.me/6283840382571"
 									className="hover:text-blue-400 transition">
-									+62 XXX-XXXX-XXXX
+									+62 838-4038-2571
 								</Link>
 							</div>
 							<div>
 								<h3 className="font-semibold mb-1">Email</h3>
 								<Link
-									href="mailto:contact@syntesa.org"
+									href="mailto:contact@ketuk.app"
 									className="hover:text-blue-400 transition">
-									contact@syntesa.org
+									contact@ketuk.app
 								</Link>
 							</div>
 						</div>

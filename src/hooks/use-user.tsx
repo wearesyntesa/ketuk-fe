@@ -2,6 +2,7 @@
 
 import { AllUser, UserType } from "@/components/type";
 import { useEffect, useState } from "react"
+import { toast } from "sonner";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://192.168.10.184:8081";
 
@@ -78,6 +79,7 @@ export const useUser = () => {
 				if (data.success) {
 					// Save tokens to localStorage
 					window.location.reload();
+					toast.success("User updated successfully");
 				} else {
 					console.error("Failed to update user:", data.message);
 				}
@@ -103,6 +105,7 @@ export const useUser = () => {
 				if (data.success) {
 					// Save tokens to localStorage
 					window.location.reload();
+					toast.success("User deleted successfully");
 				} else {
 					console.error("Failed to delete user:", data.message);
 				}

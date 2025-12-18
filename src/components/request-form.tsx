@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "./ui/textarea";
-import { CalendarRequestForm } from "./date-picker";
+import { CalendarRange, CalendarRequestForm, CalendarUnblockForm } from "./date-picker";
 import {
 	Select,
 	SelectContent,
@@ -28,6 +28,7 @@ import { useUser } from "@/hooks/use-user";
 import { useReguler } from "@/hooks/use-reguler";
 import { useSchedule } from "@/hooks/use-schedule";
 import { toast } from "sonner";
+import { DateRange } from "react-day-picker";
 
 export function RequestForm({
 	border,
@@ -107,31 +108,46 @@ export function RequestForm({
 	const [date, setDate] = useState<Date | undefined>(undefined);
 
 	const handleStartTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		console.log(e.target.value);
-		console.log(new Date().toTimeString().slice(0,5))
-		if (e.target.value < new Date().toTimeString().slice(0,5)) {
-			toast.error("Start time cannot be in the past.");
-			setForm({...form, startTime: ""});
-		} else if (form.endTime && e.target.value >= form.endTime) {
+		if (date === undefined) {
+			toast.error("Please select a date first.");
+			setForm({...form, startTime: "", endTime: ""});
+			return;
+		}
+		const isToday = date && date.toDateString() === new Date().toDateString();
+		if (isToday) {
+			console.log("is today");
+			console.log(e.target.value < new Date().toTimeString().slice(0,5))
+			if (e.target.value < new Date().toTimeString().slice(0,5)) {
+				toast.error("Start time cannot be in the past.");
+				setForm({...form, startTime: ""});
+				return;
+			}
+		}
+		if (form.endTime && e.target.value >= form.endTime) {
 			toast.error("Start time must be earlier than end time.");
 			setForm({...form, startTime: ""});
-		} else if (!form.endTime){
-			setForm({...form, startTime: e.target.value});
 		} else {
 			setForm({...form, startTime: e.target.value});
 		}
 	};
 	const handleEndTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		if (e.target.value < new Date().toTimeString().slice(0,5)) {
-			toast.error("End time cannot be in the past.");
-			setForm({...form, endTime: ""});
-		} else if (form.startTime && e.target.value <= form.startTime && e.target.value < new Date().toTimeString().slice(0,5)) {
+		if (date === undefined) {
+			toast.error("Please select a date first.");
+			setForm({...form, startTime: "", endTime: ""});
+			return;
+		}
+		const isToday = date && date.toDateString() === new Date().toDateString();
+		if (isToday) {
+			if (e.target.value < new Date().toTimeString().slice(0,5)) {
+				toast.error("End time cannot be in the past.");
+				setForm({...form, endTime: ""});
+				return;
+			}
+		}
+		if (form.startTime && e.target.value <= form.startTime) {
 			toast.error("End time must be later than start time.");
 			setForm({...form, endTime: ""});
-		} else if(!form.startTime){
-			setForm({...form, endTime: e.target.value});
 		} else {
-			console.log(e.target.value, form.startTime);
 			setForm({...form, endTime: e.target.value});
 		}
 	};
@@ -152,6 +168,19 @@ export function RequestForm({
 			: new Date(),
 		category: form.eventType,
 	}
+
+	const handleChangeDate = (date: Date | undefined) => {
+		const today = new Date();
+		today.setHours(0, 0, 0, 0);
+		
+		if (date && date >= today) {
+			setDate(date);
+		} else {
+			setDate(undefined);
+			setForm({...form, startTime: "", endTime: ""});
+			toast.error("Cannot select past dates");
+		}
+	};
 
 	return (
 		<Card
@@ -179,7 +208,7 @@ export function RequestForm({
 								/>
 							</div>
 							<div className="grid gap-2">
-								<CalendarRequestForm label setDateState={setDate} valDateState={date} />
+								<CalendarRequestForm label valDateState={date} onChange={handleChangeDate} />
 							</div>
 							<div className="grid gap-2">
 								<div className="flex items-center">
@@ -281,9 +310,14 @@ export function RequestRegulerForm({
 
 	const reguler = useReguler(token);
 
+	function sleep(ms: number) {
+		return new Promise(resolve => setTimeout(resolve, ms));
+	}
+
 	const postReguler = (data: ScheduleRegulerDataTicket[]) => {
 		data.map(async (ticket) => {
 			const response = await reguler.handlePostReguler(ticket);
+			await sleep(1000);
 			return response;
 		})
 	}
@@ -294,6 +328,11 @@ export function RequestRegulerForm({
 	const [startTime, setStartTime] = useState("");
 	const [date, setDate] = useState<Date | undefined>(undefined);
 	const [endTime, setEndTime] = useState("");
+
+	const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
+		from: new Date(),
+		to: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
+	})
 	// const [lecturer, setLecturer] = useState("");
 
 	// Form value change handlers
@@ -302,31 +341,43 @@ export function RequestRegulerForm({
 	};
 	const handleStartTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (endTime && e.target.value >= endTime) {
-			setStartTime(e.target.value);
-		} else {
 			toast.error("Start time must be earlier than end time.");
+		} else {
+			setStartTime(e.target.value);
 		}
 	};
 	const handleEndTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (startTime && e.target.value <= startTime) {
+			toast.error("End time must be later than start time.");
+		} else {
 			console.log(e.target.value, startTime);
 			setEndTime(e.target.value);
-		} else {
-			toast.error("End time must be later than start time.");
 		}
 	};
+
+	const handleChangeDateRange = (dateRange: DateRange | undefined) => {
+		const today = new Date();
+		today.setHours(0, 0, 0, 0);
+		
+		if (dateRange && dateRange.from && dateRange.from >= today) {
+			setDateRange(dateRange);
+		} else {
+			setDateRange(undefined);
+			toast.error("Cannot select past dates");
+		}
+	}
 
 	const ticketData: ScheduleRegulerDataTicket = {
 		title: eventName,
 		userId: user.user?.id || 0,
 		startDate: date
 			? new Date(
-					`${date.toISOString().split("T")[0]}T${startTime}:00`
+					`${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}T${startTime}:00`
 			  )
 			: new Date(),
 		endDate: date
 			? new Date(
-					`${date.toISOString().split("T")[0]}T${endTime}:00`
+					`${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}T${endTime}:00`
 			  )
 			: new Date()
 	}
@@ -352,7 +403,7 @@ export function RequestRegulerForm({
 				</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<form >
+				<form onSubmit={() => postReguler(arrRequest)}>
 					<div className="flex flex-col gap-6">
 						<div className="grid gap-2">
 							<Label htmlFor="event-name">Nama Kegiatan</Label>
@@ -366,7 +417,8 @@ export function RequestRegulerForm({
 							/>
 						</div>
 						<div className="grid gap-2">
-								<CalendarRequestForm label setDateState={setDate} valDateState={date} />
+								<CalendarUnblockForm label setDateState={setDate} valDateState={date} />
+								{/* <CalendarRange label use="request" valDateState={dateRange} onChange={handleChangeDateRange} /> */}
 							</div>
 							<div className="grid gap-2">
 								<div className="flex items-center">
@@ -396,9 +448,9 @@ export function RequestRegulerForm({
 					</div>
 				</form>
 			</CardContent>
-			{/* <div className="flex justify-end w-full gap-2">
-				<Button onClick={() => {console.log(arrRequest)}} type="submit">Submit Request</Button>
-			</div> */}
+			<div className="flex justify-end w-full gap-2">
+				<Button onClick={() => postReguler(arrRequest)} type="submit">Submit Request</Button>
+			</div>
 		</Card>
 	);
 }

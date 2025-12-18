@@ -61,7 +61,7 @@ export default function LandingNav(isLogin: { isLogin: boolean }) {
 									<SignOutButton />
 								</DropdownMenuItem>
 								<DropdownMenuItem className="w-full">
-									<Link href="/app/app" className="w-full flex">
+									<Link href="/app" className="w-full flex">
 										<Button variant="default" className="w-full flex">
 											Go to Dashboard
 										</Button>

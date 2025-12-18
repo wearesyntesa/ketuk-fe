@@ -81,21 +81,21 @@ export default function UnblockingPage() {
 	// 	// }
     // }, [])
 
-    if (unblocking.dataUnblocking != undefined) {
-        return (
-            <>
-                <div className="@container/main flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-                    {/* <SectionCards /> */}
-                    <div className="px-4 lg:gap-2 lg:px-6">
-                        {/* <ChartAreaInteractive /> */}
-                        <div>
-                            <UnblockingTable columns={tableHeader} data={unblocking.dataUnblocking} />
-                        </div>
-                    </div>
-                </div>
-            </>
-        )
-    }
+    // if (unblocking.dataUnblocking != undefined) {
+    //     return (
+    //         <>
+    //             <div className="@container/main flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+    //                 {/* <SectionCards /> */}
+    //                 <div className="px-4 lg:gap-2 lg:px-6">
+    //                     {/* <ChartAreaInteractive /> */}
+    //                     <div>
+    //                         <UnblockingTable columns={tableHeader} data={unblocking.dataUnblocking} />
+    //                     </div>
+    //                 </div>
+    //             </div>
+    //         </>
+    //     )
+    // }
 
     return (
         <>
@@ -103,9 +103,10 @@ export default function UnblockingPage() {
 				{/* <SectionCards /> */}
 				<div className="px-4 lg:gap-2 lg:px-6">
 					{/* <ChartAreaInteractive /> */}
-					<div className="border">
-						<UnblockingForm className="md:w-3/4 w-full px-4 m-auto" userId={user.user?.id || 0} />
+					<div className="border rounded-xl mb-4">
+						{unblocking.dataUnblocking != undefined && <UnblockingTable columns={tableHeader} data={unblocking.dataUnblocking} />}
 					</div>
+					<UnblockingForm className="md:w-3/4 w-full px-4 m-auto" userId={user.user?.id || 0} />
 				</div>
 			</div>
         </>
