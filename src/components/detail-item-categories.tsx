@@ -27,6 +27,7 @@ import { Input } from "./ui/input";
 import { useItems } from "@/hooks/use-items";
 import DetailItem from "./detail-item";
 import Link from "next/link";
+import { description } from "./pie-chart";
 
 const tableDetail: ColumnDef<ItemDetail>[] = [
 	{
@@ -64,12 +65,14 @@ const tableDetail: ColumnDef<ItemDetail>[] = [
 
 interface DetailItemCategoriesProps {
 	name: string;
+	specification?: string;
 	id: number;
 	qty: number;
 }
 
 export default function DetailItemCategories({
 	name,
+	specification,
 	id,
 	qty,
 }: DetailItemCategoriesProps) {
@@ -137,12 +140,10 @@ export default function DetailItemCategories({
 					</DialogTrigger>
 					<DialogContent>
 						<AlertDialogHeader>
-							<DialogTitle>{name}</DialogTitle>
-							<DialogDescription>
-								Detail information about the item can be displayed here.
-							</DialogDescription>
+							<DialogTitle>Category : {name} <span className="text-sm text-slate-400">{specification && specification.length > 10 ? specification.substring(0, 10) + "..." : specification}</span></DialogTitle>
 						</AlertDialogHeader>
 						<InventoryDetailTable
+							categoryName={name}
 							columns={tableDetail}
 							data={categories.itemCategories || []}
 							id={id}
