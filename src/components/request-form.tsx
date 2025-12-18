@@ -300,6 +300,8 @@ export function RequestRegulerForm({
 		startDate: new Date(ticketData.startDate.getTime() + i * 7 * 24 * 60 * 60 * 1000),
 		endDate: new Date(ticketData.endDate.getTime() + i * 7 * 24 * 60 * 60 * 1000),
 	}))
+    //this is function onsubmit for schedule reguler form
+	// onSubmit={() => postReguler (arrRequest)}
 
 	return (
 		<Card
@@ -313,7 +315,7 @@ export function RequestRegulerForm({
 				</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<form>
+				<form >
 					<div className="flex flex-col gap-6">
 						<div className="grid gap-2">
 							<Label htmlFor="event-name">Nama Kegiatan</Label>
