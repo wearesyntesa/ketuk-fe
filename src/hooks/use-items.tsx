@@ -2,6 +2,7 @@
 
 import { ItemDetail, ItemDialogProps } from "@/components/type";
 import { useState } from "react";
+import { toast } from "sonner";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://192.168.10.184:8081";
 
@@ -59,10 +60,13 @@ export const useItems = () => {
 			if (data.success) {
 				// Save tokens to localStorage
 				window.location.reload();
+				toast.success("Item created successfully");
 			} else {
+				toast.error("Failed to create item");
 				console.error("Failed to post item:", data.message);
 			}
 		} catch (err) {
+			toast.error("Error creating item");
 			console.error("Login error:", err);
 		} finally {
 			console.log("Post request completed");

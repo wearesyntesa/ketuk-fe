@@ -100,6 +100,7 @@ export const useTickets = () => {
                 },
             });
             const data = await response.json();
+            console.log("Fetched Ticket by ID:", data);
 
             if (!response.ok) {
                 throw new Error(data.message || 'Gagal mendapatkan data ticket');
@@ -128,10 +129,12 @@ export const useTickets = () => {
             const data = await response.json();
             
             if (!response.ok) {
+                toast.error(data.message || 'Gagal mengupdate status ticket');
                 throw new Error(data.message || 'Gagal mengupdate status ticket');
             }
 
             if (response.ok) {
+                toast.success('Ticket status updated successfully');
                 toast.success('Ticket status updated successfully');
                 return data;
             }

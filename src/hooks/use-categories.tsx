@@ -2,14 +2,13 @@
 
 import { CategoryPost, ItemCategories, ItemDetail } from "@/components/type";
 import { useState } from "react";
+import { toast } from "sonner";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://192.168.10.184:8081";
 
 export const useCategories = () => {
 	const [itemsCategories, setItemsCategories] = useState<ItemCategories[]>([]);
 	const [itemCategories, setItemCategories] = useState<ItemDetail[]>([]);
-	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState("");
 
 	const handleGetAllCategories = async (token: string) => {
 		const response = await fetch(`${API_URL}/api/item-categories/v1`, {
@@ -41,15 +40,11 @@ export const useCategories = () => {
 		token: string,
 		categoryData: CategoryPost
 	) => {
-		setLoading(true);
-		setError("");
-
 		if (
 			categoryData.name.trim() === "" ||
 			categoryData.specification.trim() === ""
 		) {
-			setError("Name and Specification are required.");
-			setLoading(false);
+			toast.error("Name and Specification are required.");
 			return;
 		}
 
@@ -71,14 +66,15 @@ export const useCategories = () => {
 			if (data.success) {
 				// Save tokens to localStorage
 				window.location.reload();
+				toast.success("Category created successfully");
 			} else {
-				setError(data.error || "Login failed");
+				toast.error(data.error || "Login failed");
 			}
 		} catch (err) {
-			setError("Failed to connect to server");
+			toast.error("Failed to connect to server");
 			console.error("Login error:", err);
 		} finally {
-			setLoading(false);
+			console.log("Post category request completed");
 		}
 	};
 
@@ -87,15 +83,12 @@ export const useCategories = () => {
 		categoryData: CategoryPost,
 		id: number
 	) => {
-		setLoading(true);
-		setError("");
 
 		if (
 			categoryData.name.trim() === "" ||
 			categoryData.specification.trim() === ""
 		) {
-			setError("Name and Specification are required.");
-			setLoading(false);
+			toast.error("Name and Specification are required.");
 			return;
 		}
 
@@ -117,20 +110,19 @@ export const useCategories = () => {
 			if (data.success) {
 				// Save tokens to localStorage
 				window.location.reload();
+				toast.success("Category updated successfully");
 			} else {
-				setError(data.error || "Login failed");
+				toast.error(data.error || "Login failed");
 			}
 		} catch (err) {
-			setError("Failed to connect to server");
+			toast.error("Failed to connect to server");
 			console.error("Login error:", err);
 		} finally {
-			setLoading(false);
+			console.log("Update category request completed");
 		}
 	};
 
 	const handleDeleteCategory = async (token: string, id: number) => {
-		setLoading(true);
-		setError("");
 
 		try {
 			const response = await fetch(`${API_URL}/api/item-categories/v1/${id}`, {
@@ -146,14 +138,15 @@ export const useCategories = () => {
 			if (data.success) {
 				// Save tokens to localStorage
 				window.location.reload();
+				toast.success("Category deleted successfully");
 			} else {
-				setError(data.error || "Login failed");
+				toast.error(data.error || "Failed to delete category");
 			}
 		} catch (err) {
-			setError("Failed to connect to server");
+			toast.error("Failed to connect to server");
 			console.error("Login error:", err);
 		} finally {
-			setLoading(false);
+			console.log("Delete category request completed");
 		}
 	};
 
@@ -167,7 +160,5 @@ export const useCategories = () => {
 		handleDeleteCategory,
 		setItemCategories,
 		itemCategories,
-		loading,
-		error,
 	};
 };
