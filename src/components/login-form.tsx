@@ -106,7 +106,7 @@ export function LoginForm({
 								</div>
 							)}
 
-							<div className="grid gap-3">
+							{/* <div className="grid gap-3">
 								<Label htmlFor="email">Email</Label>
 								<Input
 									id="email"
@@ -149,7 +149,7 @@ export function LoginForm({
 										Or continue with
 									</span>
 								</div>
-							</div>
+							</div> */}
 
 							<Button
 								type="button"
