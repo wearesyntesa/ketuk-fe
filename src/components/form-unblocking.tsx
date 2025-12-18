@@ -1,7 +1,7 @@
 "use client";
 
 import { useUnblocking } from "@/hooks/use-unblocking";
-import { CalendarRequestForm, CalendarUnblockForm } from "./date-picker";
+import { CalendarRange, CalendarUnblockForm } from "./date-picker";
 import { Button } from "./ui/button";
 import {
 	Card,
@@ -14,6 +14,8 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import React, { useEffect, useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import { DateRange } from "react-day-picker";
+import { toast } from "sonner";
 
 export function UnblockingForm({
     border,
@@ -26,11 +28,14 @@ export function UnblockingForm({
 }) {
     // Form state
     const [token, setToken] = useState("")
-    const [startDate, setStartDate] = useState<Date | undefined>();
-    const [endDate, setEndDate] = useState<Date | undefined>();
     const [year, setYear] = useState<number>(new Date().getFullYear());
     const [semester, setSemester] = useState("Ganjil");
     const unblocking = useUnblocking();
+
+    const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
+        from: new Date(),
+        to: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
+    })
 
     useEffect(() => {
         const storedToken = localStorage.getItem("access_token") || "";
@@ -45,27 +50,39 @@ export function UnblockingForm({
         setSemester(e.target.value);
     }
 
+    const handleChangeDateRange = (dateRange: DateRange | undefined) => {
+		const today = new Date();
+		today.setHours(0, 0, 0, 0);
+		
+		if (dateRange && dateRange.from && dateRange.from >= today) {
+			setDateRange(dateRange);
+		} else {
+			setDateRange(undefined);
+			toast.error("Cannot select past dates");
+		}
+	}
+
     const postUnblocking = async () => {
         if (token) {
-            if (!startDate || !endDate) {
+            if (!dateRange?.from || !dateRange.to) {
                 alert("Please select start and end dates.");
                 return;
             }
-            if (startDate > endDate) {
-                alert("Start date cannot be later than end date.");
-                return;
-            }
+            // if (startDate > endDate) {
+            //     alert("Start date cannot be later than end date.");
+            //     return;
+            // }
             if (semester === "") {
                 alert("Please select a semester.");
                 return;
             }
-            if ((endDate.getMonth() < startDate.getMonth() && endDate.getFullYear() === startDate.getFullYear()) || (endDate.getFullYear() < startDate.getFullYear())) {
-                alert("End date cannot be earlier than start date.");
-                return;
-            }
+            // if ((endDate.getMonth() < startDate.getMonth() && endDate.getFullYear() === startDate.getFullYear()) || (endDate.getFullYear() < startDate.getFullYear())) {
+            //     alert("End date cannot be earlier than start date.");
+            //     return;
+            // }
             unblocking.handlePostUnblocing(token || "", {
-                    startDate,
-                    endDate,
+                    startDate: dateRange.from,
+                    endDate: dateRange.to,
                     semester: semester,
                     tahun: year,
                     userId: userId,
@@ -96,7 +113,7 @@ export function UnblockingForm({
                                 <Label>Waktu</Label>
                             </div>
                             <div className="flex items-center gap-2">
-                                <CalendarUnblockForm
+                                {/* <CalendarUnblockForm
                                     label={false}
                                     setDateState={setStartDate}
                                     valDateState={startDate ? new Date(startDate) : undefined}
@@ -106,7 +123,8 @@ export function UnblockingForm({
                                     label={false}
                                     setDateState={setEndDate}
                                     valDateState={endDate ? new Date(endDate) : undefined}
-                                />
+                                /> */}
+                                <CalendarRange label use="request" valDateState={dateRange} onChange={handleChangeDateRange} />
                             </div>
                         </div>
                         <div className="grid gap-2">
@@ -133,7 +151,7 @@ export function UnblockingForm({
 							/>
 						</div>
                         <div className="flex justify-end w-full gap-2">
-                            <Button type="submit">Submit Request</Button>
+                            <Button type="submit">Submit Unblocking</Button>
                         </div>
                     </div>
                 </form>

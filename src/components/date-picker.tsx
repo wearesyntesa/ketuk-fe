@@ -11,31 +11,31 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { toast } from "sonner"
+import { DateRange } from "react-day-picker"
 
 export function CalendarRequestForm({
 	label,
-	setDateState,
 	valDateState,
+	onChange,
 }: {
 	label?: boolean;
-	setDateState: React.Dispatch<React.SetStateAction<Date | undefined>>;
 	valDateState: Date | undefined;
+	onChange: (date: Date | undefined) => void;
 }) {
 	const [open, setOpen] = React.useState(false);
 
-	const handleChangeDate = (date: Date | undefined) => {
-		const today = new Date();
-		today.setHours(0, 0, 0, 0);
+	// const handleChangeDate = (date: Date | undefined) => {
+	// 	const today = new Date();
+	// 	today.setHours(0, 0, 0, 0);
 		
-		if (date && date >= today) {
-			setDateState(date);
-		} else {
-			setDateState(undefined);
-			toast.error("Cannot select past dates");
-		}
-		setOpen(false);
-	};
+	// 	if (date && date >= today) {
+	// 		setDateState(date);
+	// 	} else {
+	// 		setDateState(undefined);
+	// 		toast.error("Cannot select past dates");
+	// 	}
+	// 	setOpen(false);
+	// };
 
 	return (
 		<div className="flex flex-col gap-3">
@@ -56,9 +56,77 @@ export function CalendarRequestForm({
 					<Calendar
 						mode="single"
 						selected={valDateState}
-						captionLayout="dropdown"
 						onSelect={(valDateState) => {
-							handleChangeDate(valDateState);
+							onChange(valDateState);
+							setOpen(false);
+						}}
+					/>
+				</PopoverContent>
+			</Popover>
+		</div>
+	);
+}
+
+export function CalendarRange({
+	label,
+	use,
+	valDateState,
+	onChange,
+}: {
+	label?: boolean;
+	use?: "unblock" | "request";
+	valDateState: DateRange | undefined;
+	onChange: (date: DateRange | undefined) => void;
+}) {
+	const [open, setOpen] = React.useState(false);
+
+	// const handleChangeDate = (date: Date | undefined) => {
+	// 	const today = new Date();
+	// 	today.setHours(0, 0, 0, 0);
+		
+	// 	if (date && date >= today) {
+	// 		setDateState(date);
+	// 	} else {
+	// 		setDateState(undefined);
+	// 		toast.error("Cannot select past dates");
+	// 	}
+	// 	setOpen(false);
+	// };
+
+	return (
+		<div className="flex flex-col gap-3">
+			<Label htmlFor="date" className={`px-1 ${label ? "visible" : "hidden"}`}>
+				Tanggal {use === "unblock" ? "Unblock" : "Request"}
+			</Label>
+			<Popover open={open} onOpenChange={setOpen}>
+				<PopoverTrigger asChild>
+					<Button
+						variant="outline"
+						id="date"
+						className="w-full justify-between font-normal">
+						{valDateState ? `${valDateState.from?.toLocaleDateString()} - ${valDateState.from?.toLocaleDateString()}` : "Select date"}
+						<ChevronDownIcon />
+					</Button>
+				</PopoverTrigger>
+				<PopoverContent className="w-auto overflow-hidden p-0" align="start">
+					<Calendar
+						mode="range"
+						selected={valDateState}
+						numberOfMonths={2}
+						className="md:block hidden"
+						onSelect={(valDateState) => {
+							onChange(valDateState);
+							setOpen(false);
+						}}
+					/>
+					<Calendar
+						mode="range"
+						selected={valDateState}
+						numberOfMonths={1}
+						className="md:hidden block"
+						onSelect={(valDateState) => {
+							onChange(valDateState);
+							setOpen(false);
 						}}
 					/>
 				</PopoverContent>
@@ -97,7 +165,6 @@ export function CalendarUnblockForm({
 					<Calendar
 						mode="single"
 						selected={valDateState}
-						captionLayout="dropdown"
 						onSelect={(valDateState) => {
 							setDateState?.(valDateState);
 							setOpen(false);
