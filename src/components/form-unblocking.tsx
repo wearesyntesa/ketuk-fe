@@ -1,7 +1,7 @@
 "use client";
 
 import { useUnblocking } from "@/hooks/use-unblocking";
-import { Calendar22 } from "./date-picker";
+import { CalendarRequestForm, CalendarUnblockForm } from "./date-picker";
 import { Button } from "./ui/button";
 import {
 	Card,
@@ -96,13 +96,13 @@ export function UnblockingForm({
                                 <Label>Waktu</Label>
                             </div>
                             <div className="flex items-center gap-2">
-                                <Calendar22
+                                <CalendarUnblockForm
                                     label={false}
                                     setDateState={setStartDate}
                                     valDateState={startDate ? new Date(startDate) : undefined}
                                 />
                                 <span className="flex items-center">-</span>
-                                <Calendar22
+                                <CalendarUnblockForm
                                     label={false}
                                     setDateState={setEndDate}
                                     valDateState={endDate ? new Date(endDate) : undefined}
