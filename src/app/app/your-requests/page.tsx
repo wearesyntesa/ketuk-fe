@@ -17,6 +17,10 @@ import DetailTicketPatch from "@/components/detail-ticket-patch";
 
 const tableHeaderAdmin: ColumnDef<MergeSchedultType>[] = [
 	{
+		accessorKey: "idSchedule",
+		header: "ID",
+	},
+	{
 		accessorKey: "title",
 		header: "Title Event",
 		cell: ({ row }) => <InitialIconWithName title={row.original.title} />,
@@ -82,6 +86,16 @@ const tableHeaderAdmin: ColumnDef<MergeSchedultType>[] = [
 		},
 	},
 	{
+		header: "Is Reguler",
+		cell: ({ row }) => {
+			return (
+				<span>
+					{row.original.isReguler ? "✅" : "❌"}
+				</span>
+			);
+		}
+	},
+	{
 		header: "Actions",
 		cell: ({ row }) => {
 			return (
@@ -97,7 +111,7 @@ const tableHeaderAdmin: ColumnDef<MergeSchedultType>[] = [
 						<EllipsisVertical size={16} />
 					</DropdownMenuTrigger>
 					<DropdownMenuContent>
-						<DetailTicketPatch id={row.original.tickets?.[0].id || 0} />
+						<DetailTicketPatch startTime={row.original.startDate} endTime={row.original.endDate} date={row.original.startDate} id={row.original.tickets?.[0].id || 0} />
 					</DropdownMenuContent>
 				</DropdownMenu>
 			);
@@ -213,51 +227,16 @@ export default function YourRequestsPage() {
 		regulerSchedules: schedules.regulerSchedules,
 	});
 
+	const regulerFiltered = schedules.regulerSchedules
+	.filter((schedule, index, self) => 
+		index === self.findIndex((s) => s.title === schedule.title)
+	);
+
 	schedules.handleMergeSchedules(
 		schedules.ticketSchedules,
-		schedules.regulerSchedules,
+		regulerFiltered,
 		user.user?.role === "admin"
 	).forEach((item) => mergedSchedules.push(item));
-
-	// schedules.ticketSchedules.forEach((ticketSchedule) => {
-	// 	mergedSchedules.push({
-	// 		idSchedule: ticketSchedule.idSchedule,
-	// 		title: ticketSchedule.title,
-	// 		startDate: ticketSchedule.startDate,
-	// 		endDate: ticketSchedule.endDate,
-	// 		date: new Date(ticketSchedule.startDate),
-	// 		day: new Date(ticketSchedule.startDate).toLocaleDateString('en-US', { weekday: 'long' }),
-	// 		userId: ticketSchedule.userId,
-	// 		kategori: ticketSchedule.kategori,
-	// 		description: ticketSchedule.description,
-	// 		createdAt: ticketSchedule.createdAt,
-	// 		updatedAt: ticketSchedule.updatedAt,
-	// 		user: ticketSchedule.user,
-	// 		tickets: ticketSchedule.tickets,
-	// 		status: ticketSchedule.tickets?.[0].status || "Pending",
-	// 		isReguler: false,
-	// 	});
-	// });
-	// if(user.user?.role === "admin") {
-	// 	schedules.regulerSchedules.forEach((regulerSchedule) => {
-	// 		mergedSchedules.push({
-	// 			idSchedule: regulerSchedule.idSchedule,
-	// 			title: regulerSchedule.title,
-	// 			startDate: regulerSchedule.startDate,
-	// 			endDate: regulerSchedule.endDate,
-	// 			date: new Date(regulerSchedule.startDate),
-	// 			day: new Date(regulerSchedule.startDate).toLocaleDateString('en-US', { weekday: 'long' }),
-	// 			userId: regulerSchedule.userId,
-	// 			kategori: regulerSchedule.kategori,
-	// 			description: regulerSchedule.description,
-	// 			createdAt: regulerSchedule.createdAt,
-	// 			updatedAt: regulerSchedule.updatedAt,
-	// 			user: regulerSchedule.user,
-	// 			status: "Accepted",
-	// 			isReguler: true,
-	// 		});
-	// 	});
-	// }
 
 	const header =
 		user.user?.role === "admin" ? tableHeaderAdmin : tableHeaderUser;

@@ -118,7 +118,13 @@ export default function RequestsTable<TData extends MergeSchedultType, TValue>({
 							<TableRow key={headerGroup.id}>
 								{headerGroup.headers.map((header) => {
 									return (
-										<TableHead key={header.id} className={`px-4`}>
+										<TableHead key={header.id} className={`px-4
+											${
+												header.column.columnDef.header === "Action" ||
+												header.column.columnDef.header === "Is Reguler"
+                                                    ? "text-center"
+                                                    : ""}
+										`}>
 											{header.isPlaceholder
 												? null
 												: flexRender(
@@ -139,7 +145,11 @@ export default function RequestsTable<TData extends MergeSchedultType, TValue>({
 									className={`hover:bg-muted/50`}
 									data-state={row.getIsSelected() && "selected"}>
 									{row.getVisibleCells().map((cell) => (
-										<TableCell key={cell.id} className={`px-4`}>
+										<TableCell key={cell.id} className={`px-4 ${
+                                                cell.column.columnDef.header === "Actions" || 
+												cell.column.columnDef.header === "Is Reguler" &&
+                                                "align-middle text-center place-items-center"
+                                            }`}>
 											{flexRender(
 												cell.column.columnDef.cell,
 												cell.getContext()
