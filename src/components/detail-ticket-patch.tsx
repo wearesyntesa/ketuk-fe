@@ -42,6 +42,8 @@ export default function DetailTicketPatch({ id }: DetailItemProps) {
 
 	const tickets = useTickets();
 
+	// console.log("this is ticket data", ticketData)
+
 	useEffect(() => {
 		tickets.handleGetTicketByID(id, token).then((data) => {
 			setTicketData({
@@ -61,6 +63,8 @@ export default function DetailTicketPatch({ id }: DetailItemProps) {
 			status: "accepted",
 			reason: ticketData.reason,
 		};
+		// console.log("this is the data:", data)
+		// console.log("this is ticket id:", id)
 		if (token) {
 			tickets.handlePatchTicket(data, id, token).then(() => {
 				console.log("Ticket approved");
@@ -91,7 +95,7 @@ export default function DetailTicketPatch({ id }: DetailItemProps) {
 					<DialogDescription>
 						Are you sure you want to approve this ticket?
 					</DialogDescription>
-					<form onSubmit={() => approveTicket}>
+					<form onSubmit={approveTicket}>
 						<div className="flex flex-col gap-6">
 							<div className="grid gap-2">
 								<Label htmlFor="item-name">Nama Ticket</Label>
@@ -120,7 +124,7 @@ export default function DetailTicketPatch({ id }: DetailItemProps) {
 							</div>
 							<div className="w-full gap-4 grid grid-cols-2">
 								<DialogClose className="border rounded-mb">Cancel</DialogClose>
-								<Button>Approve</Button>
+								<Button type="submit">Approve</Button>
 							</div>
 						</div>
 					</form>
@@ -142,7 +146,7 @@ export default function DetailTicketPatch({ id }: DetailItemProps) {
 							<DialogClose className="flex-1 p-1 border rounded-md">
 								Cancel
 							</DialogClose>
-							<Button className="flex-1" onClick={() => rejectTicket}>
+							<Button className="flex-1" onClick={rejectTicket}>
 								Confirm
 							</Button>
 						</div>

@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "./ui/textarea";
-import { Calendar22 } from "./date-picker";
+import { CalendarRequestForm } from "./date-picker";
 import {
 	Select,
 	SelectContent,
@@ -54,8 +54,6 @@ export function RequestForm({
 		schedules.ticketSchedules,
 		schedules.regulerSchedules
 	).forEach((item) => mergedSchedules.push(item));
-	
-	console.log("Merged Schedules:", mergedSchedules);
 
 	useEffect(() => {
 		const storedToken = localStorage.getItem("access_token") || "";
@@ -108,6 +106,36 @@ export function RequestForm({
 	})
 	const [date, setDate] = useState<Date | undefined>(undefined);
 
+	const handleStartTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		console.log(e.target.value);
+		console.log(new Date().toTimeString().slice(0,5))
+		if (e.target.value < new Date().toTimeString().slice(0,5)) {
+			toast.error("Start time cannot be in the past.");
+			setForm({...form, startTime: ""});
+		} else if (form.endTime && e.target.value >= form.endTime) {
+			toast.error("Start time must be earlier than end time.");
+			setForm({...form, startTime: ""});
+		} else if (!form.endTime){
+			setForm({...form, startTime: e.target.value});
+		} else {
+			setForm({...form, startTime: e.target.value});
+		}
+	};
+	const handleEndTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		if (e.target.value < new Date().toTimeString().slice(0,5)) {
+			toast.error("End time cannot be in the past.");
+			setForm({...form, endTime: ""});
+		} else if (form.startTime && e.target.value <= form.startTime && e.target.value < new Date().toTimeString().slice(0,5)) {
+			toast.error("End time must be later than start time.");
+			setForm({...form, endTime: ""});
+		} else if(!form.startTime){
+			setForm({...form, endTime: e.target.value});
+		} else {
+			console.log(e.target.value, form.startTime);
+			setForm({...form, endTime: e.target.value});
+		}
+	};
+
 	const ticketData: ScheduleDataTicket = {
 		description: form.description,
 		title: form.eventName,
@@ -151,7 +179,7 @@ export function RequestForm({
 								/>
 							</div>
 							<div className="grid gap-2">
-								<Calendar22 label setDateState={setDate} valDateState={date} />
+								<CalendarRequestForm label setDateState={setDate} valDateState={date} />
 							</div>
 							<div className="grid gap-2">
 								<div className="flex items-center">
@@ -161,7 +189,7 @@ export function RequestForm({
 									<Input
 										type="time"
 										value={form.startTime}
-										onChange={(e) => setForm({...form, startTime: e.target.value})}
+										onChange={(e) => handleStartTimeChange(e)}
 										className="bg-background appearance-none w-fit"
 										required
 									/>
@@ -169,7 +197,7 @@ export function RequestForm({
 									<Input
 										type="time"
 										value={form.endTime}
-										onChange={(e) => setForm({...form, endTime: e.target.value})}
+										onChange={(e) => handleEndTimeChange(e)}
 										className="bg-background appearance-none w-fit"
 										required
 									/>
@@ -273,10 +301,19 @@ export function RequestRegulerForm({
 		setEventName(e.target.value);
 	};
 	const handleStartTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setStartTime(e.target.value);
+		if (endTime && e.target.value >= endTime) {
+			setStartTime(e.target.value);
+		} else {
+			toast.error("Start time must be earlier than end time.");
+		}
 	};
 	const handleEndTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setEndTime(e.target.value);
+		if (startTime && e.target.value <= startTime) {
+			console.log(e.target.value, startTime);
+			setEndTime(e.target.value);
+		} else {
+			toast.error("End time must be later than start time.");
+		}
 	};
 
 	const ticketData: ScheduleRegulerDataTicket = {
@@ -300,6 +337,8 @@ export function RequestRegulerForm({
 		startDate: new Date(ticketData.startDate.getTime() + i * 7 * 24 * 60 * 60 * 1000),
 		endDate: new Date(ticketData.endDate.getTime() + i * 7 * 24 * 60 * 60 * 1000),
 	}))
+    //this is function onsubmit for schedule reguler form
+	// onSubmit={() => postReguler (arrRequest)}
 
 	return (
 		<Card
@@ -313,7 +352,7 @@ export function RequestRegulerForm({
 				</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<form>
+				<form >
 					<div className="flex flex-col gap-6">
 						<div className="grid gap-2">
 							<Label htmlFor="event-name">Nama Kegiatan</Label>
@@ -327,7 +366,7 @@ export function RequestRegulerForm({
 							/>
 						</div>
 						<div className="grid gap-2">
-								<Calendar22 label setDateState={setDate} valDateState={date} />
+								<CalendarRequestForm label setDateState={setDate} valDateState={date} />
 							</div>
 							<div className="grid gap-2">
 								<div className="flex items-center">

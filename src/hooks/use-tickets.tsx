@@ -117,7 +117,7 @@ export const useTickets = () => {
 
     const handlePatchTicket = async (patchTicket: PatchTicketStatus, id: number, token: string) => {
         try {
-            const response = await fetch(`${API_URL}/api/tickets/v1/{id}/status`, {
+            const response = await fetch(`${API_URL}/api/tickets/v1/${id}/status`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",

@@ -277,6 +277,16 @@ export default function YourRequestsPage() {
 }
 
 function EventTypeCell({ category }: { category: string }) {
-    const iconType = category.toLowerCase() === "kelas" ? "📅" : category.toLowerCase() === "praktikum" ? "🛠️" : category.toLowerCase() === "skripsi" ? "💻" : "❓";
-    return <span>{iconType} {category}</span>;
+	if(category == "" || category == null ){
+		// console.log("passing schedule reguler")
+	}else{
+		const iconType = category.toLowerCase() === "kelas" ? "📅" : category.toLowerCase() === "praktikum" ? "🛠️" : category.toLowerCase() === "skripsi" ? "💻" : "❓";
+		return (
+      <span>
+        {iconType} {category}
+      </span>
+    );
+
+	}
+    
 }

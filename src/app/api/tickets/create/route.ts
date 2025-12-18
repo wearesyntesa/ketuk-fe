@@ -6,7 +6,7 @@ import amqp from 'amqplib';
 // Gunakan format full: amqp://user:pass@host:port
 const USER = process.env.QUEUE_USER || 'user';
 const PASS = process.env.QUEUE_PASSWORD || 'password';
-const HOST = '192.168.10.184';
+const HOST = process.env.RABBITMQ_HOST || "192.168.10.184";
 const PORT = process.env.QUEUE_PORT || 5672;
 
 const RABBITMQ_URL = `amqp://${USER}:${PASS}@${HOST}:${PORT}`;

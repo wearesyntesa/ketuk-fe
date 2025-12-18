@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useUser } from "@/hooks/use-user";
 import AppHeader from "@/components/app-header";
-import { Toaster } from "sonner";
+import { toast, Toaster } from "sonner";
 
 export default function AppLayout({
 	children,
@@ -69,6 +69,15 @@ export default function AppLayout({
 		console.log("Pathname changed:", user.user?.role);
 	}, [pathname]);
 
+	useEffect(() => {
+		if (user.user && user.user?.email.includes("unesa.ac.id") === false) {
+			console.log("Non-UNESA email detected");
+			toast.warning("You are using a non-UNESA email address. Please sign in with your UNESA email to access all features.", {
+				duration: 8000,
+			});
+		}
+	}, [user.user?.email]);
+
 	if (loading) {
 		return (
 			<div className="flex min-h-screen items-center justify-center">
@@ -94,7 +103,7 @@ export default function AppLayout({
 							<AppHeader title={header} />
 							{children}
 							{/* <Toaster position="bottom-right" /> */}
-							<WarningEmail email={user.user?.email || ""} />
+							{/* <WarningEmail email={user.user?.email || ""} /> */}
 							<Toaster richColors position="bottom-right" />
 						</div>
 					</div>
