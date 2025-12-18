@@ -6,11 +6,15 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, Di
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
-import { PatchTicketStatus, UserType } from "./type";
+import { MergeSchedultType, PatchTicketStatus, UserType } from "./type";
 import { useTickets } from "@/hooks/use-tickets";
+import { useSchedule } from "@/hooks/use-schedule";
 
 interface DetailItemProps {
 	id: number;
+	startTime: string;
+	endTime: string;
+	date: string;
 }
 
 interface TicketData {
@@ -23,7 +27,7 @@ interface TicketData {
 	user: UserType;
 }
 
-export default function DetailTicketPatch({ id }: DetailItemProps) {
+export default function DetailTicketPatch({ id, startTime, endTime, date }: DetailItemProps) {
 	const [ticketData, setTicketData] = useState<TicketData>({
 		id: 0,
 		idSchedule: 0,
@@ -39,6 +43,21 @@ export default function DetailTicketPatch({ id }: DetailItemProps) {
 		},
 	});
 	const token = localStorage.getItem("access_token") || "";
+	const schedules = useSchedule(token);
+	const mergeAcceptedSchedules: MergeSchedultType[] = [];
+
+	useEffect(() => {
+		const fetchData = async () => {
+			schedules.handleGetAllRegulerSchedules();
+			schedules.handleGetAllTicketSchedules();
+		};
+		fetchData();
+	}, [mergeAcceptedSchedules.length]);
+
+	schedules.handleGetAllAcceptedSchedules(
+		schedules.ticketSchedules,
+		schedules.regulerSchedules
+	).map((item) => mergeAcceptedSchedules.push(item));
 
 	const tickets = useTickets();
 
@@ -57,6 +76,26 @@ export default function DetailTicketPatch({ id }: DetailItemProps) {
 			});
 		})
 	}, [])
+
+	const checkConflict = () => {
+		const conflicts = mergeAcceptedSchedules.filter((schedule) => {
+			const scheduleDate = new Date(schedule.date);
+			const checkDate = new Date(date);
+			return (
+				schedule.startDate === startTime &&
+				schedule.endDate === endTime &&
+				scheduleDate.getFullYear() === checkDate.getFullYear() &&
+				scheduleDate.getMonth() === checkDate.getMonth() &&
+				scheduleDate.getDate() === checkDate.getDate()
+			);
+		});
+
+		if (conflicts.length > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	const approveTicket = () => {
 		const data: PatchTicketStatus = {
@@ -90,29 +129,60 @@ export default function DetailTicketPatch({ id }: DetailItemProps) {
 				<DialogTrigger className="cursor-pointer hover:font-semibold w-full">
 					Approve
 				</DialogTrigger>
-				<DialogContent>
-					<DialogTitle>Approve Ticket</DialogTitle>
-					<DialogDescription>
-						Are you sure you want to approve this ticket?
-					</DialogDescription>
-					<form onSubmit={approveTicket}>
-						<div className="flex flex-col gap-6">
-							<div className="grid gap-2">
-								<Label htmlFor="item-name">Nama Ticket</Label>
-								<Input
-									id="item-name"
-									type="text"
-									placeholder="Lemari"
-									value={ticketData.title}
-									readOnly
-								/>
-							</div>
+					{!checkConflict() ? (
+						<DialogContent>
+							<DialogTitle>Approve Ticket</DialogTitle>
+							<DialogDescription>
+								Are you sure you want to approve this ticket?
+							</DialogDescription>
+							<form onSubmit={approveTicket}>
+								<div className="flex flex-col gap-6">
+									<div className="grid gap-2">
+										<Label htmlFor="item-name">Nama Ticket</Label>
+										<Input
+											id="item-name"
+											type="text"
+											placeholder="Lemari"
+											value={ticketData.title}
+											readOnly
+										/>
+									</div>
+									<div className="grid gap-2">
+										<Label htmlFor="specification">Note</Label>
+										<Textarea
+											id="specification"
+											placeholder="Azko"
+											value={ticketData.reason}
+											onChange={(e) =>
+												setTicketData({
+													...ticketData,
+													reason: e.target.value,
+												})
+											}
+											required
+										/>
+									</div>
+									<div className="w-full gap-4 grid grid-cols-2">
+										<DialogClose className="border rounded-mb">Cancel</DialogClose>
+										<Button type="submit">Approve</Button>
+									</div>
+								</div>
+							</form>
+						</DialogContent>
+					) : (
+						<DialogContent>
+							<DialogTitle>Conflict Detected</DialogTitle>
+							<DialogDescription>
+								There is a scheduling conflict with the selected time slot. You cannot approve this ticket.
+								<br/>
+								This action will reject the ticket instead.
+							</DialogDescription>
 							<div className="grid gap-2">
 								<Label htmlFor="specification">Note</Label>
 								<Textarea
 									id="specification"
 									placeholder="Azko"
-									value={ticketData.reason}
+									value={"Your request conflicts with an existing schedule."}
 									onChange={(e) =>
 										setTicketData({
 											...ticketData,
@@ -122,13 +192,16 @@ export default function DetailTicketPatch({ id }: DetailItemProps) {
 									required
 								/>
 							</div>
-							<div className="w-full gap-4 grid grid-cols-2">
-								<DialogClose className="border rounded-mb">Cancel</DialogClose>
-								<Button type="submit">Approve</Button>
+							<div className="flex gap-2">
+								<DialogClose className="flex-1 p-1 border rounded-md">
+									Cancel
+								</DialogClose>
+								<Button className="flex-1" onClick={rejectTicket}>
+									Confirm
+								</Button>
 							</div>
-						</div>
-					</form>
-				</DialogContent>
+						</DialogContent>
+					)}
 			</Dialog>
 
 			{/* Delete Data */}
@@ -142,6 +215,21 @@ export default function DetailTicketPatch({ id }: DetailItemProps) {
 						<DialogDescription>
 							Are you sure you want to reject this ticket?
 						</DialogDescription>
+						<div className="grid gap-2">
+							<Label htmlFor="specification">Note</Label>
+							<Textarea
+								id="specification"
+								placeholder="Azko"
+								value={ticketData.reason}
+								onChange={(e) =>
+									setTicketData({
+										...ticketData,
+										reason: e.target.value,
+									})
+								}
+								required
+							/>
+						</div>
 						<div className="flex gap-2">
 							<DialogClose className="flex-1 p-1 border rounded-md">
 								Cancel
