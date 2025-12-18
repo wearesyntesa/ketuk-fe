@@ -1,13 +1,17 @@
 "use client";
 
-import { useState } from "react";
+// import { useState } from "react";
+import { toast } from "sonner";
 
 export default function WarningEmail({email}: {email: string | undefined | null}) {
-    const [showWarning, setShowWarning] = useState(true);
+    // const [showWarning, setShowWarning] = useState(true);
     if (email && !email.includes("unesa.ac.id")) {
 			return (
 				<div>
-					{showWarning && (
+					{/* {toast.warning('You are using a non-UNESA email address. Please sign in with your UNESA email to access all features.', {
+			duration: 8000,
+		  })} */}
+					{/* {showWarning && (
 						<div
 							role="alert"
 							className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-md flex items-start gap-3 fixed bottom-4 right-4 max-w-sm shadow-md">
@@ -31,7 +35,7 @@ export default function WarningEmail({email}: {email: string | undefined | null}
 								</div>
 							</div>
 						</div>
-					)}
+					)} */}
 				</div>
 			);
 		} else {
