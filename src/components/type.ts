@@ -222,7 +222,7 @@ export interface ScheduleRegulerDataTicket {
 }
 
 export interface CategoryChartData {
-  category: string;
+  category: "Praktikum" | "Kelas" | "Skripsi" | string;
   totalRequest: number;
   fill: string;
 }
