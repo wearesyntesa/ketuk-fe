@@ -1,7 +1,7 @@
 "use client";
 
 import { Ticket, ScheduleDataTicket, ScheduleRegulerDataTicket, PatchTicketStatus } from "@/components/type";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import { useState } from "react"
 import { toast } from "sonner";
 
@@ -9,7 +9,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://192.168.10.184:8081";
 
 export const useTickets = () => {
     // const token = localStorage.getItem("access_token") || "";
-    const route = useRouter();
+    // const route = useRouter();
     const [tickets, setTickets] = useState<Ticket[]>([]);
 
     const handleGetAllTickets = async () => {
@@ -41,16 +41,16 @@ export const useTickets = () => {
                 throw new Error(data.message || 'Gagal mengirim pesan');
             }
 
-            if (response.ok) {
-                route.push('/app/your-requests');
-                toast.success('Ticket created successfully');
-                return data;
-            }
-    
+            // route.push('/app/your-requests');
+            // window.location.reload();
+            window.location.href = '/app/your-requests';
+            toast.success('Ticket created successfully');
             return data;
         } catch (error: any) {
             toast.error(error.message || 'Gagal mengirim pesan');
             throw error;
+        } finally {
+
         }
     }
 
@@ -142,6 +142,7 @@ export const useTickets = () => {
             if (response.ok) {
                 toast.success('Ticket status updated successfully');
                 toast.success('Ticket status updated successfully');
+                window.location.reload();
                 return data;
             }
     

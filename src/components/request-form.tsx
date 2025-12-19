@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "./ui/textarea";
-import { CalendarRange, CalendarRequestForm, CalendarUnblockForm } from "./date-picker";
+import { CalendarRequestForm, CalendarUnblockForm } from "./date-picker";
 import {
 	Select,
 	SelectContent,
@@ -42,6 +42,7 @@ export function RequestForm({
 	const [token, setToken] = useState(localStorage.getItem("access_token") || "");
 	const schedules = useSchedule(token);
 	const mergedSchedules: MergeSchedultType[] = [];
+	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -62,6 +63,7 @@ export function RequestForm({
 	}, [])
 
 	const postTicket = (data: ScheduleDataTicket) => {
+		setLoading(true);
 		// console.log("Submitting ticket:", data);
 		if (mergedSchedules.length != 0) {
 			const hasConflict = mergedSchedules.some((schedule) => {
@@ -74,13 +76,16 @@ export function RequestForm({
 			if (hasConflict) {
 				// alert("Jadwal bertabrakan dengan jadwal lain. Silakan pilih hari lain.");
 				toast.error("Schedule conflicts with another schedule. Please choose another time.");
+				setLoading(false);
 				return;
 			} else {
 				console.log("No conflicts found, submitting ticket.", data);
+				setLoading(false);
 				return tickets.handlePostTicket(data, token);
 			}
 		}
 
+		setLoading(false);
 		return tickets.handlePostTicket(data, token);
 	}
 
@@ -181,6 +186,28 @@ export function RequestForm({
 			toast.error("Cannot select past dates");
 		}
 	};
+
+	if (loading) {
+		return (
+			<Card
+				className={`${border ? "border" : "border-0 shadow-none"} ${
+					className ? className : "w-full"
+				}`}>
+				<CardHeader>
+					<CardTitle>Request Lab</CardTitle>
+					<CardDescription>Insert your event information bellow.</CardDescription>
+				</CardHeader>
+				<CardContent>
+					<div className="flex items-center justify-center py-12">
+						<div className="text-center">
+							<div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+							<p className="mt-4 text-sm text-muted-foreground">Submitting your request...</p>
+						</div>
+					</div>
+				</CardContent>
+			</Card>
+		)
+	}
 
 	return (
 		<Card
