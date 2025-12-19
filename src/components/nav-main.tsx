@@ -36,7 +36,7 @@ const itemsAdmin: SideBarItem[] = [
 		bgGradient: "bg-linear-to-r from-cyan-300 to-cyan-50",
 	},
 	{
-		title: "Requests History",
+		title: "Requests List",
 		url: "/app/your-requests",
 		icon: Ticket,
 		child: [],

@@ -109,12 +109,12 @@ export default function DetailItem({ itemId }: DetailItemProps) {
 										...categoryData,
 										condition: value as "Good" | "Poor",
 									})
-								}>
+								}
+								required>
 								<SelectTrigger className="w-full">
 									<SelectValue placeholder="Select Condition" />
 								</SelectTrigger>
 								<SelectContent>
-									<SelectItem value="Baik">Baik</SelectItem>
 									<SelectItem value="Good">Good</SelectItem>
 									<SelectItem value="Poor">Poor</SelectItem>
 								</SelectContent>

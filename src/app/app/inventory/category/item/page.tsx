@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useItems } from "@/hooks/use-items";
+import { ArrowLeftCircle } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -50,6 +51,9 @@ export default function DetailCategoryItem() {
                 <div className="px-4 lg:gap-2 lg:px-6 flex flex-col gap-4">
                     <form onSubmit={updateItem}>
 						<div className="flex flex-col gap-6">
+							<div className="w-full gap-4 grid grid-cols-2">
+								<Button variant={"outline"} onClick={() => window.history.back()} className="w-fit"><ArrowLeftCircle/> Back</Button>
+							</div>
 							<div className="grid gap-2">
 								<Label htmlFor="item-name">Nama Item</Label>
 								<Input
@@ -61,7 +65,8 @@ export default function DetailCategoryItem() {
 										setCategoryData({ ...categoryData, name: e.target.value })
 									}
 									required
-								/>
+									readOnly
+									/>
 							</div>
 							<div className="grid gap-2">
 								<Label htmlFor="specification">Specification</Label>
@@ -75,8 +80,8 @@ export default function DetailCategoryItem() {
 											note: e.target.value,
 										})
 									}
-									required
-								/>
+									required 
+									readOnly />
 							</div>
 							<Select
 								value={categoryData.condition}
@@ -85,21 +90,16 @@ export default function DetailCategoryItem() {
 										...categoryData,
 										condition: value as "Good" | "Poor",
 									})
-								}>
-								<SelectTrigger className="w-full">
+							}
+							disabled>
+								<SelectTrigger className="w-full" >
 									<SelectValue placeholder="Select Condition" />
 								</SelectTrigger>
 								<SelectContent>
-									<SelectItem value="Baik">Baik</SelectItem>
 									<SelectItem value="Good">Good</SelectItem>
 									<SelectItem value="Poor">Poor</SelectItem>
 								</SelectContent>
 							</Select>
-
-							<div className="w-full gap-4 grid grid-cols-2">
-								<Button variant={"outline"} onClick={() => window.history.back()}>Cancel</Button>
-								<Button>Submit</Button>
-							</div>
 						</div>
 					</form>
                 </div>

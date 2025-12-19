@@ -12,22 +12,12 @@ import {
 import {
   ChartConfig,
   ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
 import { CategoryChartData } from "./type"
 
 export const description = "A simple pie chart"
-
-// const chartData = [
-//   { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
-//   { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-//   { browser: "firefox", visitors: 187, fill: "var(--color-firefox)" },
-//   { browser: "edge", visitors: 173, fill: "var(--color-edge)" },
-//   { browser: "other", visitors: 90, fill: "var(--color-other)" },
-// ]
 
 const chartConfig = {
   category: {
@@ -64,12 +54,26 @@ export function ChartPieSimple({data}: {data: CategoryChartData[]}) {
 							content={<ChartTooltipContent />}
 						/>
 						<Pie data={data} dataKey="totalRequest" nameKey="category" />
-            <ChartLegend
+            {/* <ChartLegend
               content={<ChartLegendContent nameKey="category" />}
               className="-translate-y-2 flex-wrap gap-2 *:basis-1/4 *:justify-center"
-            />
+            /> */}
 					</PieChart>
 				</ChartContainer>
+          <div className="flex gap-4">
+            <div className="flex gap-2">
+              <div className="bg-[var(--chart-1)] w-4 h-4 rounded"></div>
+              Skripsi
+            </div>
+            <div className="flex gap-2">
+              <div className="bg-[var(--chart-2)] w-4 h-4 rounded"></div>
+              Praktikum
+            </div>
+            <div className="flex gap-2">
+              <div className="bg-[var(--chart-3)] w-4 h-4 rounded"></div>
+              Kelas
+            </div>
+          </div>
 			</CardContent>
 			<CardFooter className="flex-col gap-2 text-sm">
         {/* <div className="flex items-center gap-2 leading-none font-medium">
