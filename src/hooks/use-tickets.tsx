@@ -66,8 +66,11 @@ export const useTickets = () => {
         const data = await response.json();
         
         if (!response.ok) {
+            toast.error(data.message || 'Gagal mengirim pesan');
             throw new Error(data.message || 'Gagal mengirim pesan');
         }
+
+        toast.success('Ticket updated successfully');
 
         return data;
     }
@@ -84,8 +87,11 @@ export const useTickets = () => {
         const data = await response.json();
         
         if (!response.ok) {
+            toast.error(data.message || 'Gagal mengirim pesan');
             throw new Error(data.message || 'Gagal mengirim pesan');
         }
+
+        toast.success('Ticket created successfully');
 
         return data;
     }

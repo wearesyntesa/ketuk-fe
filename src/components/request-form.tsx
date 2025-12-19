@@ -284,9 +284,7 @@ export function RequestForm({
 						{/* <div className="flex flex-col gap-6">
 						</div> */}
 				</form>
-				{/* <Button onClick={() => console.log(new Date(
-					`${date?.getFullYear()}-${String(date ? date.getMonth() + 1 : 0).padStart(2, "0")}-${String(date?.getDate()).padStart(2, "0")}T${form.startTime}:00`
-			  ), ticketData)}>Submit Request</Button> */}
+				{/* <Button onClick={() => postTicket(ticketData)}>Submit Request</Button> */}
 
 			</CardContent>
 		</Card>
