@@ -2,7 +2,6 @@
 
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
-import WarningEmail from "@/components/warning-email";
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useUser } from "@/hooks/use-user";
@@ -44,6 +43,22 @@ export default function AppLayout({
 		setLoading(false);
 	}, [router]);
 
+	const updateUserData = (token: string, id: number) => {
+		user.handleUserbyID(token, id).then((data) => {
+			user.setUser(data);
+			localStorage.setItem("user", JSON.stringify(data));
+		})
+	}
+
+	const protectedRoutes = [
+		"/app/requests",
+		"/app/inventory",
+		"/app/user-management",
+		"/app/unblocking",
+		"/app/audit",
+		"/app/your-requests",
+	];
+
 	useEffect(() => {
 		const userData = localStorage.getItem("user") || "{}";
 		setHeader(() => {
@@ -54,6 +69,18 @@ export default function AppLayout({
 			if (pathname.includes("/app/audit")) return "Audit Logs";
 			return "Dashboard";
 		});
+		if (JSON.parse(userData).name != "" || JSON.parse(userData).name != undefined ) {
+			updateUserData(
+				localStorage.getItem("access_token") || "",
+				JSON.parse(userData).id
+			);
+		}
+		if (JSON.parse(userData).role != "admin") {
+			if (protectedRoutes.some((route) => pathname.includes(route))) {
+				// window.location.href = "/app";
+				router.push("/app");
+			}
+		}
 		if (
 			JSON.parse(userData).role === "admin" &&
 			pathname.includes("/app/your-requests")

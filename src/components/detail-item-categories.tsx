@@ -27,7 +27,6 @@ import { Input } from "./ui/input";
 import { useItems } from "@/hooks/use-items";
 import DetailItem from "./detail-item";
 import Link from "next/link";
-import { description } from "./pie-chart";
 
 const tableDetail: ColumnDef<ItemDetail>[] = [
 	{

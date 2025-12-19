@@ -1,6 +1,6 @@
 "use client";
 
-import { EllipsisVertical, HelpCircle, SettingsIcon } from "lucide-react";
+import { EllipsisVertical } from "lucide-react";
 import {
 	SidebarFooter,
 	SidebarMenu,
@@ -8,7 +8,6 @@ import {
 	SidebarMenuItem,
 } from "./ui/sidebar";
 import { Separator } from "./ui/separator";
-import Link from "next/link";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -37,7 +36,7 @@ export default function NavFooter() {
 	return (
 		<SidebarFooter className="mt-auto">
 			<SidebarMenu>
-				<SidebarMenuItem>
+				{/* <SidebarMenuItem>
 					<SidebarMenuButton asChild>
 						<Link href="/help" className="gap-4">
 							<HelpCircle className="min-w-6 min-h-6" />
@@ -52,7 +51,7 @@ export default function NavFooter() {
 							<span className="font-semibold text-xl">Settings</span>
 						</Link>
 					</SidebarMenuButton>
-				</SidebarMenuItem>
+				</SidebarMenuItem> */}
 				<Separator />
 				<SidebarMenuItem>
 					<SidebarMenuButton asChild>

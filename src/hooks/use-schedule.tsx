@@ -192,7 +192,7 @@ export const useSchedule = (token: string) => {
 		]
 		merged.forEach((item) => {
 			const existingCategory = pieData.find((data) => data.category === item.kategori);
-			const category = item.kategori === undefined ? "Other" : item.kategori;
+			// const category = item.kategori === undefined ? "Other" : item.kategori;
 			if (existingCategory) {
 				existingCategory.totalRequest += 1;
 			} else {

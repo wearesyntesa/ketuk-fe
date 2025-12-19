@@ -78,7 +78,7 @@ export function CalendarRange({
 	valDateState: DateRange | undefined;
 	onChange: (date: DateRange | undefined) => void;
 }) {
-	const [open, setOpen] = React.useState(false);
+	// const [open, setOpen] = React.useState(false);
 
 	return (
 		<div className="flex flex-col gap-3">
