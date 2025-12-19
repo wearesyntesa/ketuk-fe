@@ -37,7 +37,7 @@ export default function AddItemDialog({id}: {id: number}) {
 					Add Item +
 				</DialogTrigger>
 				<DialogContent>
-					<DialogTitle>Add New Itemaa</DialogTitle>
+					<DialogTitle>Add New Item</DialogTitle>
 					<DialogDescription>
 						Fill in the details for the new inventory item.
 					</DialogDescription>
