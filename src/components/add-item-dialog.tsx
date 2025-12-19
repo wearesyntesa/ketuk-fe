@@ -102,7 +102,6 @@ export default function AddItemDialog({id}: {id: number}) {
 									<SelectValue placeholder="Select Condition" />
 								</SelectTrigger>
 								<SelectContent>
-									<SelectItem value="Baik">Baik</SelectItem>
 									<SelectItem value="Good">Good</SelectItem>
 									<SelectItem value="Poor">Poor</SelectItem>
 								</SelectContent>

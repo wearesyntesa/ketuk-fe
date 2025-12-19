@@ -9,7 +9,7 @@ import { useItems } from "@/hooks/use-items";
 import { ColumnDef } from "@tanstack/react-table";
 import { EllipsisVertical } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const tableDetail: ColumnDef<ItemDetail>[] = [
     // {
@@ -19,6 +19,10 @@ const tableDetail: ColumnDef<ItemDetail>[] = [
 	{
 		accessorKey: "id",
 		header: "ID",
+	},
+	{
+		accessorKey: "name",
+		header: "Item Name",
 	},
 	{
 		accessorKey: "year",
@@ -56,11 +60,15 @@ export default function DetailCategoryItem() {
     const idFromQuery: number = Number(searchParams.get("categoryId"));
     const items = useItems();
     const categories = useCategories();
+	const [categoryName, setCategoryName] = useState<string>("");
 
     const fetchItemsCategory = () => {
 		if (token) {
 			items.handleGetItemCategory(token, idFromQuery).then((data) => {
 				categories.setItemCategories(data);
+				if (data.length > 0) {
+					setCategoryName(data[0].category.categoryName);
+				}
 			});
 		}
 	};
@@ -75,6 +83,7 @@ export default function DetailCategoryItem() {
             <div className="@container/main flex flex-col gap-4 py-4 md:gap-6 md:py-6">
                 {/* <SectionCards /> */}
                 <div className="px-4 lg:gap-2 lg:px-6 flex flex-col gap-4">
+					<h1 className="text-2xl font-bold">Category : {categoryName}</h1>
                     <InventoryDetailTable
                         columns={tableDetail}
                         data={categories.itemCategories || []}

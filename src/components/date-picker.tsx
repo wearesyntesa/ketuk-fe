@@ -80,25 +80,12 @@ export function CalendarRange({
 }) {
 	const [open, setOpen] = React.useState(false);
 
-	// const handleChangeDate = (date: Date | undefined) => {
-	// 	const today = new Date();
-	// 	today.setHours(0, 0, 0, 0);
-		
-	// 	if (date && date >= today) {
-	// 		setDateState(date);
-	// 	} else {
-	// 		setDateState(undefined);
-	// 		toast.error("Cannot select past dates");
-	// 	}
-	// 	setOpen(false);
-	// };
-
 	return (
 		<div className="flex flex-col gap-3">
 			<Label htmlFor="date" className={`px-1 ${label ? "visible" : "hidden"}`}>
 				Tanggal {use === "unblock" ? "Unblock" : "Request"}
 			</Label>
-			<Popover open={open} onOpenChange={setOpen}>
+			<Popover>
 				<PopoverTrigger asChild>
 					<Button
 						variant="outline"
@@ -116,7 +103,7 @@ export function CalendarRange({
 						className="md:block hidden"
 						onSelect={(valDateState) => {
 							onChange(valDateState);
-							setOpen(false);
+							// setOpen(false);
 						}}
 					/>
 					<Calendar
@@ -126,7 +113,7 @@ export function CalendarRange({
 						className="md:hidden block"
 						onSelect={(valDateState) => {
 							onChange(valDateState);
-							setOpen(false);
+							// setOpen(false);
 						}}
 					/>
 				</PopoverContent>
