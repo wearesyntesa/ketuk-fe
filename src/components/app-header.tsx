@@ -1,32 +1,32 @@
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+// import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
-import { Bell } from "lucide-react";
-import Link from "next/link";
+// import { Bell } from "lucide-react";
+// import Link from "next/link";
 
-const AnnouncementItem = [
-	{
-		title: "New feature released",
-		time: "2 hours ago",
-		url: "#",
-	},
-	{
-		title: "Scheduled maintenance",
-		time: "1 day ago",
-		url: "#",
-	},
-	{
-		title: "Welcome to the platform",
-		time: "3 days ago",
-		url: "#",
-	},
-	{
-		title: "Security update",
-		time: "1 week ago",
-		url: "#",
-	}
-]
+// const AnnouncementItem = [
+// 	{
+// 		title: "New feature released",
+// 		time: "2 hours ago",
+// 		url: "#",
+// 	},
+// 	{
+// 		title: "Scheduled maintenance",
+// 		time: "1 day ago",
+// 		url: "#",
+// 	},
+// 	{
+// 		title: "Welcome to the platform",
+// 		time: "3 days ago",
+// 		url: "#",
+// 	},
+// 	{
+// 		title: "Security update",
+// 		time: "1 week ago",
+// 		url: "#",
+// 	}
+// ]
 
 export default function AppHeader({ title }: { title: string }) {
 	return (
@@ -39,7 +39,7 @@ export default function AppHeader({ title }: { title: string }) {
 				/>
 				<h1 className="text-xl font-medium">{title}</h1>
 				<div className="flex ml-auto gap-2">
-					<DropdownMenu>
+					{/* <DropdownMenu>
 						<DropdownMenuTrigger className="p-1 rounded-full border border-slate-300 shadow">
 							<Bell className="min-w-7 min-h-7" />
 						</DropdownMenuTrigger>
@@ -62,7 +62,7 @@ export default function AppHeader({ title }: { title: string }) {
 								</DropdownMenuItem>
 							))}
 						</DropdownMenuContent>
-					</DropdownMenu>
+					</DropdownMenu> */}
 				</div>
 			</div>
 		</header>

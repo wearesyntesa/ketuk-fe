@@ -91,7 +91,9 @@ export default function DetailUser({ id }: { id: number }) {
 						</div>
 						<div className="flex flex-col">
 							<strong>Role:</strong>
-							<Select>
+							<Select onValueChange={(value) =>
+								setUserData({ ...userData, role: value })
+							}>
 								<SelectTrigger className="w-full" value={userData?.role || ""}>
 									<SelectValue placeholder={userData?.role || ""} />
 								</SelectTrigger>
