@@ -10,6 +10,9 @@ import { useItems } from "@/hooks/use-items";
 import { ArrowLeftCircle } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import QRCodeGenerator from "@/components/qr-code";
+
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://ketuk.app";
 
 export default function DetailCategoryItem() {
     const searchParams = useSearchParams();
@@ -102,6 +105,7 @@ export default function DetailCategoryItem() {
 							</Select>
 						</div>
 					</form>
+					<QRCodeGenerator value={`${BASE_URL}/app/inventory/category/item?itemId=${itemId}`} size={200} />
                 </div>
             </div>
         </>
