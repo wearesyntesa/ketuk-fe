@@ -9,6 +9,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://192.168.10.184:8081";
 export const useUser = () => {
     const [user, setUser] = useState<UserType>();
     const [allUsers, setAllUsers] = useState<AllUser[]>();
+	const [allUserManagement, setAllUserManagement] = useState<AllUser[]>();
 
 	useEffect(() => {
 		const userData = localStorage.getItem("user");
@@ -34,6 +35,32 @@ export const useUser = () => {
 
 			if (data.success) {
 				setAllUsers(data.data);
+			} else {
+				console.error("Failed to fetch users:", data.message);
+			}
+		} catch (err) {
+			console.error("Fetch users error:", err);
+		} finally {
+			console.log("Fetch users completed");
+		}
+	};
+
+	const handleGetAllUserManagement = async (token: string, id: number) => {
+		try {
+			const response = await fetch(`${API_URL}/api/users/v1`, {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+			});
+			const data = await response.json();
+
+			if (data.success) {
+				console.log("Fetched users for management:", data.data);
+				console.log("Excluding user ID:", id);
+				const dataFiltered = data.data.filter((user: AllUser) => user.id !== id);
+				setAllUserManagement(dataFiltered);
 			} else {
 				console.error("Failed to fetch users:", data.message);
 			}
@@ -124,10 +151,12 @@ export const useUser = () => {
 		user,
 		setUser,
 		allUsers,
+		allUserManagement,
 		handleGetAllUser,
 		setAllUsers,
 		handleUserbyID,
 		handleUpdateUser,
 		handleDeleteUser,
+		handleGetAllUserManagement,
 	};
 }

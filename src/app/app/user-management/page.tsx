@@ -72,8 +72,10 @@ export default function UserManagement() {
 	const user = useUser();
 	const token = localStorage.getItem("access_token");
 
+	const id = JSON.parse(localStorage.getItem("user") || "{}").id;
+
 	useEffect(() => {
-		user.handleGetAllUser(token || "");
+		user.handleGetAllUserManagement(token || "", id);
 	}, []);
 
 	return (
@@ -82,7 +84,7 @@ export default function UserManagement() {
 				{/* <SectionCards /> */}
 				<div className="px-4 lg:gap-2 lg:px-6 flex flex-col gap-4">
 					{/* <ChartAreaInteractive /> */}
-					<UserTable columns={tableHeader} data={user.allUsers || []} />
+					<UserTable columns={tableHeader} data={user.allUserManagement || []} />
 				</div>
 			</div>
 		</>
