@@ -1,10 +1,15 @@
 import Link from "next/link";
 import { Button } from "./ui/button";
+import { cn } from "@/lib/utils";
 
-export function SignInButton() {
-	return (
-		<Link href="/auth/login">
-			<Button type="submit">Get Started</Button>
-		</Link>
-	);
+interface SignInButtonProps {
+  className?: string;
+}
+
+export function SignInButton({ className }: SignInButtonProps) {
+  return (
+    <Link href="/auth/login">
+      <Button className={cn(className)}>Get Started</Button>
+    </Link>
+  );
 }
