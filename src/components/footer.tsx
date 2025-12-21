@@ -54,8 +54,13 @@ export default function Footer() {
           </div>
 
           <div className="col-span-1 md:col-span-2 lg:col-span-2">
-            <h3 className="text-sm font-bold text-slate-900 tracking-wide mb-4">Product</h3>
+            <h3 className="text-sm font-bold text-slate-900 tracking-wide mb-4">Service</h3>
             <ul className="space-y-3 text-sm">
+              <li>
+                <Link href="/" className="text-slate-500 hover:text-emerald-600 transition-colors">
+                  Landing Page
+                </Link>
+              </li>
               <li>
                 <Link href="/app" className="text-slate-500 hover:text-emerald-600 transition-colors">
                   Dashboard
@@ -63,17 +68,17 @@ export default function Footer() {
               </li>
               <li>
                 <Link href="/app/schedule-lab" className="text-slate-500 hover:text-emerald-600 transition-colors">
-                  Scheduling
+                  Schedule Lab
                 </Link>
               </li>
               <li>
-                <Link href="/app/inventory" className="text-slate-500 hover:text-emerald-600 transition-colors">
-                  Inventory
+                <Link href="/app/your-requests" className="text-slate-500 hover:text-emerald-600 transition-colors">
+                  Your Requests
                 </Link>
               </li>
               <li>
-                <Link href="/changelog" className="text-slate-500 hover:text-emerald-600 transition-colors">
-                  Changelog
+                <Link href="https://status.ketuk.app/" target="_blank" className="text-slate-500 hover:text-emerald-600 transition-colors">
+                  Service status
                 </Link>
               </li>
             </ul>
