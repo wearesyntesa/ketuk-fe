@@ -6,6 +6,29 @@ export interface SideBarItem {
 	bgGradient?: string;
 }
 
+export interface AuditLog {
+	id: number;
+	ticketId: number;
+	userId?: number;
+	action: "created" | "updated" | "status_changed" | "deleted" | "assigned" | "commented" | "approved" | "rejected";
+	oldValue?: string;
+	newValue?: string;
+	changes?: string;
+	ipAddress?: string;
+	userAgent?: string;
+	notes?: string;
+	createdAt: string;
+	ticket?: {
+		id: number;
+		title: string;
+	};
+	user?: {
+		id: number;
+		name: string;
+		email: string;
+	};
+}
+
 interface SubItem {
     title: string;
     url: string;

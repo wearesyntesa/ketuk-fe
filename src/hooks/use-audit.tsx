@@ -1,6 +1,6 @@
 "use client";
 
-import { AuditLogByTicket, AuditLogByUser } from "@/components/type";
+import { AuditLog, AuditLogByTicket, AuditLogByUser } from "@/components/type";
 import { useState } from "react";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://192.168.10.184:8081";
@@ -12,6 +12,7 @@ export const useAudit = (token: string) => {
 	const [auditsTicketsbuUserID, setAuditsTicketsbyUserID] = useState<
 		AuditLogByUser[]
 	>([]);
+	const [allAuditLogs, setAllAuditLogs] = useState<AuditLog[]>([]);
 
 	const handleGetAuditLogByTicketID = async (ticketID: number) => {
 		try {
@@ -63,10 +64,34 @@ export const useAudit = (token: string) => {
 		}
 	};
 
+	const handleGetAllAuditLogs = async () => {
+		try {
+			const response = await fetch(`${API_URL}/api/audit/logs`, {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+			});
+			const data = await response.json();
+			if (data.success) {
+				setAllAuditLogs(data.data);
+			} else {
+				console.error("Failed to fetch all audit logs:", data.message);
+			}
+		} catch (err) {
+			console.error("Fetch all audit logs error:", err);
+		} finally {
+			console.log("Fetch all audit logs completed");
+		}
+	};
+
 	return {
 		auditsTicketsbyID,
 		auditsTicketsbuUserID,
+		allAuditLogs,
 		handleGetAuditLogByTicketID,
 		handleGetAuditLogByUserID,
+		handleGetAllAuditLogs,
 	};
 };
