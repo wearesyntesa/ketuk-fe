@@ -15,7 +15,12 @@ export default function Home() {
   useEffect(() => {
     const userData = localStorage.getItem("user");
     if (userData) {
-      user.setUser(JSON.parse(userData));
+      try {
+        user.setUser(JSON.parse(userData));
+      } catch (error) {
+        console.error("Failed to parse user data:", error);
+        localStorage.removeItem("user");
+      }
     }
   }, []);
 

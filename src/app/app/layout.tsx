@@ -51,12 +51,10 @@ export default function AppLayout({
 	}
 
 	const protectedRoutes = [
-		"/app/requests",
 		"/app/inventory",
 		"/app/user-management",
 		"/app/unblocking",
 		"/app/audit",
-		"/app/your-requests",
 	];
 
 	useEffect(() => {

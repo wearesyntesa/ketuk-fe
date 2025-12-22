@@ -13,11 +13,20 @@ export const useUser = () => {
 
 	useEffect(() => {
 		const userData = localStorage.getItem("user");
-		if (userData) {
+		if (userData && userData !== "undefined" && userData !== "null") {
 			try {
-				setUser(JSON.parse(userData));
+				const parsedUser = JSON.parse(userData);
+				if (parsedUser && typeof parsedUser === 'object') {
+					setUser(parsedUser);
+				} else {
+					console.warn("Invalid user data format, clearing from localStorage");
+					localStorage.removeItem("user");
+				}
 			} catch (error) {
 				console.error("Failed to parse user data:", error);
+				console.log("Invalid user data:", userData);
+				// Clear invalid data from localStorage
+				localStorage.removeItem("user");
 			}
 		}
 	}, []);
