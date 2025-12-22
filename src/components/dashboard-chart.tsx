@@ -1,132 +1,237 @@
-'use client';
+"use client";
 
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
-
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { ChartPieSimple } from "./pie-chart";
-import { ScrollArea, ScrollBar } from "./ui/scroll-area";
+import { useMemo, useEffect, useState } from "react";
+import {
+  Area,
+  AreaChart,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+} from "recharts";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { CategoryChartData, MergeSchedultType } from "./type";
 import { useSchedule } from "@/hooks/use-schedule";
-import { useEffect, useState } from "react";
 import { useUser } from "@/hooks/use-user";
+import { Loader2 } from "lucide-react";
 
-const chartConfig: ChartConfig = {
-	request: {
-		label: "Requests",
-		color: "#ffd230",
-	},
-} satisfies ChartConfig;
-
-interface DashboardLineChartProps {
-	totalRequests: number;
-	date: Date | string;
+interface ChartDataPoint {
+  date: string;
+  rawDate: string;
+  requests: number;
 }
 
-export default function DashboardChart({pieData}: {pieData: CategoryChartData[]}) {
-	const [token, setToken] = useState(localStorage.getItem("access_token") || "");
-	const mergedSchedules: MergeSchedultType[] = [];
-	const filteredDataLineChart: DashboardLineChartProps[] = [
-		{ date: "2025-12-15", totalRequests: 10 },
-		{ date: "2025-12-16", totalRequests: 18 },
-		{ date: "2025-12-17", totalRequests: 5 },
-	];
+const COLORS = [
+  "#10b981", // Emerald 500
+  "#0ea5e9", // Sky 500
+  "#84cc16", // Lime 500
+  "#14b8a6", // Teal 500
+];
 
-	useEffect(() => {
-		const storedToken = localStorage.getItem("access_token") || "";
-		setToken(storedToken);
-	}, []);
+export default function DashboardChart({ pieData }: { pieData: CategoryChartData[] }) {
+  const [token, setToken] = useState<string>("");
+  const [isMounted, setIsMounted] = useState(false);
 
-	const schedules = useSchedule(token);
-	const user = useUser();
+  const schedules = useSchedule(token);
+  const user = useUser();
 
-	useEffect(() => {
-		const fetchData = async () => {
-			schedules.handleGetAllRegulerSchedules();
-			schedules.handleGetAllTicketSchedules();
-			user.handleGetAllUser(token);
-		};
-		fetchData();
-	}, [])
+  useEffect(() => {
+    setIsMounted(true);
+    const storedToken = localStorage.getItem("access_token") || "";
+    setToken(storedToken);
+  }, []);
 
-	schedules.handleMergeSchedules(
-		schedules.ticketSchedules,
-		schedules.regulerSchedules,
-		true
-	).map((item) => mergedSchedules.push(item));
+  useEffect(() => {
+    if (token) {
+      schedules.handleGetAllRegulerSchedules();
+      schedules.handleGetAllTicketSchedules();
+      user.handleGetAllUser(token);
+    }
+  }, [token]);
 
-	mergedSchedules.forEach((item) => {
-		const date = new Date(item.createdAt);
-		const formattedDate = date.toISOString().split("T")[0];
+  const { chartData } = useMemo(() => {
+    const merged: MergeSchedultType[] = [];
+    const rawMerged = schedules.handleMergeSchedules(schedules.ticketSchedules, schedules.regulerSchedules, true);
 
-		const existingEntry = filteredDataLineChart.find(
-			(entry) => entry.date === formattedDate
-		);
-		
-		if (existingEntry) {
-			existingEntry.totalRequests += 1;
-		} else {
-			filteredDataLineChart.push({
-				date: formattedDate,
-				totalRequests: 1,
-			});
-		}
-	});
+    if (Array.isArray(rawMerged)) {
+      merged.push(...rawMerged);
+    }
 
-	console.log("Filtered Data Line Chart:", filteredDataLineChart);
+    const dataMap = new Map<string, number>();
+    const baseline = [
+      { date: "2025-12-15", val: 10 },
+      { date: "2025-12-16", val: 18 },
+      { date: "2025-12-17", val: 5 },
+    ];
 
+    baseline.forEach((b) => dataMap.set(b.date, b.val));
 
-	// setTotalRequests(mergedSchedules.length);
-	// setTotalUser(user.allUsers ? user.allUsers.length : 0);
+    merged.forEach((item) => {
+      const dateStr = new Date(item.createdAt).toISOString().split("T")[0];
+      const current = dataMap.get(dateStr) || 0;
+      dataMap.set(dateStr, current + 1);
+    });
 
-	return (
-		<div className="grid grid-cols-3 w-full justify-center gap-8">
-			<div className="flex flex-col xl:col-span-2 col-span-3 w-full bg-white border rounded-2xl p-2 shadow-sm">
-				<div className="flex lg:flex-row flex-col h-28 w-full justify-between lg:items-center mb-4 px-4 py-2 rounded-md gap-4">
-					<div>
-						<h3 className="text-xl font-semibold">Request Schedule Matrix</h3>
-						<p className="text-sm text-muted-foreground">
-							Overview of requests over the past 10 days.
-						</p>
-					</div>
-					<div className="flex gap-4">
-						<div className="flex flex-col items-center justify-center w-48 h-full">
-							<h4>Total Request</h4>
-							<p className="text-2xl font-semibold">{mergedSchedules.length}</p>
-						</div>
-						<div className="flex flex-col items-center justify-center w-48 h-full">
-							<h4>Total User</h4>
-							<p className="text-2xl font-semibold">{user.allUsers ? user.allUsers.length : 0}</p>
-						</div>
-					</div>
-				</div>
-				<ScrollArea>
-					<ChartContainer
-						title="Requests Over Time"
-						config={chartConfig}
-						className="max-h-96 w-[1200px] p-4">
-						<AreaChart
-							accessibilityLayer
-							data={filteredDataLineChart}
-							className="w-[825px]">
-							<CartesianGrid vertical={false} />
-							<XAxis
-								dataKey="date"
-								tickLine={false}
-								tickMargin={10}
-								axisLine={false}
-							/>
-							<ChartTooltip content={<ChartTooltipContent />} />
-							<Area
-								fill="var(--color-request)"
-								type="monotone"
-								dataKey="totalRequests"
-							/>
-						</AreaChart>
-					</ChartContainer>
-					<ScrollBar orientation="horizontal" />
-				</ScrollArea>
-			</div>
-			<ChartPieSimple data={pieData} />
-		</div>
-	);
+    const sortedData: ChartDataPoint[] = Array.from(dataMap.entries())
+      .map(([date, count]) => ({
+        rawDate: date,
+        date: new Date(date).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+        requests: count,
+      }))
+      .sort((a, b) => new Date(a.rawDate).getTime() - new Date(b.rawDate).getTime());
+
+    return {
+      chartData: sortedData,
+      totalRequests: merged.length,
+      totalUsers: user.allUsers ? user.allUsers.length : 0,
+    };
+  }, [schedules.ticketSchedules, schedules.regulerSchedules, user.allUsers]);
+
+  if (!isMounted)
+    return (
+      <div className="flex h-64 w-full items-center justify-center">
+        <Loader2 className="animate-spin text-slate-300" />
+      </div>
+    );
+
+  return (
+    <div className="w-full space-y-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <Card className="lg:col-span-2 border border-white/60 bg-white/60 backdrop-blur-xl shadow-sm rounded-[24px] overflow-hidden hover:shadow-md transition-shadow duration-300">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg font-bold tracking-tight text-slate-900">Request Volume</CardTitle>
+            <CardDescription className="text-slate-500 font-medium">
+              Daily traffic over the past 30 days
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="pl-0 pb-6 pr-6">
+            <div className="h-[300px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={chartData} margin={{ top: 20, right: 0, left: 0, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="colorRequests" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.15} />
+                      <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+
+                  <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="#e2e8f0" />
+
+                  <XAxis
+                    dataKey="date"
+                    axisLine={false}
+                    tickLine={false}
+                    tickMargin={12}
+                    fontSize={12}
+                    tick={{ fill: "#64748b", fontWeight: 500 }}
+                  />
+                  <YAxis
+                    axisLine={false}
+                    tickLine={false}
+                    tickMargin={12}
+                    fontSize={12}
+                    tick={{ fill: "#64748b", fontWeight: 500 }}
+                  />
+
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "rgba(255, 255, 255, 0.95)",
+                      borderRadius: "12px",
+                      border: "1px solid #e2e8f0",
+                      color: "#0f172a",
+                      boxShadow: "0 4px 20px -5px rgba(0, 0, 0, 0.1)",
+                      padding: "8px 12px",
+                    }}
+                    itemStyle={{ fontSize: "12px", fontWeight: 600, color: "#0f172a" }}
+                    cursor={{ stroke: "#cbd5e1", strokeWidth: 1, strokeDasharray: "4 4" }}
+                  />
+
+                  <Area
+                    type="monotone"
+                    dataKey="requests"
+                    stroke="#10b981" // Emerald 500
+                    strokeWidth={3}
+                    fillOpacity={1}
+                    fill="url(#colorRequests)"
+                    activeDot={{ r: 6, fill: "#10b981", stroke: "#fff", strokeWidth: 2 }}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="flex flex-col border border-white/60 bg-white/60 backdrop-blur-xl shadow-sm rounded-[24px] hover:shadow-md transition-shadow duration-300">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg font-bold tracking-tight text-slate-900">Categories</CardTitle>
+            <CardDescription className="text-slate-500 font-medium">Distribution by type</CardDescription>
+          </CardHeader>
+          <CardContent className="flex-1 flex flex-col items-center justify-center p-6">
+            <div className="h-[220px] w-full relative">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={pieData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={65}
+                    outerRadius={85}
+                    paddingAngle={4}
+                    stroke="none"
+                    dataKey="value"
+                  >
+                    {pieData.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                        className="stroke-white stroke-[3px]"
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "rgba(255, 255, 255, 0.95)",
+                      borderRadius: "8px",
+                      border: "1px solid #e2e8f0",
+                      color: "#0f172a",
+                      boxShadow: "0 4px 20px -5px rgba(0, 0, 0, 0.1)",
+                    }}
+                    itemStyle={{ color: "#0f172a", fontWeight: 600 }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div className="text-center">
+                  <span className="text-4xl font-bold tracking-tighter text-slate-900 block">
+                    {pieData.reduce((acc, curr) => acc + curr.value, 0)}
+                  </span>
+                  <span className="text-[10px] font-bold tracking-widest text-slate-400 uppercase">Total</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="w-full mt-4 space-y-3">
+              {pieData.slice(0, 3).map((entry, index) => (
+                <div key={index} className="flex items-center justify-between text-sm group cursor-default">
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="w-2.5 h-2.5 rounded-full shadow-sm transition-transform group-hover:scale-125"
+                      style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                    />
+                    <span className="text-slate-600 font-medium">{entry.category}</span>
+                  </div>
+                  <span className="font-bold text-slate-900">{entry.value}</span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
 }

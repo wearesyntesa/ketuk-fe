@@ -1,83 +1,110 @@
 "use client";
 
-import { EllipsisVertical } from "lucide-react";
+import { ChevronsUpDown, LogOut, Sparkles, BadgeCheck, CreditCard, Bell } from "lucide-react";
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "./ui/sidebar";
 import {
-	SidebarFooter,
-	SidebarMenu,
-	SidebarMenuButton,
-	SidebarMenuItem,
-} from "./ui/sidebar";
-import { Separator } from "./ui/separator";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { SignOutButton } from "./signout-button";
 import { useEffect } from "react";
 import { useUser } from "@/hooks/use-user";
-import { InitialIcon } from "./initial-icon";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export default function NavFooter() {
-	const user = useUser();
+  const user = useUser();
 
-	useEffect(() => {
-		const userData = localStorage.getItem("user");
-		if (userData) {
-			try {
-				user.setUser(JSON.parse(userData));
-			} catch (error) {
-				console.error("Failed to parse user data:", error);
-			}
-		}
-	}, []);
+  useEffect(() => {
+    const userData = localStorage.getItem("user");
+    if (userData) {
+      try {
+        user.setUser(JSON.parse(userData));
+      } catch (error) {
+        console.error("Failed to parse user data:", error);
+      }
+    }
+  }, []);
 
-	return (
-		<SidebarFooter className="mt-auto">
-			<SidebarMenu>
-				{/* <SidebarMenuItem>
-					<SidebarMenuButton asChild>
-						<Link href="/help" className="gap-4">
-							<HelpCircle className="min-w-6 min-h-6" />
-							<span className="font-semibold text-xl">Support</span>
-						</Link>
-					</SidebarMenuButton>
-				</SidebarMenuItem>
-				<SidebarMenuItem>
-					<SidebarMenuButton asChild>
-						<Link href="/app/settings" className="gap-4">
-							<SettingsIcon className="min-w-6 min-h-6" />
-							<span className="font-semibold text-xl">Settings</span>
-						</Link>
-					</SidebarMenuButton>
-				</SidebarMenuItem> */}
-				<Separator />
-				<SidebarMenuItem>
-					<SidebarMenuButton asChild>
-						<div className="h-12 flex justify-between items-center px-2">
-							<div className="flex gap-2 justify-center items-center">
-								{InitialIcon(user.user?.name || "User")}
-								<span className="font-semibold text-xl">
-									{user.user?.name.split(" ")[0] || "User"}
-								</span>
-							</div>
-							<div>
-								<DropdownMenu>
-									<DropdownMenuTrigger className="p-2 flex justify-center items-center rounded-md hover:bg-accent/50 w-fit">
-										<EllipsisVertical className="h-5 w-5 cursor-pointer text-muted-foreground" />
-									</DropdownMenuTrigger>
-									<DropdownMenuContent>
-										<DropdownMenuItem>
-											<SignOutButton />
-										</DropdownMenuItem>
-									</DropdownMenuContent>
-								</DropdownMenu>
-							</div>
-						</div>
-					</SidebarMenuButton>
-				</SidebarMenuItem>
-			</SidebarMenu>
-		</SidebarFooter>
-	);
+  if (!user.user) return null;
+
+  const initials = user.user.name
+    ? user.user.name
+        .split(" ")
+        .map((n: string) => n[0])
+        .join("")
+        .substring(0, 2)
+        .toUpperCase()
+    : "U";
+
+  return (
+    <SidebarMenu>
+      <SidebarMenuItem>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <SidebarMenuButton
+              size="lg"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground rounded-xl transition-all duration-200 hover:bg-slate-50 hover:shadow-sm border border-transparent hover:border-slate-100"
+            >
+              <Avatar className="h-8 w-8 rounded-lg border border-slate-200 bg-white">
+                <AvatarFallback className="rounded-lg bg-emerald-50 text-emerald-600 text-xs font-bold">
+                  {initials}
+                </AvatarFallback>
+              </Avatar>
+
+              <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="truncate font-semibold text-slate-900">{user.user.name.split(" ")[0]}</span>
+                <span className="truncate text-xs text-slate-500">{user.user.email}</span>
+              </div>
+              <ChevronsUpDown className="ml-auto size-4 text-slate-400" />
+            </SidebarMenuButton>
+          </DropdownMenuTrigger>
+
+          <DropdownMenuContent
+            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-xl bg-white/95 backdrop-blur-xl border border-slate-200/60 shadow-xl shadow-slate-200/10 p-1.5 mb-2"
+            side="top"
+            align="start"
+            sideOffset={12}
+          >
+            <div className="flex items-center gap-3 px-2 py-2.5">
+              <Avatar className="h-9 w-9 rounded-lg border border-slate-100">
+                <AvatarFallback className="rounded-lg bg-emerald-50 text-emerald-600 text-xs font-bold">
+                  {initials}
+                </AvatarFallback>
+              </Avatar>
+              <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="truncate font-semibold text-slate-900">{user.user.name}</span>
+                <span className="truncate text-xs text-slate-500 capitalize">{user.user.role} Account</span>
+              </div>
+            </div>
+
+            <DropdownMenuSeparator className="bg-slate-100 my-1" />
+
+            <DropdownMenuGroup>
+              <DropdownMenuItem className="gap-3 p-2 rounded-lg text-slate-600 focus:text-slate-900 focus:bg-slate-50 cursor-pointer">
+                <BadgeCheck className="h-4 w-4 text-slate-400" />
+                <span>Account</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem className="gap-3 p-2 rounded-lg text-slate-600 focus:text-slate-900 focus:bg-slate-50 cursor-pointer">
+                <Bell className="h-4 w-4 text-slate-400" />
+                <span>Notifications</span>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+
+            <DropdownMenuSeparator className="bg-slate-100 my-1" />
+
+            <DropdownMenuItem asChild className="p-0 focus:bg-transparent">
+              <div className="w-full">
+                <SignOutButton />
+              </div>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </SidebarMenuItem>
+    </SidebarMenu>
+  );
 }

@@ -4,13 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import ScheduleMonth from "./schedule-month";
 import ScheduleWeek from "./schedule-week";
 import { MergeSchedultType } from "./type";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "./ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import ScheduleList from "./schedule-list";
 import { useState } from "react";
 import { Button } from "./ui/button";
@@ -18,158 +12,113 @@ import Link from "next/link";
 import { InitialIconWithName } from "./initial-icon";
 
 const tableHeader: ColumnDef<MergeSchedultType>[] = [
-	{
-		accessorKey: "title",
-		header: "Title Event",
-	},
-	{
-		accessorKey: "date",
-		header: "Date",
-	},
-	{
-		accessorKey: "user",
-		header: "Contact",
-		cell: ({ row }) => <InitialIconWithName title={row.original.user.email} />,
-	},
-	{
-		accessorKey: "kategori",
-		header: "Category",
-	},
-	{
-		accessorKey: "startDate",
-		header: "Start Time",
-		cell: ({ row }) => {
-			return new Date(row.original.startDate).toLocaleTimeString([], {
-				hour: "2-digit",
-				minute: "2-digit",
-			});
-		}
-	},
-	{
-		accessorKey: "endDate",
-		header: "End Time",
-		cell: ({ row }) => {
-			return new Date(row.original.endDate).toLocaleTimeString([], {
-				hour: "2-digit",
-				minute: "2-digit",
-			});
-		}
-	}
-]
+  {
+    accessorKey: "title",
+    header: "Title Event",
+    cell: ({ row }) => <span className="font-semibold text-slate-900">{row.original.title}</span>,
+  },
+  {
+    accessorKey: "date",
+    header: "Date",
+    cell: ({ row }) => (
+      <span className="text-slate-600 font-medium tabular-nums">
+        {new Date(row.original.date).toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+        })}
+      </span>
+    ),
+  },
+  {
+    accessorKey: "user",
+    header: "Contact",
+    cell: ({ row }) => (
+      <div className="text-slate-700">
+        <InitialIconWithName title={row.original.user.email} />
+      </div>
+    ),
+  },
+  {
+    accessorKey: "kategori",
+    header: "Category",
+    cell: ({ row }) => (
+      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100">
+        {row.original.kategori}
+      </span>
+    ),
+  },
+  {
+    accessorKey: "startDate",
+    header: "Start Time",
+    cell: ({ row }) => {
+      return (
+        <span className="font-mono text-slate-500 text-sm tabular-nums">
+          {new Date(row.original.startDate).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
+        </span>
+      );
+    },
+  },
+  {
+    accessorKey: "endDate",
+    header: "End Time",
+    cell: ({ row }) => {
+      return (
+        <span className="font-mono text-slate-500 text-sm tabular-nums">
+          {new Date(row.original.endDate).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
+        </span>
+      );
+    },
+  },
+];
 
-export default function ScheduleLab({mergedSchedules}: {mergedSchedules: MergeSchedultType[]}) {
-	const [scheduleType, setScheduleType] = useState('week');
+export default function ScheduleLab({ mergedSchedules }: { mergedSchedules: MergeSchedultType[] }) {
+  const [scheduleType, setScheduleType] = useState("week");
 
-	const handleScheduleTypeChange = (value: string) => {
-		setScheduleType(value);
-	};
+  const handleScheduleTypeChange = (value: string) => {
+    setScheduleType(value);
+  };
 
-	// const [token, setToken] = useState<string>(localStorage.getItem("access_token") || "");
-	// const user = useUser();
-	// const mergedSchedules: MergeSchedultType[] = [];
-	
-	// useEffect(() => {
-	// 	const storedToken = localStorage.getItem("access_token") || "";
-	// 	setToken(storedToken);
-	// 	const userData = localStorage.getItem("user");
-	// 	if (userData) {
-	// 		try {
-	// 			user.setUser(JSON.parse(userData));
-	// 		} catch (error) {
-	// 			console.error("Failed to parse user data:", error);
-	// 		}
-	// 	}
-	// }, []);
-	
-	// const schedules = useSchedule(token);
-	// useEffect(() => {
-	// 	const fetchData = async () => {
-	// 		schedules.handleGetAllRegulerSchedules();
-	// 		schedules.handleGetAllTicketSchedules();
-	// 	};
-	// 	fetchData();
-	// }, [mergedSchedules.length, ]);
+  return (
+    <div className="space-y-6">
+      <div className="flex md:flex-row flex-col justify-between items-end md:items-center gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900">
+            This {scheduleType === "week" ? "Week" : scheduleType === "month" ? "Month" : "List"} Schedule
+          </h1>
+          <p className="text-slate-500 text-sm mt-1">Manage and view laboratory allocations.</p>
+        </div>
 
-	// schedules.handleGetAllAcceptedSchedules(
-	// 	schedules.ticketSchedules,
-	// 	schedules.regulerSchedules
-	// ).map((item) => mergedSchedules.push(item));
+        <div className="flex justify-end gap-3 w-full md:w-auto">
+          <Select onValueChange={handleScheduleTypeChange} defaultValue="week">
+            <SelectTrigger className="w-[160px] bg-white/60 border-slate-200 text-slate-700 focus:ring-blue-500/20 backdrop-blur-md shadow-sm">
+              <SelectValue placeholder="Schedule Type" />
+            </SelectTrigger>
+            <SelectContent className="bg-white/90 backdrop-blur-xl border-slate-200 text-slate-700 shadow-xl">
+              <SelectItem value="week">Week</SelectItem>
+              <SelectItem value="month">Month</SelectItem>
+              <SelectItem value="list">List</SelectItem>
+            </SelectContent>
+          </Select>
 
-	// schedules.ticketSchedules.forEach((ticketSchedule) => {
-	// 	mergedSchedules.push({
-	// 		idSchedule: ticketSchedule.idSchedule,
-	// 		title: ticketSchedule.title,
-	// 		startDate: new Date(ticketSchedule.startDate).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-	// 		endDate: new Date(ticketSchedule.endDate).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-	// 		date: new Date(ticketSchedule.startDate),
-	// 		day: new Date(ticketSchedule.startDate).toLocaleDateString('en-US', { weekday: 'long' }),
-	// 		userId: ticketSchedule.userId,
-	// 		kategori: ticketSchedule.kategori,
-	// 		description: ticketSchedule.description,
-	// 		createdAt: ticketSchedule.createdAt,
-	// 		updatedAt: ticketSchedule.updatedAt,
-	// 		user: ticketSchedule.user,
-	// 		tickets: ticketSchedule.tickets,
-	// 		status: ticketSchedule.tickets?.[0].status || "Pending",
-	// 		isReguler: false,
-	// 	});
-	// });
-	// schedules.regulerSchedules.forEach((regulerSchedule) => {
-	// 	mergedSchedules.push({
-	// 		idSchedule: regulerSchedule.idSchedule,
-	// 		title: regulerSchedule.title,
-	// 		startDate: new Date(regulerSchedule.startDate).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-	// 		endDate: new Date(regulerSchedule.endDate).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-	// 		date: new Date(regulerSchedule.startDate),
-	// 		day: new Date(regulerSchedule.startDate).toLocaleDateString('en-US', { weekday: 'long' }),
-	// 		userId: regulerSchedule.userId,
-	// 		kategori: regulerSchedule.kategori,
-	// 		description: regulerSchedule.description,
-	// 		createdAt: regulerSchedule.createdAt,
-	// 		updatedAt: regulerSchedule.updatedAt,
-	// 		user: regulerSchedule.user,
-	// 		status: "Accepted",
-	// 		isReguler: true,
-	// 	});
-	// });
+          <Link href="/app/requests">
+            <Button className="bg-slate-900 hover:bg-slate-800 text-white shadow-lg shadow-slate-900/20 transition-all duration-300">
+              Request Schedule +
+            </Button>
+          </Link>
+        </div>
+      </div>
 
-	return (
-		<div>
-			<div className="flex md:flex-row flex-col justify-between mb-4">
-				<h1 className="text-2xl font-bold">
-					This{" "}
-					{scheduleType === "week"
-						? "Week"
-						: scheduleType === "month"
-						? "Month"
-						: "List"}{" "}
-					Schedule
-				</h1>
-				{/* <Button className="bg-blue-400">Request Lab +</Button> */}
-				<div className="flex justify-end gap-4">
-					<Select onValueChange={handleScheduleTypeChange} defaultValue="week">
-						<SelectTrigger className="sm:w-[180px] w-full" value={scheduleType}>
-							{/* <SelectValue placeholder="This Week" /> */}
-							<SelectValue placeholder="Schedule Type" />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectItem value="week">Week</SelectItem>
-							<SelectItem value="month">Month</SelectItem>
-							<SelectItem value="list">List</SelectItem>
-						</SelectContent>
-					</Select>
-					<Link href="/app/requests">
-					<Button className="bg-blue-400">Request Schedule +</Button>
-					</Link>
-					{/* <RequestDialog /> */}
-				</div>
-			</div>
-
-			{scheduleType === "week" && <ScheduleWeek data={mergedSchedules} />}
-			{scheduleType === "month" && <ScheduleMonth data={mergedSchedules} />}
-			{scheduleType === "list" && (
-				<ScheduleList columns={tableHeader} data={mergedSchedules} />
-			)}
-		</div>
-	);
+      <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+        {scheduleType === "week" && <ScheduleWeek data={mergedSchedules} />}
+        {scheduleType === "month" && <ScheduleMonth data={mergedSchedules} />}
+        {scheduleType === "list" && <ScheduleList columns={tableHeader} data={mergedSchedules} />}
+      </div>
+    </div>
+  );
 }

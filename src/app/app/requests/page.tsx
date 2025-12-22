@@ -2,42 +2,43 @@
 
 import { RequestForm, RequestRegulerForm } from "@/components/request-form";
 import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import { useUser } from "@/hooks/use-user";
 import { useState } from "react";
 
 export default function RequestsPage() {
-	const [isReguler, setIsRegular] = useState(false);
-	const user = useUser();
+  const [isReguler, setIsRegular] = useState(false);
+  const user = useUser();
 
-	const handleToggle = () => {
-		setIsRegular(!isReguler);
-	};
+  return (
+    <div className="w-full max-w-5xl mx-auto space-y-8">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Request Schedule</h2>
+          <p className="text-slate-500 text-sm">Book a laboratory slot for your class or research.</p>
+        </div>
 
-	return (
-		<>
-			<div className="@container/main flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-				{/* <SectionCards /> */}
-				<div className="px-4 lg:gap-2 lg:px-6">
-					{/* <ChartAreaInteractive /> */}
-					<div className="border">
-						{user.user?.role === "admin" ? (
-							<>
-								<div className="md:w-3/4 w-full flex justify-end items-center gap-4 p-4 m-auto">
-									<span>Check if you want to request a regular schedule</span>
-									<Switch checked={isReguler} onCheckedChange={handleToggle} />
-								</div>
-								{isReguler ? (
-									<RequestRegulerForm className="md:w-3/4 w-full px-4 m-auto" />
-								) : (
-									<RequestForm className="md:w-3/4 w-full px-4 m-auto" />
-								)}
-							</>
-						) : (
-							<RequestForm className="md:w-3/4 w-full px-4 m-auto" />
-						)}
-					</div>
-				</div>
-			</div>
-		</>
-	);
+        {user.user?.role === "admin" && (
+          <div className="flex items-center gap-3 bg-white px-4 py-2 rounded-full border border-slate-200 shadow-sm">
+            <Label
+              htmlFor="mode-toggle"
+              className="text-xs font-bold uppercase tracking-wider text-slate-400 cursor-pointer"
+            >
+              Regular Mode
+            </Label>
+            <Switch
+              id="mode-toggle"
+              checked={isReguler}
+              onCheckedChange={setIsRegular}
+              className="data-[state=checked]:bg-emerald-500"
+            />
+          </div>
+        )}
+      </div>
+
+      <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+        {user.user?.role === "admin" && isReguler ? <RequestRegulerForm /> : <RequestForm />}
+      </div>
+    </div>
+  );
 }

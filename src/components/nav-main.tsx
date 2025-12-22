@@ -1,142 +1,67 @@
 "use client";
 
-import {
-	Archive,
-	BookCheck,
-	CalendarDays,
-	FlagTriangleRightIcon,
-	Logs,
-	Ticket,
-	UserCog2,
-} from "lucide-react";
-import { SideBarItem } from "./type";
-import {
-	SidebarGroup,
-	SidebarGroupContent,
-	SidebarMenu,
-	SidebarMenuButton,
-	SidebarMenuItem,
-} from "./ui/sidebar";
+import { Archive, BookCheck, CalendarDays, FlagTriangleRight, Logs, Ticket, UserCog2 } from "lucide-react";
+import { SidebarGroup, SidebarGroupContent, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "./ui/sidebar";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { SideBarItem } from "./type";
 
 const itemsAdmin: SideBarItem[] = [
-	{
-		title: "Overview",
-		url: "/app",
-		icon: CalendarDays,
-		child: [],
-		bgGradient: "bg-linear-to-r from-amber-300 to-amber-50",
-	},
-	{
-		title: "Requests Schedule",
-		url: "/app/requests",
-		icon: BookCheck,
-		child: [],
-		bgGradient: "bg-linear-to-r from-cyan-300 to-cyan-50",
-	},
-	{
-		title: "Requests List",
-		url: "/app/your-requests",
-		icon: Ticket,
-		child: [],
-		bgGradient: "bg-linear-to-r from-lime-300 to-lime-50",
-	},
-	{
-		title: "Inventory",
-		url: "/app/inventory",
-		icon: Archive,
-		child: [],
-		bgGradient: "bg-linear-to-r from-violet-300 to-violet-50",
-	},
-	{
-		title: "User Management",
-		url: "/app/user-management",
-		icon: UserCog2,
-		child: [],
-		bgGradient: "bg-linear-to-r from-teal-300 to-teal-50",
-	},
-	{
-		title: "Unblocking",
-		url: "/app/unblocking",
-		icon: FlagTriangleRightIcon,
-		child: [],
-		bgGradient: "bg-linear-to-r from-rose-300 to-rose-50",
-	},
-	{
-		title: "Audit Logs",
-		url: "/app/audit",
-		icon: Logs,
-		child: [],
-		bgGradient: "bg-linear-to-r from-amber-300 to-amber-50",
-	},
+  { title: "Overview", url: "/app", icon: CalendarDays },
+  { title: "Schedule", url: "/app/requests", icon: BookCheck },
+  { title: "Request List", url: "/app/your-requests", icon: Ticket },
+  { title: "Inventory", url: "/app/inventory", icon: Archive },
+  { title: "Users", url: "/app/user-management", icon: UserCog2 },
+  { title: "Unblocking", url: "/app/unblocking", icon: FlagTriangleRight },
+  { title: "Audit Logs", url: "/app/audit", icon: Logs },
 ];
 
 const itemsUser: SideBarItem[] = [
-	{
-		title: "Overview",
-		url: "/app",
-		icon: CalendarDays,
-		child: [],
-		bgGradient: "bg-linear-to-r from-amber-300 to-amber-50",
-	},
-	{
-		title: "Requests Schedule",
-		url: "/app/requests",
-		icon: BookCheck,
-		child: [],
-		bgGradient: "bg-linear-to-r from-cyan-300 to-cyan-50",
-	},
-	{
-		title: "Requests History",
-		url: "/app/your-requests",
-		icon: Ticket,
-		child: [],
-		bgGradient: "bg-linear-to-r from-lime-300 to-lime-50",
-	},
+  { title: "Overview", url: "/app", icon: CalendarDays },
+  { title: "Schedule", url: "/app/requests", icon: BookCheck },
+  { title: "History", url: "/app/your-requests", icon: Ticket },
 ];
 
 export default function NavMain({ role }: { role: string }) {
-	const pathname = usePathname();
+  const pathname = usePathname();
+  const items = role === "admin" ? itemsAdmin : itemsUser;
 
-	const items = role === "admin" ? itemsAdmin : itemsUser;
+  return (
+    <SidebarGroup>
+      <SidebarGroupContent>
+        <SidebarMenu className="gap-1">
+          {items.map((item) => {
+            const isActive = pathname === item.url;
 
-	return (
-		<SidebarGroup>
-			<SidebarGroupContent>
-				<SidebarMenu className="gap-4">
-					{items &&
-						items.map((item) => (
-							<SidebarMenuItem key={item.title}>
-								<SidebarMenuButton
-									asChild
-									className={`h-10 ${
-										pathname === item.url
-											? "bg-none data-[state=open]:hover:bg-white"
-											: ""
-									}`}>
-									<Link
-										href={item.url}
-										className={`${
-											pathname === item.url ? "relative z-10" : ""
-										} gap-4`}>
-										<item.icon className="min-w-6 min-h-6" />
-										<span className="font-semibold text-xl hover:text-primary">
-											{item.title}
-										</span>
-										<div
-											className={`${
-												pathname === item.url
-													? `absolute w-48 h-5 ${item.bgGradient} top-4 z-[-1]`
-													: ""
-											}`}
-										/>
-									</Link>
-								</SidebarMenuButton>
-							</SidebarMenuItem>
-						))}
-				</SidebarMenu>
-			</SidebarGroupContent>
-		</SidebarGroup>
-	);
+            return (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton
+                  asChild
+                  tooltip={item.title}
+                  className={`
+                    h-9 px-3 transition-all duration-200 rounded-lg group
+                    ${
+                      isActive
+                        ? "bg-emerald-50 text-emerald-700 font-medium shadow-sm ring-1 ring-emerald-100"
+                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                    }
+                  `}
+                >
+                  <Link href={item.url} className="flex items-center gap-3">
+                    <item.icon
+                      className={`
+                            h-4 w-4 shrink-0 transition-colors
+                            ${isActive ? "text-emerald-600" : "text-slate-400 group-hover:text-slate-600"}
+                        `}
+                    />
+                    <span className="text-sm">{item.title}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            );
+          })}
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </SidebarGroup>
+  );
 }
