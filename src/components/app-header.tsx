@@ -1,5 +1,6 @@
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
+import { LanguageSwitcher } from "@/components/language-switcher";
 
 export default function AppHeader({ title }: { title: string }) {
   return (
@@ -10,6 +11,10 @@ export default function AppHeader({ title }: { title: string }) {
         <Separator orientation="vertical" className="mr-2 h-4 bg-slate-200" />
 
         <h1 className="text-sm font-semibold tracking-tight text-slate-900 uppercase">{title}</h1>
+
+        <div className="ml-auto flex items-center gap-2">
+          <LanguageSwitcher />
+        </div>
       </div>
     </header>
   );

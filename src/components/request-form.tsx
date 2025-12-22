@@ -8,6 +8,7 @@ import { Textarea } from "./ui/textarea";
 import { CalendarRequestForm, CalendarUnblockForm } from "./date-picker";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import React, { useEffect, useState } from "react";
+import { DateTime } from "luxon";
 import { useTickets } from "@/hooks/use-tickets";
 import { MergeSchedultType, ScheduleDataTicket, ScheduleRegulerDataTicket } from "./type";
 import { useUser } from "@/hooks/use-user";
@@ -25,6 +26,7 @@ import {
   FileText,
   Type,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 const generateTimeSlots = () => {
   const slots = [];
@@ -45,7 +47,8 @@ function CleanCard({ children, className }: { children: React.ReactNode; classNa
   );
 }
 
-export function RequestForm({ className }: { className?: string }) {
+export function RequestForm({ className, border = true }: { className?: string; border?: boolean }) {
+  const t = useTranslations("requests");
   const user = useUser();
   const tickets = useTickets();
   const [token, setToken] = useState("");
@@ -81,18 +84,18 @@ export function RequestForm({ className }: { className?: string }) {
 
   const handleStartTimeChange = (val: string) => {
     if (!date) {
-      toast.error("Please select a date first.");
+      toast.error(t("selectDateFirst"));
       return;
     }
-    const isToday = date.toDateString() === new Date().toDateString();
-    const now = new Date().toTimeString().slice(0, 5);
+    const isToday = DateTime.fromJSDate(date).hasSame(DateTime.now(), 'day');
+    const now = DateTime.now().toFormat('HH:mm');
     if (isToday && val < now) {
-      toast.error("Start time cannot be in the past.");
+      toast.error(t("startTimeCannotBePast"));
       return;
     }
 
     if (form.endTime && val >= form.endTime) {
-      toast.error("Start time must be earlier than end time.");
+      toast.error(t("startTimeMustBeEarlier"));
       setForm({ ...form, startTime: "" });
     } else {
       setForm({ ...form, startTime: val });
@@ -101,11 +104,11 @@ export function RequestForm({ className }: { className?: string }) {
 
   const handleEndTimeChange = (val: string) => {
     if (!date) {
-      toast.error("Please select a date first.");
+      toast.error(t("selectDateFirst"));
       return;
     }
     if (form.startTime && val <= form.startTime) {
-      toast.error("End time must be later than start time.");
+      toast.error(t("endTimeMustBeLater"));
       setForm({ ...form, endTime: "" });
     } else {
       setForm({ ...form, endTime: val });
@@ -120,32 +123,50 @@ export function RequestForm({ className }: { className?: string }) {
     } else {
       setDate(undefined);
       setForm({ ...form, startTime: "", endTime: "" });
-      if (d) toast.error("Cannot select past dates");
+      if (d) toast.error(t("cannotSelectPastDates"));
     }
   };
 
   const postTicket = () => {
     setLoading(true);
+    // Safe date parsing with luxon
+    let startDate = new Date();
+    let endDate = new Date();
+    
+    if (date) {
+      const [hours, minutes] = form.startTime.split(':').map(Number);
+      const [endHours, endMinutes] = form.endTime.split(':').map(Number);
+      
+      startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), hours, minutes);
+      endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), endHours, endMinutes);
+    }
+
     const ticketData: ScheduleDataTicket = {
       description: form.description,
       title: form.eventName,
       userId: user.user?.id || 0,
-      startDate: date ? new Date(`${date.toDateString()} ${form.startTime}`) : new Date(),
-      endDate: date ? new Date(`${date.toDateString()} ${form.endTime}`) : new Date(),
+      startDate,
+      endDate,
       category: form.eventType,
     };
 
     if (mergedSchedules.length > 0) {
       const hasConflict = mergedSchedules.some((schedule) => {
+        const scheduleStart = new Date(schedule.startDate);
+        const scheduleEnd = new Date(schedule.endDate);
+        
         return (
-          ticketData.startDate.getDate() === new Date(schedule.startDate).getDate() &&
-          ticketData.startDate.getHours() < new Date(schedule.endDate).getHours() &&
-          ticketData.endDate.getHours() > new Date(schedule.startDate).getHours()
+          ticketData.startDate.getDate() === scheduleStart.getDate() &&
+          ticketData.startDate.getMonth() === scheduleStart.getMonth() &&
+          ticketData.startDate.getFullYear() === scheduleStart.getFullYear() &&
+          ((ticketData.startDate >= scheduleStart && ticketData.startDate < scheduleEnd) ||
+           (ticketData.endDate > scheduleStart && ticketData.endDate <= scheduleEnd) ||
+           (ticketData.startDate <= scheduleStart && ticketData.endDate >= scheduleEnd))
         );
       });
       if (hasConflict) {
-        toast.error("Schedule Conflict", {
-          description: "Time slot already booked.",
+        toast.error(t("scheduleConflict"), {
+          description: t("timeSlotBooked"),
           icon: <AlertCircle className="w-5 h-5 text-red-500" />,
         });
         setLoading(false);
@@ -155,7 +176,7 @@ export function RequestForm({ className }: { className?: string }) {
     tickets.handlePostTicket(ticketData, token);
     setTimeout(() => {
       setLoading(false);
-      toast.success("Request submitted!");
+      toast.success(t("requestSubmitted"));
     }, 1000);
   };
 
@@ -164,7 +185,7 @@ export function RequestForm({ className }: { className?: string }) {
       <CleanCard className={className}>
         <CardContent className="flex flex-col items-center justify-center py-32 text-center">
           <Loader2 className="h-12 w-12 animate-spin text-emerald-500 mb-4" />
-          <h3 className="text-lg font-semibold text-slate-900">Processing Request...</h3>
+          <h3 className="text-lg font-semibold text-slate-900">{t("processingRequest")}</h3>
         </CardContent>
       </CleanCard>
     );
@@ -178,9 +199,9 @@ export function RequestForm({ className }: { className?: string }) {
             <CalendarClock className="w-5 h-5" />
           </div>
           <div>
-            <CardTitle className="text-xl font-bold text-slate-900">New Reservation</CardTitle>
+            <CardTitle className="text-xl font-bold text-slate-900">{t("newReservation")}</CardTitle>
             <CardDescription className="text-slate-500 mt-0.5">
-              Fill in the details below to book a laboratory slot.
+              {t("newReservationDescription")}
             </CardDescription>
           </div>
         </div>
@@ -196,11 +217,11 @@ export function RequestForm({ className }: { className?: string }) {
         >
           <div className="grid gap-6">
             <div className="grid gap-2">
-              <Label className="text-slate-700 font-semibold">Event Name</Label>
+              <Label className="text-slate-700 font-semibold">{t("eventName")}</Label>
               <div className="relative">
                 <Type className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <Input
-                  placeholder="e.g. Basic Programming Practicum"
+                  placeholder={t("eventNamePlaceholder")}
                   value={form.eventName}
                   onChange={(e) => setForm({ ...form, eventName: e.target.value })}
                   className="h-11 pl-10 bg-white border-slate-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10"
@@ -211,28 +232,28 @@ export function RequestForm({ className }: { className?: string }) {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="grid gap-2">
-                <Label className="text-slate-700 font-semibold">Category</Label>
+                <Label className="text-slate-700 font-semibold">{t("category")}</Label>
                 <div className="relative">
                   <Layers className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 z-10" />
                   <Select onValueChange={(val) => setForm({ ...form, eventType: val })}>
                     <SelectTrigger className="h-11 pl-10 bg-white border-slate-200 focus:ring-emerald-500/20">
-                      <SelectValue placeholder="Select type" />
+                      <SelectValue placeholder={t("selectType")} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Praktikum">Practicum</SelectItem>
-                      <SelectItem value="Kelas">Class</SelectItem>
-                      <SelectItem value="Skripsi">Thesis</SelectItem>
+                      <SelectItem value="Praktikum">{t("practicum")}</SelectItem>
+                      <SelectItem value="Kelas">{t("class")}</SelectItem>
+                      <SelectItem value="Skripsi">{t("thesis")}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
 
               <div className="grid gap-2">
-                <Label className="text-slate-700 font-semibold">Lecturer</Label>
+                <Label className="text-slate-700 font-semibold">{t("lecturer")}</Label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                   <Input
-                    placeholder="Lecturer Name"
+                    placeholder={t("lecturerPlaceholder")}
                     value={form.lecturer}
                     onChange={(e) => setForm({ ...form, lecturer: e.target.value })}
                     className="h-11 pl-10 bg-white border-slate-200 focus:border-emerald-500"
@@ -245,19 +266,19 @@ export function RequestForm({ className }: { className?: string }) {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-end">
             <div className="grid gap-2 w-full">
-              <Label className="text-slate-500 text-xs font-bold uppercase tracking-wider pl-1">Date</Label>
+              <Label className="text-slate-500 text-xs font-bold uppercase tracking-wider pl-1">{t("date")}</Label>
               <div className="w-full">
                 <CalendarRequestForm label={false} valDateState={date} onChange={handleChangeDate} />
               </div>
             </div>
 
             <div className="grid gap-2 w-full">
-              <Label className="text-slate-500 text-xs font-bold uppercase tracking-wider pl-1">Duration</Label>
+              <Label className="text-slate-500 text-xs font-bold uppercase tracking-wider pl-1">{t("duration")}</Label>
               <div className="flex w-full items-center gap-2">
                 <div className="relative flex-1 min-w-0">
                   <Select value={form.startTime} onValueChange={handleStartTimeChange}>
                     <SelectTrigger className="h-10 w-full bg-white border-slate-200 focus:ring-emerald-500/20">
-                      <SelectValue placeholder="Start" />
+                      <SelectValue placeholder={t("start")} />
                     </SelectTrigger>
                     <SelectContent className="max-h-[200px]">
                       {TIME_SLOTS.map((t) => (
@@ -276,7 +297,7 @@ export function RequestForm({ className }: { className?: string }) {
                 <div className="relative flex-1 min-w-0">
                   <Select value={form.endTime} onValueChange={handleEndTimeChange}>
                     <SelectTrigger className="h-10 w-full bg-white border-slate-200 focus:ring-emerald-500/20">
-                      <SelectValue placeholder="End" />
+                      <SelectValue placeholder={t("end")} />
                     </SelectTrigger>
                     <SelectContent className="max-h-[200px]">
                       {TIME_SLOTS.map((t) => (
@@ -292,11 +313,11 @@ export function RequestForm({ className }: { className?: string }) {
           </div>
 
           <div className="grid gap-2">
-            <Label className="text-slate-700 font-semibold">Description</Label>
+            <Label className="text-slate-700 font-semibold">{t("description")}</Label>
             <div className="relative">
               <FileText className="absolute left-3 top-3 w-4 h-4 text-slate-400" />
               <Textarea
-                placeholder="Additional details..."
+                placeholder={t("descriptionPlaceholder")}
                 value={form.description}
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
                 className="min-h-[100px] pl-10 bg-white border-slate-200 focus:border-emerald-500 resize-none pt-2.5"
@@ -311,7 +332,7 @@ export function RequestForm({ className }: { className?: string }) {
               size="lg"
               className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold shadow-lg px-8 rounded-xl"
             >
-              Submit Request
+              {t("submitRequest")}
             </Button>
           </div>
         </form>
@@ -320,7 +341,8 @@ export function RequestForm({ className }: { className?: string }) {
   );
 }
 
-export function RequestRegulerForm({ className }: { className?: string }) {
+export function RequestRegulerForm({ className, border = true }: { className?: string; border?: boolean }) {
+  const t = useTranslations("requests");
   const user = useUser();
   const [token, setToken] = useState("");
   const reguler = useReguler(token);
@@ -334,11 +356,23 @@ export function RequestRegulerForm({ className }: { className?: string }) {
   const [endTime, setEndTime] = useState("");
   const [date, setDate] = useState<Date | undefined>(undefined);
 
-  const ticketData: ScheduleRegulerDataTicket = {
-    title: eventName,
-    userId: user.user?.id || 0,
-    startDate: date ? new Date(`${date.toDateString()} ${startTime}`) : new Date(),
-    endDate: date ? new Date(`${date.toDateString()} ${endTime}`) : new Date(),
+  // Safe date parsing with luxon for regular schedule
+    let startDate = new Date();
+    let endDate = new Date();
+    
+    if (date && startTime && endTime) {
+      const [startHours, startMinutes] = startTime.split(':').map(Number);
+      const [endHours, endMinutes] = endTime.split(':').map(Number);
+      
+      startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), startHours, startMinutes);
+      endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), endHours, endMinutes);
+    }
+
+    const ticketData: ScheduleRegulerDataTicket = {
+      title: eventName,
+      userId: user.user?.id || 0,
+      startDate,
+      endDate,
   };
 
   const arrRequest = Array.from({ length: 16 }, (_, i) => ({
@@ -351,7 +385,7 @@ export function RequestRegulerForm({ className }: { className?: string }) {
     for (const t of arrRequest) {
       await reguler.handlePostReguler(t);
     }
-    toast.success("Semester schedule created!");
+    toast.success(t("semesterScheduleCreated"));
   };
 
   return (
@@ -362,9 +396,9 @@ export function RequestRegulerForm({ className }: { className?: string }) {
             <CheckCircle2 className="w-5 h-5" />
           </div>
           <div>
-            <CardTitle className="text-xl font-bold text-slate-900">Recurring Schedule</CardTitle>
+            <CardTitle className="text-xl font-bold text-slate-900">{t("recurringSchedule")}</CardTitle>
             <CardDescription className="text-slate-600 mt-0.5">
-              Create a schedule that repeats weekly for 16 weeks.
+              {t("recurringScheduleDescription")}
             </CardDescription>
           </div>
         </div>
@@ -379,11 +413,11 @@ export function RequestRegulerForm({ className }: { className?: string }) {
           className="flex flex-col gap-8"
         >
           <div className="grid gap-2">
-            <Label className="text-slate-700 font-semibold">Event Name</Label>
+            <Label className="text-slate-700 font-semibold">{t("eventName")}</Label>
             <div className="relative">
               <Type className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <Input
-                placeholder="e.g. Regular Class 4A"
+                placeholder={t("regularClassPlaceholder")}
                 value={eventName}
                 onChange={(e) => setEventName(e.target.value)}
                 className="h-11 pl-10 bg-white border-slate-200 focus:border-emerald-500"
@@ -395,24 +429,24 @@ export function RequestRegulerForm({ className }: { className?: string }) {
           <div className="rounded-2xl border border-emerald-100 bg-white/60 p-6 space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-end">
               <div className="grid gap-2 w-full">
-                <Label className="text-slate-500 text-xs font-bold uppercase tracking-wider pl-1">Start Date</Label>
+                <Label className="text-slate-500 text-xs font-bold uppercase tracking-wider pl-1">{t("startDate")}</Label>
                 <div className="w-full">
                   <CalendarUnblockForm label={false} setDateState={setDate} valDateState={date} />
                 </div>
               </div>
 
               <div className="grid gap-2 w-full">
-                <Label className="text-slate-500 text-xs font-bold uppercase tracking-wider pl-1">Weekly Time</Label>
+                <Label className="text-slate-500 text-xs font-bold uppercase tracking-wider pl-1">{t("weeklyTime")}</Label>
                 <div className="flex w-full items-center gap-2">
                   <div className="relative flex-1 min-w-0">
                     <Select value={startTime} onValueChange={setStartTime}>
                       <SelectTrigger className="h-10 w-full bg-white border-slate-200">
-                        <SelectValue placeholder="Start" />
+                        <SelectValue placeholder={t("start")} />
                       </SelectTrigger>
                       <SelectContent className="max-h-[200px]">
-                        {TIME_SLOTS.map((t) => (
-                          <SelectItem key={t} value={t}>
-                            {t}
+                        {TIME_SLOTS.map((slot) => (
+                          <SelectItem key={slot} value={slot}>
+                            {slot}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -424,12 +458,12 @@ export function RequestRegulerForm({ className }: { className?: string }) {
                   <div className="relative flex-1 min-w-0">
                     <Select value={endTime} onValueChange={setEndTime}>
                       <SelectTrigger className="h-10 w-full bg-white border-slate-200">
-                        <SelectValue placeholder="End" />
+                        <SelectValue placeholder={t("end")} />
                       </SelectTrigger>
                       <SelectContent className="max-h-[200px]">
-                        {TIME_SLOTS.map((t) => (
-                          <SelectItem key={t} value={t}>
-                            {t}
+                        {TIME_SLOTS.map((slot) => (
+                          <SelectItem key={slot} value={slot}>
+                            {slot}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -446,7 +480,7 @@ export function RequestRegulerForm({ className }: { className?: string }) {
               size="lg"
               className="bg-slate-900 hover:bg-slate-800 text-white font-semibold shadow-lg px-8 rounded-xl"
             >
-              Create 16-Week Schedule
+              {t("createWeeklySchedule")}
             </Button>
           </div>
         </form>

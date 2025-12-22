@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import {
     Dialog,
@@ -15,59 +17,61 @@ import AuditTicketsByUserTable from "./table-audit-user";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { EllipsisVertical } from "lucide-react";
 import DetailAuditTicket from "./detail-audit-ticket";
-
-const headerTableAuditLogUser: ColumnDef<AuditLogByUser>[] = [
-    {
-        accessorKey: "ticketId",
-        header: "Ticket ID",
-    },
-    {
-        accessorKey: "action",
-        header: "Action",
-    },
-    {
-        accessorKey: "oldValue",
-        header: "Old Value",
-    },
-    {
-        accessorKey: "changes",
-        header: "Changes",
-    },
-    {
-        accessorKey: "newValue",
-        header: "New Value",
-    },
-    {
-        accessorKey: "createdAt",
-        header: "Created At",
-        cell: ({ row }) => {
-            return <>{new Date(row.getValue("createdAt")).toLocaleString()}</>;
-        }
-    },
-    {
-        header: "Action",
-        cell: ({ row }) => {
-			return (
-				<DropdownMenu>
-					<DropdownMenuTrigger asChild>
-						<EllipsisVertical className="cursor-pointer" />
-					</DropdownMenuTrigger>
-					<DropdownMenuContent>
-						<div className="flex justify-start w-full text-sm">
-							<DetailAuditTicket id={row.getValue("ticketId")} />
-						</div>
-					</DropdownMenuContent>
-				</DropdownMenu>
-			);
-		},
-    },
-]
+import { useTranslations } from "next-intl";
 
 export default function DetailAuditUser({ id }: { id: number }) {
+    const t = useTranslations("audit");
     const token = localStorage.getItem("access_token") || "";
     const user = useUser();
     const audit = useAudit(token);
     const [userName, setUserName] = useState<string>("");
+
+    const headerTableAuditLogUser: ColumnDef<AuditLogByUser>[] = [
+        {
+            accessorKey: "ticketId",
+            header: t("ticketId"),
+        },
+        {
+            accessorKey: "action",
+            header: t("action"),
+        },
+        {
+            accessorKey: "oldValue",
+            header: t("oldValue"),
+        },
+        {
+            accessorKey: "changes",
+            header: t("changes"),
+        },
+        {
+            accessorKey: "newValue",
+            header: t("newValue"),
+        },
+        {
+            accessorKey: "createdAt",
+            header: t("createdAt"),
+            cell: ({ row }) => {
+                return <>{new Date(row.getValue("createdAt")).toLocaleString()}</>;
+            }
+        },
+        {
+            header: t("action"),
+            cell: ({ row }) => {
+                return (
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <EllipsisVertical className="cursor-pointer" />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                            <div className="flex justify-start w-full text-sm">
+                                <DetailAuditTicket id={row.getValue("ticketId")} />
+                            </div>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                );
+            },
+        },
+    ];
 
     const fetchUser = () => {
         if (token) {
@@ -87,54 +91,18 @@ export default function DetailAuditUser({ id }: { id: number }) {
                 <DialogTrigger
                     className="cursor-pointer hover:font-semibold w-full"
                     onClick={() => fetchUser()}>
-                    Detail
+                    {t("detail")}
                 </DialogTrigger>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Audit Log Tickets by {userName || ""}</DialogTitle>
+                        <DialogTitle>{t("auditLogTicketsBy")} {userName || ""}</DialogTitle>
                         <DialogDescription>
-                            Detail information log audit ticket by user.
+                            {t("detailLogAuditTicketByUser")}
                         </DialogDescription>
                     </DialogHeader>
                     <div className="flex flex-col gap-4 mt-4 w-full max-h-96 overflow-y-auto">
                         <AuditTicketsByUserTable columns={headerTableAuditLogUser} data={audit.auditsTicketsbuUserID || []} />
-                        {/* {audit.auditsTicketsbuUserID.length === 0 ? (
-                            <p>No audit logs found for this user.</p>
-                        ) : (
-                            <>
-                                {audit.auditsTicketsbuUserID.map((log) => (
-                                    <div
-                                        key={log.id}
-                                        className="border rounded-md p-4 flex flex-col gap-2">
-                                        <p>
-                                            <strong>Tickets ID:</strong> {log.ticketId}
-                                        </p>
-                                        <p>
-                                            <strong>Action:</strong> {log.action}
-                                        </p>
-                                        <p>
-                                            <strong>Old Value:</strong>{" "}
-                                            {log.oldValue ? log.oldValue : "N/A"}
-                                        </p>
-                                        <p>
-                                            <strong>New Value:</strong> {log.newValue}
-                                        </p>
-                                        <p>
-                                            <strong>Changes:</strong>{" "}
-                                            {log.changes ? log.changes : "N/A"}
-                                        </p>
-                                        <p>
-                                            <strong>Created At:</strong>{" "}
-                                            {new Date(log.createdAt).toLocaleString()}
-                                        </p>
-                                    </div>
-                                ))}
-                            </>
-                        )} */}
                     </div>
-                    {/* <div className="grid grid-cols-2 gap-4 w-full justify-end">
-                        <DialogClose className="border rounded-mb mr-2">Close</DialogClose>
-                    </div> */}
                 </DialogContent>
             </Dialog>
         </div>

@@ -4,6 +4,7 @@ import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
 import { Input } from "./ui/input";
 import { Search } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -11,6 +12,8 @@ interface DataTableProps<TData, TValue> {
 }
 
 export default function ScheduleList<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+  const t = useTranslations("features");
+
   const table = useReactTable({
     data,
     columns,
@@ -23,7 +26,7 @@ export default function ScheduleList<TData, TValue>({ columns, data }: DataTable
         <div className="relative flex items-center">
           <Search className="absolute left-3 w-4 h-4 text-slate-400" />
           <Input
-            placeholder="Search schedule..."
+            placeholder={t("searchSchedule")}
             className="pl-9 bg-transparent border-none text-slate-900 placeholder:text-slate-400 focus-visible:ring-0 focus-visible:ring-offset-0 h-10"
           />
         </div>
@@ -67,7 +70,7 @@ export default function ScheduleList<TData, TValue>({ columns, data }: DataTable
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-32 text-center text-slate-500">
-                  No results found.
+                  {t("noResultsFound")}
                 </TableCell>
               </TableRow>
             )}

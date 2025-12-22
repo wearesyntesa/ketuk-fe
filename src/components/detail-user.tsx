@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { Button } from "./ui/button";
 import {
@@ -19,8 +21,12 @@ import {
 } from "./ui/select";
 import { UserType } from "./type";
 import { useUser } from "@/hooks/use-user";
+import { useTranslations } from "next-intl";
 
 export default function DetailUser({ id }: { id: number }) {
+	const t = useTranslations("users");
+	const tCommon = useTranslations("common");
+	
 	const token = localStorage.getItem("access_token");
 	const user = useUser();
 	const [userName, setUserName] = useState<string>("");
@@ -62,21 +68,21 @@ export default function DetailUser({ id }: { id: number }) {
 				<DialogTrigger
 					className="cursor-pointer hover:font-semibold w-full"
 					onClick={() => fetchUser()}>
-					Detail
+					{t("detail")}
 				</DialogTrigger>
 				<DialogContent>
 					<DialogHeader>
-						<DialogTitle>{userName || ""}</DialogTitle>
+						<DialogTitle>{t("editUser")}: {userName || ""}</DialogTitle>
 						<DialogDescription>
-							Detail information about the item can be displayed here.
+							{t("updateProfile")}
 						</DialogDescription>
 					</DialogHeader>
 					<div className="flex flex-col gap-4 mt-4 w-full">
 						<div className="flex flex-col">
-							<strong>ID:</strong>
+							<strong>{t("id")}:</strong>
 							<Input value={userData?.id || ""} readOnly />
 							<div className="flex flex-col">
-								<strong>Name:</strong>
+								<strong>{tCommon("name")}:</strong>
 								<Input
 									value={userData.name}
 									onChange={(e) =>
@@ -86,11 +92,11 @@ export default function DetailUser({ id }: { id: number }) {
 							</div>
 						</div>
 						<div className="flex flex-col">
-							<strong>Email:</strong>
+							<strong>{tCommon("email")}:</strong>
 							<Input value={userData?.email || ""} readOnly />
 						</div>
 						<div className="flex flex-col">
-							<strong>Role:</strong>
+							<strong>{t("role")}:</strong>
 							<Select onValueChange={(value) =>
 								setUserData({ ...userData, role: value })
 							}>
@@ -98,40 +104,40 @@ export default function DetailUser({ id }: { id: number }) {
 									<SelectValue placeholder={userData?.role || ""} />
 								</SelectTrigger>
 								<SelectContent>
-									<SelectItem value="admin">admin</SelectItem>
-									<SelectItem value="user">user</SelectItem>
+									<SelectItem value="admin">{t("admin")}</SelectItem>
+									<SelectItem value="user">{t("user")}</SelectItem>
 								</SelectContent>
 							</Select>
 						</div>
 					</div>
 					<div className="grid grid-cols-2 gap-4 w-full justify-end">
-						<DialogClose className="border rounded-mb mr-2">Cancel</DialogClose>
+						<DialogClose className="border rounded-mb mr-2">{tCommon("cancel")}</DialogClose>
 						<Button
 							onClick={(e) => {
 								e.preventDefault();
 								updateUser();
 							}}>
-							Save Update
+							{t("saveChanges")}
 						</Button>
 					</div>
 				</DialogContent>
 			</Dialog>
 			<Dialog>
 				<DialogTrigger className="cursor-pointer hover:font-semibold w-full">
-					Delete
+					{tCommon("delete")}
 				</DialogTrigger>
 				<DialogContent>
 					<DialogHeader>
 						<DialogTitle>{userData?.name}</DialogTitle>
 						<DialogDescription>
-							Are you sure you want to delete this item?
+							{t("confirmDeleteUser")}
 						</DialogDescription>
 						<div className="flex gap-2">
 							<DialogClose className="flex-1 p-1 border rounded-md">
-								Cancel
+								{tCommon("cancel")}
 							</DialogClose>
 							<Button onClick={() => deleteUser()} className="flex-1">
-								Confirm
+								{tCommon("confirm")}
 							</Button>
 						</div>
 					</DialogHeader>

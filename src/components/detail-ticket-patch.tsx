@@ -18,6 +18,7 @@ import { MergeSchedultType, PatchTicketStatus, UserType } from "./type";
 import { useTickets } from "@/hooks/use-tickets";
 import { useSchedule } from "@/hooks/use-schedule";
 import { Check, X, AlertCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface DetailItemProps {
   id: number;
@@ -37,6 +38,9 @@ interface TicketData {
 }
 
 export default function DetailTicketPatch({ id, startTime, endTime, date }: DetailItemProps) {
+  const t = useTranslations("tickets");
+  const tCommon = useTranslations("common");
+  
   const [ticketData, setTicketData] = useState<TicketData>({
     id: 0,
     idSchedule: 0,
@@ -108,26 +112,26 @@ export default function DetailTicketPatch({ id, startTime, endTime, date }: Deta
         <DialogTrigger asChild>
           <div className="flex items-center gap-2 w-full px-2 py-1.5 text-sm rounded-md cursor-pointer hover:bg-emerald-50 text-slate-600 hover:text-emerald-700 transition-colors">
             <Check className="w-4 h-4" />
-            <span>Approve Request</span>
+            <span>{t("approveRequest")}</span>
           </div>
         </DialogTrigger>
         {!checkConflict() ? (
           <DialogContent className="sm:max-w-md bg-white border-slate-200">
             <DialogHeader>
-              <DialogTitle className="text-xl font-bold text-slate-900">Approve Request</DialogTitle>
+              <DialogTitle className="text-xl font-bold text-slate-900">{t("approveRequest")}</DialogTitle>
               <DialogDescription>
-                Confirm approval for <span className="font-semibold text-slate-700">{ticketData.title}</span>.
+                {t("confirmApprovalFor")} <span className="font-semibold text-slate-700">{ticketData.title}</span>.
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
-                <Label className="text-slate-700 font-medium">Event Name</Label>
+                <Label className="text-slate-700 font-medium">{t("eventName")}</Label>
                 <Input value={ticketData.title} readOnly className="bg-slate-50 border-slate-200 text-slate-500" />
               </div>
               <div className="grid gap-2">
-                <Label className="text-slate-700 font-medium">Notes (Optional)</Label>
+                <Label className="text-slate-700 font-medium">{t("notesOptional")}</Label>
                 <Textarea
-                  placeholder="Add a note to the requester..."
+                  placeholder={t("addNoteToRequester")}
                   value={ticketData.reason}
                   onChange={(e) => setTicketData({ ...ticketData, reason: e.target.value })}
                   className="bg-white border-slate-200 focus:border-emerald-500"
@@ -137,11 +141,11 @@ export default function DetailTicketPatch({ id, startTime, endTime, date }: Deta
             <div className="flex justify-end gap-3">
               <DialogClose asChild>
                 <Button variant="outline" className="border-slate-200 text-slate-600">
-                  Cancel
+                  {tCommon("cancel")}
                 </Button>
               </DialogClose>
               <Button onClick={approveTicket} className="bg-emerald-600 hover:bg-emerald-700 text-white">
-                Confirm Approval
+                {t("confirmApproval")}
               </Button>
             </div>
           </DialogContent>
@@ -150,21 +154,21 @@ export default function DetailTicketPatch({ id, startTime, endTime, date }: Deta
             <DialogHeader>
               <div className="flex items-center gap-2 text-red-600 mb-2">
                 <AlertCircle className="w-6 h-6" />
-                <DialogTitle className="text-xl font-bold">Conflict Detected</DialogTitle>
+                <DialogTitle className="text-xl font-bold">{t("conflictDetected")}</DialogTitle>
               </div>
               <DialogDescription className="text-slate-600">
-                This time slot overlaps with an existing schedule. You cannot approve this ticket.
+                {t("conflictDescription")}
               </DialogDescription>
             </DialogHeader>
 
             <div className="p-4 bg-red-50 rounded-lg border border-red-100 text-sm text-red-800 font-medium">
-              Please reject this request or advise the user to reschedule.
+              {t("pleaseRejectOrReschedule")}
             </div>
 
             <div className="grid gap-2 py-4">
-              <Label className="text-slate-700 font-medium">Rejection Reason</Label>
+              <Label className="text-slate-700 font-medium">{t("rejectionReason")}</Label>
               <Textarea
-                value={"Scheduling conflict detected."}
+                value={t("schedulingConflict")}
                 readOnly
                 className="bg-slate-50 border-slate-200 text-slate-500"
               />
@@ -172,10 +176,10 @@ export default function DetailTicketPatch({ id, startTime, endTime, date }: Deta
 
             <div className="flex justify-end gap-3">
               <DialogClose asChild>
-                <Button variant="outline">Cancel</Button>
+                <Button variant="outline">{tCommon("cancel")}</Button>
               </DialogClose>
               <Button variant="destructive" onClick={rejectTicket}>
-                Reject Request
+                {t("rejectRequest")}
               </Button>
             </div>
           </DialogContent>
@@ -186,21 +190,21 @@ export default function DetailTicketPatch({ id, startTime, endTime, date }: Deta
         <DialogTrigger asChild>
           <div className="flex items-center gap-2 w-full px-2 py-1.5 text-sm rounded-md cursor-pointer hover:bg-red-50 text-slate-600 hover:text-red-700 transition-colors">
             <X className="w-4 h-4" />
-            <span>Reject Request</span>
+            <span>{t("rejectRequest")}</span>
           </div>
         </DialogTrigger>
         <DialogContent className="sm:max-w-md bg-white border-slate-200">
           <DialogHeader>
-            <DialogTitle className="text-xl font-bold text-slate-900">Reject Request</DialogTitle>
+            <DialogTitle className="text-xl font-bold text-slate-900">{t("rejectRequest")}</DialogTitle>
             <DialogDescription>
-              Are you sure you want to reject <span className="font-semibold text-slate-700">{ticketData.title}</span>?
+              {t("confirmRejectFor")} <span className="font-semibold text-slate-700">{ticketData.title}</span>?
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label className="text-slate-700 font-medium">Reason for Rejection</Label>
+              <Label className="text-slate-700 font-medium">{t("reasonForRejection")}</Label>
               <Textarea
-                placeholder="e.g. Incomplete information..."
+                placeholder={t("incompleteInfoPlaceholder")}
                 value={ticketData.reason}
                 onChange={(e) => setTicketData({ ...ticketData, reason: e.target.value })}
                 className="bg-white border-slate-200 focus:border-red-500 min-h-[100px]"
@@ -211,11 +215,11 @@ export default function DetailTicketPatch({ id, startTime, endTime, date }: Deta
           <div className="flex justify-end gap-3">
             <DialogClose asChild>
               <Button variant="outline" className="border-slate-200 text-slate-600">
-                Cancel
+                {tCommon("cancel")}
               </Button>
             </DialogClose>
             <Button variant="destructive" onClick={rejectTicket}>
-              Confirm Rejection
+              {t("confirmRejection")}
             </Button>
           </div>
         </DialogContent>

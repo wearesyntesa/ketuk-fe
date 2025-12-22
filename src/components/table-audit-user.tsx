@@ -29,6 +29,7 @@ import {
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -39,6 +40,9 @@ export default function AuditTicketsByUserTable<TData, TValue>({
     columns,
     data,
 }: DataTableProps<TData, TValue>) {
+    const t = useTranslations("audit");
+    const tCommon = useTranslations("common");
+    
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
@@ -70,21 +74,21 @@ export default function AuditTicketsByUserTable<TData, TValue>({
                         <SelectTrigger
                             className="w-full"
                             value={table.getColumn("action")?.getFilterValue() as string}>
-                            <SelectValue placeholder="Filter by role" />
+                            <SelectValue placeholder={t("filterByAction")} />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="all">All</SelectItem>
-                            <SelectItem value="created">Created</SelectItem>
-                            <SelectItem value="approved">Approved</SelectItem>
-                            <SelectItem value="rejected">Rejected</SelectItem>
+                            <SelectItem value="all">{t("allActions")}</SelectItem>
+                            <SelectItem value="created">{t("created")}</SelectItem>
+                            <SelectItem value="approved">{t("approved")}</SelectItem>
+                            <SelectItem value="rejected">{t("rejected")}</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
             </Card>
             <div className="flex justify-between items-center px-2">
                 <div>
-                    Data {table.getState().pagination.pageIndex + 1} of{" "}
-                    {table.getState().pagination.pageSize}
+                    {tCommon("page")} {table.getState().pagination.pageIndex + 1} {tCommon("of")}{" "}
+                    {table.getPageCount() || 1}
                 </div>
                 <div className="flex gap-4">
                     <Button
@@ -169,8 +173,8 @@ export default function AuditTicketsByUserTable<TData, TValue>({
                             <TableRow>
                                 <TableCell
                                     colSpan={columns.length}
-                                    className="h-24 text-center">
-                                    No results.
+                                    className="h-24 text-center text-muted-foreground">
+                                    {t("noUserActivity")}
                                 </TableCell>
                             </TableRow>
                         )}

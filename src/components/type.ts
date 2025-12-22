@@ -2,7 +2,7 @@ export interface SideBarItem {
 	title: string;
 	url: string;
 	icon: React.ElementType;
-	child: SubItem[];
+	child?: SubItem[];
 	bgGradient?: string;
 }
 

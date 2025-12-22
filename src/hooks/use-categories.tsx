@@ -44,7 +44,7 @@ export const useCategories = () => {
 			categoryData.name.trim() === "" ||
 			categoryData.specification.trim() === ""
 		) {
-			toast.error("Name and Specification are required.");
+			toast.error("Please enter both a category name and specification.");
 			return;
 		}
 
@@ -68,11 +68,11 @@ export const useCategories = () => {
 				window.location.reload();
 				toast.success("Category created successfully");
 			} else {
-				toast.error(data.error || "Login failed");
+				toast.error(data.error || "Unable to create category. Please try again.");
 			}
 		} catch (err) {
-			toast.error("Failed to connect to server");
-			console.error("Login error:", err);
+			toast.error("Connection error. Please check your internet and try again.");
+			console.error("Create category error:", err);
 		} finally {
 			console.log("Post category request completed");
 		}
@@ -88,7 +88,7 @@ export const useCategories = () => {
 			categoryData.name.trim() === "" ||
 			categoryData.specification.trim() === ""
 		) {
-			toast.error("Name and Specification are required.");
+			toast.error("Please fill in all required fields to update this category.");
 			return;
 		}
 
@@ -112,11 +112,11 @@ export const useCategories = () => {
 				window.location.reload();
 				toast.success("Category updated successfully");
 			} else {
-				toast.error(data.error || "Login failed");
+				toast.error(data.error || "Unable to update category. Please try again.");
 			}
 		} catch (err) {
-			toast.error("Failed to connect to server");
-			console.error("Login error:", err);
+			toast.error("Connection error. Please check your internet and try again.");
+			console.error("Update category error:", err);
 		} finally {
 			console.log("Update category request completed");
 		}
@@ -143,8 +143,8 @@ export const useCategories = () => {
 				toast.error(data.error || "Failed to delete category");
 			}
 		} catch (err) {
-			toast.error("Failed to connect to server");
-			console.error("Login error:", err);
+			toast.error("Connection error. Please check your internet and try again.");
+			console.error("Delete category error:", err);
 		} finally {
 			console.log("Delete category request completed");
 		}

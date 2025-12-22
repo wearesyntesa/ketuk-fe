@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import QRCode from "qrcode";
 import { Button } from "./ui/button";
 import { Download } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface QRCodeGeneratorProps {
   value: string;
@@ -11,6 +12,7 @@ interface QRCodeGeneratorProps {
 }
 
 export default function QRCodeGenerator({ value, size = 200 }: QRCodeGeneratorProps) {
+  const t = useTranslations("qrCode");
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -37,7 +39,7 @@ export default function QRCodeGenerator({ value, size = 200 }: QRCodeGeneratorPr
       <canvas ref={canvasRef} />
       <Button onClick={downloadQR} variant="outline" size="sm">
         <Download className="mr-2 h-4 w-4" />
-        Download QR Code
+        {t("downloadQRCode")}
       </Button>
     </div>
   );

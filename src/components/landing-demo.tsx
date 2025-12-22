@@ -1,3 +1,5 @@
+"use client";
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -11,18 +13,22 @@ import {
 	MessageCircle,
 	MoreHorizontal,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export default function LandingDemo() {
+	const t = useTranslations("landingDemo");
+	const tCommon = useTranslations("common");
+
 	return (
 		<section className="py-20 bg-muted/30">
 			<div className="container mx-auto px-4">
 				<div className="max-w-6xl mx-auto">
 					<div className="text-center mb-16">
 						<h2 className="text-3xl md:text-4xl font-bold mb-4">
-							See Ketuk in action
+							{t("seeInAction")}
 						</h2>
 						<p className="text-xl text-muted-foreground">
-							Experience the intuitive interface for lab management
+							{t("experienceInterface")}
 						</p>
 					</div>
 
@@ -32,12 +38,12 @@ export default function LandingDemo() {
 								<div className="flex items-center space-x-4">
 									<div className="flex items-center space-x-2">
 										<div className="w-6 h-6 bg-primary rounded"></div>
-										<span className="font-semibold">Ketuk</span>
+										<span className="font-semibold">{tCommon("appName")}</span>
 									</div>
 									<div className="relative w-64">
 										<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
 										<Input
-											placeholder="Search"
+											placeholder={t("search")}
 											className="pl-10 bg-muted border-0"
 											readOnly
 										/>
@@ -62,10 +68,10 @@ export default function LandingDemo() {
 										</Avatar>
 									</div>
 									<Button variant="ghost" size="sm">
-										Team more
+										{t("teamMore")}
 									</Button>
 									<Button variant="ghost" size="sm">
-										Menu
+										{t("menu")}
 									</Button>
 								</div>
 							</div>
@@ -84,14 +90,13 @@ export default function LandingDemo() {
 										</div>
 									</div>
 									<div>
-										<h3 className="font-semibold mb-2">New task</h3>
+										<h3 className="font-semibold mb-2">{t("newTask")}</h3>
 										<p className="text-sm text-muted-foreground">
-											Involves creating and assigning a new task within the
-											project management system.
+											{t("newTaskDescription")}
 										</p>
 										<Button className="w-full mt-4" size="sm">
 											<Plus className="w-4 h-4 mr-2" />
-											Add new task
+											{t("addNewTask")}
 										</Button>
 									</div>
 								</div>
@@ -100,9 +105,9 @@ export default function LandingDemo() {
 								<div className="space-y-6">
 									<div>
 										<div className="flex items-center justify-between mb-4">
-											<h3 className="font-semibold">Tasks</h3>
+											<h3 className="font-semibold">{t("tasks")}</h3>
 											<span className="text-sm text-muted-foreground">
-												Mark as completed
+												{t("markAsCompleted")}
 											</span>
 										</div>
 										<div className="space-y-3">
@@ -112,13 +117,13 @@ export default function LandingDemo() {
 														<Circle className="w-5 h-5 text-muted-foreground" />
 														<div className="flex-1">
 															<div className="font-medium">
-																Creating persona
+																{t("creatingPersona")}
 															</div>
 															<div className="text-sm text-muted-foreground">
-																68% Done
+																68% {t("done")}
 															</div>
 														</div>
-														<Badge variant="secondary">In progress</Badge>
+														<Badge variant="secondary">{t("inProgress")}</Badge>
 													</div>
 												</CardContent>
 											</Card>
@@ -129,11 +134,11 @@ export default function LandingDemo() {
 														<CheckCircle2 className="w-5 h-5 text-green-500" />
 														<div className="flex-1">
 															<div className="font-medium">
-																Documents & sorting
+																{t("documentsSorting")}
 															</div>
 														</div>
 														<Badge className="bg-green-500/10 text-green-600">
-															Complete
+															{t("complete")}
 														</Badge>
 													</div>
 												</CardContent>
@@ -145,25 +150,25 @@ export default function LandingDemo() {
 
 							<div className="w-80 p-6 space-y-6">
 								<div>
-									<h3 className="font-semibold mb-4">Upcoming</h3>
+									<h3 className="font-semibold mb-4">{t("upcoming")}</h3>
 									<div className="space-y-3">
 										<div className="flex items-center space-x-3">
 											<div className="w-2 h-2 bg-blue-500 rounded-full"></div>
 											<div className="flex-1">
 												<div className="text-sm font-medium">
-													Branch meeting
+													{t("branchMeeting")}
 												</div>
 												<div className="text-xs text-muted-foreground">
-													Team
+													{t("team")}
 												</div>
 											</div>
 										</div>
 										<div className="flex items-center space-x-2">
 											<Badge variant="secondary" className="text-xs">
-												Design
+												{t("design")}
 											</Badge>
 											<Badge variant="secondary" className="text-xs">
-												Development
+												{t("development")}
 											</Badge>
 										</div>
 									</div>
@@ -172,7 +177,7 @@ export default function LandingDemo() {
 								<div>
 									<h3 className="font-semibold mb-4 flex items-center">
 										<MessageCircle className="w-4 h-4 mr-2" />
-										Chat details
+										{t("chatDetails")}
 									</h3>
 									<div className="space-y-3">
 										<div className="flex items-center space-x-3">
@@ -196,7 +201,7 @@ export default function LandingDemo() {
 									</div>
 									<Button className="w-full mt-4" size="sm">
 										<Plus className="w-4 h-4 mr-2" />
-										Add new chat
+										{t("addNewChat")}
 									</Button>
 								</div>
 							</div>

@@ -5,6 +5,7 @@ import { auditTableColumns } from "@/components/table-audit-logs";
 import { useAudit } from "@/hooks/use-audit";
 import { useUser } from "@/hooks/use-user";
 import { useEffect } from "react";
+import { DateTime } from "luxon";
 import { 
 	Activity, 
 	FileText, 
@@ -102,9 +103,9 @@ export default function AuditPage() {
 									</p>
 									<p className="text-2xl font-bold text-slate-900 mt-1">
 										{audit.allAuditLogs?.filter(log => {
-											const logDate = new Date(log.createdAt).toDateString();
-											const today = new Date().toDateString();
-											return logDate === today;
+											const logDate = DateTime.fromISO(log.createdAt);
+											const today = DateTime.now();
+											return logDate.hasSame(today, 'day');;
 										}).length || 0}
 									</p>
 								</div>

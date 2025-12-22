@@ -5,9 +5,13 @@ import ScheduleCard from "./schedule-card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { MergeSchedultType } from "./type";
 import { CalendarDays } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export default function ScheduleWeek({ data }: { data: MergeSchedultType[] }) {
-  const baseDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+  const t = useTranslations("schedule");
+  
+  const dayKeys = ["monday", "tuesday", "wednesday", "thursday", "friday"] as const;
+  const baseDays = dayKeys.map((key) => ({ key, label: t(key) }));
   const todayDay = new Date().getDay();
 
   const startIndex = todayDay === 0 || todayDay === 6 ? 0 : todayDay - 1;
@@ -15,7 +19,7 @@ export default function ScheduleWeek({ data }: { data: MergeSchedultType[] }) {
 
   return (
     <div className="w-full space-y-6">
-      <Tabs defaultValue={days[0]} className="flex flex-col lg:flex-row gap-6 w-full">
+      <Tabs defaultValue={days[0].key} className="flex flex-col lg:flex-row gap-6 w-full">
         <TabsList className="flex lg:flex-col flex-row h-auto w-full lg:w-72 gap-3 bg-transparent p-0 justify-start">
           {days.map((day, id) => {
             const now = new Date();
@@ -31,7 +35,7 @@ export default function ScheduleWeek({ data }: { data: MergeSchedultType[] }) {
             return (
               <TabsTrigger
                 key={id}
-                value={day}
+                value={day.key}
                 className={`
                   relative flex w-full flex-col items-start justify-center gap-1.5 rounded-2xl border p-4 text-left transition-all duration-200
                   data-[state=active]:bg-white data-[state=active]:border-emerald-200 data-[state=active]:shadow-md data-[state=active]:ring-1 data-[state=active]:ring-emerald-100
@@ -39,7 +43,7 @@ export default function ScheduleWeek({ data }: { data: MergeSchedultType[] }) {
                 `}
               >
                 <div className="flex w-full items-center justify-between">
-                  <span className={`text-sm font-bold ${isToday ? "text-emerald-700" : "text-slate-700"}`}>{day}</span>
+                  <span className={`text-sm font-bold ${isToday ? "text-emerald-700" : "text-slate-700"}`}>{day.label}</span>
                   {isToday && (
                     <span className="flex h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
                   )}
@@ -59,13 +63,13 @@ export default function ScheduleWeek({ data }: { data: MergeSchedultType[] }) {
         <div className="flex-1 w-full">
           {days.map((day, id) => (
             <TabsContent
-              value={day}
+              value={day.key}
               key={id}
               className="mt-0 w-full focus-visible:ring-0 focus-visible:outline-none animate-in fade-in slide-in-from-left-4 duration-300"
             >
               <ScrollArea className="h-[500px] w-full rounded-2xl">
                 <div className="pb-4 pr-4">
-                  <ScheduleCard data={data} day={day} id={id} />
+                  <ScheduleCard data={data} day={day.key} id={id} />
                 </div>
                 <ScrollBar orientation="vertical" />
               </ScrollArea>

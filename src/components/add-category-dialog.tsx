@@ -6,8 +6,12 @@ import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { useCategories } from "@/hooks/use-categories";
+import { useTranslations } from "next-intl";
 
 export default function AddCategoryDialog() {
+	const t = useTranslations("inventory");
+	const tCommon = useTranslations("common");
+	
 	const [categoryData, setCategoryData] = useState({
 		name: "",
 		specification: "",
@@ -20,18 +24,10 @@ export default function AddCategoryDialog() {
 		<>
 			<Dialog>
 				<DialogTrigger className="ml-2 bg-linear-to-br from-blue-500 via-blue-400 to-blue-300 text-white px-2 py-1 rounded-md font-semibold">
-					Add Category +
+					{t("addCategory")}
 				</DialogTrigger>
 				<DialogContent>
-					<DialogTitle>Add New Category</DialogTitle>
-					{/* <DialogTitle>Add New Item</DialogTitle>
-                    <DialogDescription>
-                        Fill in the details for the new inventory item.
-                    </DialogDescription>
-                    <DialogFooter>
-                        <Button type="submit">Add Item</Button>
-                    </DialogFooter> */}
-					{/* <InventoryForm /> */}
+					<DialogTitle>{t("addCategory")}</DialogTitle>
 					<form
 						onSubmit={(e) => {
 							e.preventDefault();
@@ -39,11 +35,11 @@ export default function AddCategoryDialog() {
 						}}>
 						<div className="flex flex-col gap-6">
 							<div className="grid gap-2">
-								<Label htmlFor="item-name">Nama Category</Label>
+								<Label htmlFor="item-name">{t("categoryName")}</Label>
 								<Input
 									id="item-name"
 									type="text"
-									placeholder="Lemari"
+									placeholder={t("categoryPlaceholder")}
 									value={categoryData.name}
 									onChange={(e) =>
 										setCategoryData({ ...categoryData, name: e.target.value })
@@ -51,17 +47,8 @@ export default function AddCategoryDialog() {
 									required
 								/>
 							</div>
-							{/* <div className="grid gap-2">
-                                    <Label htmlFor="procurement-year">Procurement Year</Label>
-                                    <Input
-                                        id="procurement-year"
-                                        type="number"
-                                        placeholder="2025"
-                                        required
-                                    />
-                                </div> */}
 							<div className="grid gap-2">
-								<Label htmlFor="specification">Specification</Label>
+								<Label htmlFor="specification">{tCommon("description")}</Label>
 								<Input
 									id="specification"
 									type="text"
@@ -78,8 +65,8 @@ export default function AddCategoryDialog() {
 							</div>
 
 							<div className="w-full gap-4 grid grid-cols-2">
-								<Button variant={"secondary"}>Cancel</Button>
-								<Button>Submit</Button>
+								<Button variant={"secondary"}>{tCommon("cancel")}</Button>
+								<Button>{tCommon("submit")}</Button>
 							</div>
 						</div>
 					</form>

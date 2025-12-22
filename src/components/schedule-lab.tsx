@@ -10,78 +10,91 @@ import { useState } from "react";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import { InitialIconWithName } from "./initial-icon";
-
-const tableHeader: ColumnDef<MergeSchedultType>[] = [
-  {
-    accessorKey: "title",
-    header: "Title Event",
-    cell: ({ row }) => <span className="font-semibold text-slate-900">{row.original.title}</span>,
-  },
-  {
-    accessorKey: "date",
-    header: "Date",
-    cell: ({ row }) => (
-      <span className="text-slate-600 font-medium tabular-nums">
-        {new Date(row.original.date).toLocaleDateString("en-US", {
-          month: "short",
-          day: "numeric",
-        })}
-      </span>
-    ),
-  },
-  {
-    accessorKey: "user",
-    header: "Contact",
-    cell: ({ row }) => (
-      <div className="text-slate-700">
-        <InitialIconWithName title={row.original.user.email} />
-      </div>
-    ),
-  },
-  {
-    accessorKey: "kategori",
-    header: "Category",
-    cell: ({ row }) => (
-      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100">
-        {row.original.kategori}
-      </span>
-    ),
-  },
-  {
-    accessorKey: "startDate",
-    header: "Start Time",
-    cell: ({ row }) => {
-      return (
-        <span className="font-mono text-slate-500 text-sm tabular-nums">
-          {new Date(row.original.startDate).toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
-        </span>
-      );
-    },
-  },
-  {
-    accessorKey: "endDate",
-    header: "End Time",
-    cell: ({ row }) => {
-      return (
-        <span className="font-mono text-slate-500 text-sm tabular-nums">
-          {new Date(row.original.endDate).toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
-        </span>
-      );
-    },
-  },
-];
+import { useTranslations } from "next-intl";
 
 export default function ScheduleLab({ mergedSchedules }: { mergedSchedules: MergeSchedultType[] }) {
   const [scheduleType, setScheduleType] = useState("week");
+  const t = useTranslations("schedule");
+
+  const tableHeader: ColumnDef<MergeSchedultType>[] = [
+    {
+      accessorKey: "title",
+      header: t("titleEvent"),
+      cell: ({ row }) => <span className="font-semibold text-slate-900">{row.original.title}</span>,
+    },
+    {
+      accessorKey: "date",
+      header: t("date"),
+      cell: ({ row }) => (
+        <span className="text-slate-600 font-medium tabular-nums">
+          {new Date(row.original.date).toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+          })}
+        </span>
+      ),
+    },
+    {
+      accessorKey: "user",
+      header: t("contact"),
+      cell: ({ row }) => (
+        <div className="text-slate-700">
+          <InitialIconWithName title={row.original.user.email} />
+        </div>
+      ),
+    },
+    {
+      accessorKey: "kategori",
+      header: t("category"),
+      cell: ({ row }) => (
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100">
+          {row.original.kategori}
+        </span>
+      ),
+    },
+    {
+      accessorKey: "startDate",
+      header: t("startTime"),
+      cell: ({ row }) => {
+        return (
+          <span className="font-mono text-slate-500 text-sm tabular-nums">
+            {new Date(row.original.startDate).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </span>
+        );
+      },
+    },
+    {
+      accessorKey: "endDate",
+      header: t("endTime"),
+      cell: ({ row }) => {
+        return (
+          <span className="font-mono text-slate-500 text-sm tabular-nums">
+            {new Date(row.original.endDate).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </span>
+        );
+      },
+    },
+  ];
 
   const handleScheduleTypeChange = (value: string) => {
     setScheduleType(value);
+  };
+
+  const getScheduleTitle = () => {
+    switch (scheduleType) {
+      case "week":
+        return t("thisWeekSchedule");
+      case "month":
+        return t("thisMonthSchedule");
+      default:
+        return t("thisListSchedule");
+    }
   };
 
   return (
@@ -89,26 +102,26 @@ export default function ScheduleLab({ mergedSchedules }: { mergedSchedules: Merg
       <div className="flex md:flex-row flex-col justify-between items-end md:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-slate-900">
-            This {scheduleType === "week" ? "Week" : scheduleType === "month" ? "Month" : "List"} Schedule
+            {getScheduleTitle()}
           </h1>
-          <p className="text-slate-500 text-sm mt-1">Manage and view laboratory allocations.</p>
+          <p className="text-slate-500 text-sm mt-1">{t("manageAndView")}</p>
         </div>
 
         <div className="flex justify-end gap-3 w-full md:w-auto">
           <Select onValueChange={handleScheduleTypeChange} defaultValue="week">
             <SelectTrigger className="w-[160px] bg-white/60 border-slate-200 text-slate-700 focus:ring-blue-500/20 backdrop-blur-md shadow-sm">
-              <SelectValue placeholder="Schedule Type" />
+              <SelectValue placeholder={t("scheduleType")} />
             </SelectTrigger>
             <SelectContent className="bg-white/90 backdrop-blur-xl border-slate-200 text-slate-700 shadow-xl">
-              <SelectItem value="week">Week</SelectItem>
-              <SelectItem value="month">Month</SelectItem>
-              <SelectItem value="list">List</SelectItem>
+              <SelectItem value="week">{t("week")}</SelectItem>
+              <SelectItem value="month">{t("month")}</SelectItem>
+              <SelectItem value="list">{t("list")}</SelectItem>
             </SelectContent>
           </Select>
 
           <Link href="/app/requests">
             <Button className="bg-slate-900 hover:bg-slate-800 text-white shadow-lg shadow-slate-900/20 transition-all duration-300">
-              Request Schedule +
+              {t("requestSchedule")}
             </Button>
           </Link>
         </div>

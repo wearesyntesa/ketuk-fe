@@ -15,8 +15,10 @@ import Link from "next/link";
 import { Button } from "./ui/button";
 import { InitialIcon } from "./initial-icon";
 import { DoorOpen, LayoutDashboard } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export default function LandingNav(isLogin: { isLogin: boolean }) {
+  const t = useTranslations("landing");
   const user = useUser();
   const [scrolled, setScrolled] = useState(false);
 
@@ -62,12 +64,12 @@ export default function LandingNav(isLogin: { isLogin: boolean }) {
               <div className="flex items-center gap-2">
                 <Link href="/app">
                   <Button variant="ghost" className="text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-medium">
-                    Log in
+                    {t("login")}
                   </Button>
                 </Link>
                 <Link href="/app">
                   <Button className="rounded-full bg-slate-950 text-white hover:bg-slate-800 shadow-md font-medium px-5">
-                    Get Started
+                    {t("getStarted")}
                   </Button>
                 </Link>
               </div>
@@ -97,7 +99,7 @@ export default function LandingNav(isLogin: { isLogin: boolean }) {
                   >
                     <Link href="/app" className="flex items-center w-full py-2">
                       <LayoutDashboard className="mr-2 h-4 w-4 text-slate-500" />
-                      <span>Dashboard</span>
+                      <span>{t("dashboard")}</span>
                     </Link>
                   </DropdownMenuItem>
 

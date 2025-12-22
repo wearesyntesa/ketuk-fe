@@ -1,3 +1,5 @@
+"use client";
+
 import {
     Dialog,
     DialogContent,
@@ -10,40 +12,42 @@ import { useAudit } from "@/hooks/use-audit";
 import { ColumnDef } from "@tanstack/react-table";
 import { AuditLogByTicket } from "./type";
 import AuditTicketsByTicketTable from "./table-audit-ticket";
-
-const headerTableAuditLogUser: ColumnDef<AuditLogByTicket>[] = [
-    {
-        accessorKey: "ticketId",
-        header: "Ticket ID",
-    },
-    {
-        accessorKey: "action",
-        header: "Action",
-    },
-    {
-        accessorKey: "oldValue",
-        header: "Old Value",
-    },
-    {
-        accessorKey: "changes",
-        header: "Changes",
-    },
-    {
-        accessorKey: "newValue",
-        header: "New Value",
-    },
-    {
-        accessorKey: "createdAt",
-        header: "Created At",
-        cell: ({ row }) => {
-            return <>{new Date(row.getValue("createdAt")).toLocaleString()}</>;
-        }
-    },
-]
+import { useTranslations } from "next-intl";
 
 export default function DetailAuditTicket({ id }: { id: number }) {
+    const t = useTranslations("audit");
     const token = localStorage.getItem("access_token") || "";
     const audit = useAudit(token);
+
+    const headerTableAuditLogUser: ColumnDef<AuditLogByTicket>[] = [
+        {
+            accessorKey: "ticketId",
+            header: t("ticketId"),
+        },
+        {
+            accessorKey: "action",
+            header: t("action"),
+        },
+        {
+            accessorKey: "oldValue",
+            header: t("oldValue"),
+        },
+        {
+            accessorKey: "changes",
+            header: t("changes"),
+        },
+        {
+            accessorKey: "newValue",
+            header: t("newValue"),
+        },
+        {
+            accessorKey: "createdAt",
+            header: t("createdAt"),
+            cell: ({ row }) => {
+                return <>{new Date(row.getValue("createdAt")).toLocaleString()}</>;
+            }
+        },
+    ];
 
     const fetchUser = () => {
         if (token) {
@@ -59,13 +63,13 @@ export default function DetailAuditTicket({ id }: { id: number }) {
                 <DialogTrigger
                     className="cursor-pointer hover:font-semibold w-full"
                     onClick={() => fetchUser()}>
-                    Detail
+                    {t("detail")}
                 </DialogTrigger>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Audit Log by Ticket with id {id}</DialogTitle>
+                        <DialogTitle>{t("auditLogByTicketId")} {id}</DialogTitle>
                         <DialogDescription>
-                            Detail information log audit ticket by ticket ID {id}.
+                            {t("detailLogAuditTicketById")} {id}.
                         </DialogDescription>
                     </DialogHeader>
                     <div className="flex flex-col gap-4 mt-4 w-full max-h-96 overflow-y-auto">

@@ -15,8 +15,10 @@ import { SignOutButton } from "./signout-button";
 import { useEffect } from "react";
 import { useUser } from "@/hooks/use-user";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { useTranslations } from "next-intl";
 
 export default function NavFooter() {
+  const t = useTranslations("users");
   const user = useUser();
 
   useEffect(() => {
@@ -40,6 +42,8 @@ export default function NavFooter() {
         .substring(0, 2)
         .toUpperCase()
     : "U";
+
+  const roleLabel = user.user.role === "admin" ? t("admin") : t("user");
 
   return (
     <SidebarMenu>
@@ -78,7 +82,7 @@ export default function NavFooter() {
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold text-slate-900">{user.user.name}</span>
-                <span className="truncate text-xs text-slate-500 capitalize">{user.user.role} Account</span>
+                <span className="truncate text-xs text-slate-500 capitalize">{roleLabel}</span>
               </div>
             </div>
 
@@ -87,11 +91,11 @@ export default function NavFooter() {
             <DropdownMenuGroup>
               <DropdownMenuItem className="gap-3 p-2 rounded-lg text-slate-600 focus:text-slate-900 focus:bg-slate-50 cursor-pointer">
                 <BadgeCheck className="h-4 w-4 text-slate-400" />
-                <span>Account</span>
+                <span>{t("account")}</span>
               </DropdownMenuItem>
               <DropdownMenuItem className="gap-3 p-2 rounded-lg text-slate-600 focus:text-slate-900 focus:bg-slate-50 cursor-pointer">
                 <Bell className="h-4 w-4 text-slate-400" />
-                <span>Notifications</span>
+                <span>{t("notifications")}</span>
               </DropdownMenuItem>
             </DropdownMenuGroup>
 

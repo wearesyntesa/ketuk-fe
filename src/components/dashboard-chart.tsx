@@ -182,7 +182,7 @@ export default function DashboardChart({ pieData }: { pieData: CategoryChartData
                     outerRadius={85}
                     paddingAngle={4}
                     stroke="none"
-                    dataKey="value"
+                    dataKey="totalRequest"
                   >
                     {pieData.map((entry, index) => (
                       <Cell
@@ -208,7 +208,7 @@ export default function DashboardChart({ pieData }: { pieData: CategoryChartData
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                 <div className="text-center">
                   <span className="text-4xl font-bold tracking-tighter text-slate-900 block">
-                    {pieData.reduce((acc, curr) => acc + curr.value, 0)}
+                    {pieData.reduce((acc, curr) => acc + curr.totalRequest, 0)}
                   </span>
                   <span className="text-[10px] font-bold tracking-widest text-slate-400 uppercase">Total</span>
                 </div>
@@ -225,7 +225,7 @@ export default function DashboardChart({ pieData }: { pieData: CategoryChartData
                     />
                     <span className="text-slate-600 font-medium">{entry.category}</span>
                   </div>
-                  <span className="font-bold text-slate-900">{entry.value}</span>
+                  <span className="font-bold text-slate-900">{entry.totalRequest}</span>
                 </div>
               ))}
             </div>

@@ -22,6 +22,7 @@ import { Card } from "./ui/card";
 import { Input } from "./ui/input";
 import { useState } from "react";
 import { UnblockingResponse } from "./type";
+import { useTranslations } from "next-intl";
 
 interface DataTableProps<TData extends UnblockingResponse, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -32,6 +33,8 @@ export default function UnblockingTable<TData extends UnblockingResponse, TValue
     columns,
     data,
 }: DataTableProps<TData, TValue>) {
+    const t = useTranslations("bookingWindow");
+    const tCommon = useTranslations("common");
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
@@ -54,41 +57,21 @@ export default function UnblockingTable<TData extends UnblockingResponse, TValue
             <Card className="p-2">
                 <div className="flex items-center gap-4">
                     <Input
-                        placeholder="Search inventory..."
+                        placeholder={t("searchBookingWindows")}
                         className="flex-1"
                         value={(table.getColumn("startDate")?.getFilterValue() as string) ?? ""}
                         onChange={(event) =>
                             table.getColumn("startDate")?.setFilterValue(event.target.value)
                         }
                     />
-                    <Input
-                        placeholder="Search inventory..."
-                        className="flex-1"
-                        value={(table.getColumn("endDate")?.getFilterValue() as string) ?? ""}
-                        onChange={(event) =>
-                            table.getColumn("endDate")?.setFilterValue(event.target.value)
-                        }
-                    />
                 </div>
             </Card>
             <div className="flex justify-between items-center px-2">
                 <div>
-                    Data {table.getState().pagination.pageIndex + 1} of{" "}
-                    {table.getState().pagination.pageSize}
+                    {tCommon("page")} {table.getState().pagination.pageIndex + 1} {tCommon("of")}{" "}
+                    {table.getPageCount() || 1}
                 </div>
                 <div className="flex gap-4">
-                    {/* <Button
-                        variant="outline"
-                        onClick={() => table.previousPage()}
-                        disabled={!table.getCanPreviousPage()}>
-                        <ChevronLeft size={16} />
-                    </Button>
-                    <Button
-                        variant="outline"
-                        onClick={() => table.nextPage()}
-                        disabled={!table.getCanNextPage()}>
-                        <ChevronRight size={16} />
-                    </Button> */}
                 </div>
             </div>
             <Card className="p-0">
@@ -136,8 +119,8 @@ export default function UnblockingTable<TData extends UnblockingResponse, TValue
                             <TableRow>
                                 <TableCell
                                     colSpan={columns.length}
-                                    className="h-24 text-center">
-                                    No results.
+                                    className="h-24 text-center text-muted-foreground">
+                                    {t("noBookingWindows")}
                                 </TableCell>
                             </TableRow>
                         )}

@@ -27,7 +27,7 @@ export const useTickets = () => {
 
     const handlePostTicket = async (ticket: ScheduleDataTicket, token: string) => {
         try {
-            const response = await fetch(`/api/tickets/create`, {
+const response = await fetch(`${API_URL}/api/tickets/v1`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -38,16 +38,16 @@ export const useTickets = () => {
             const data = await response.json();
             
             if (!response.ok) {
-                throw new Error(data.message || 'Gagal mengirim pesan');
+                throw new Error(data.message || 'Unable to submit your request. Please try again.');
             }
 
             // route.push('/app/your-requests');
             // window.location.reload();
             window.location.href = '/app/your-requests';
-            toast.success('Ticket created successfully');
+            toast.success('Request submitted successfully!');
             return data;
         } catch (error: any) {
-            toast.error(error.message || 'Gagal mengirim pesan');
+            toast.error(error.message || 'Unable to submit your request. Please try again.');
             throw error;
         } finally {
 
@@ -66,17 +66,17 @@ export const useTickets = () => {
         const data = await response.json();
         
         if (!response.ok) {
-            toast.error(data.message || 'Gagal mengirim pesan');
-            throw new Error(data.message || 'Gagal mengirim pesan');
+            toast.error(data.message || 'Unable to update your request. Please try again.');
+            throw new Error(data.message || 'Unable to update your request. Please try again.');
         }
 
-        toast.success('Ticket updated successfully');
+        toast.success('Request updated successfully!');
 
         return data;
     }
 
     const handlePostTicketReguler = async (ticket: ScheduleRegulerDataTicket, token: string) => {
-        const response = await fetch(`/api/tickets/create`, {
+        const response = await fetch(`${API_URL}/api/tickets/v1`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -87,11 +87,11 @@ export const useTickets = () => {
         const data = await response.json();
         
         if (!response.ok) {
-            toast.error(data.message || 'Gagal mengirim pesan');
-            throw new Error(data.message || 'Gagal mengirim pesan');
+            toast.error(data.message || 'Unable to submit your request. Please try again.');
+            throw new Error(data.message || 'Unable to submit your request. Please try again.');
         }
 
-        toast.success('Ticket created successfully');
+        toast.success('Request submitted successfully!');
 
         return data;
     }
@@ -109,7 +109,7 @@ export const useTickets = () => {
             console.log("Fetched Ticket by ID:", data);
 
             if (!response.ok) {
-                throw new Error(data.message || 'Gagal mendapatkan data ticket');
+                throw new Error(data.message || 'Unable to load request details. Please refresh the page.');
             }
 
             if (response.ok) {
@@ -117,7 +117,7 @@ export const useTickets = () => {
             }
             return data.data;
         } catch (error: any) {
-            toast.error(error.message || 'Gagal mendapatkan data ticket');
+            toast.error(error.message || 'Unable to load request details. Please refresh the page.');
             throw error;
         }
     }
@@ -135,20 +135,19 @@ export const useTickets = () => {
             const data = await response.json();
             
             if (!response.ok) {
-                toast.error(data.message || 'Gagal mengupdate status ticket');
-                throw new Error(data.message || 'Gagal mengupdate status ticket');
+                toast.error(data.message || 'Unable to update request status. Please try again.');
+                throw new Error(data.message || 'Unable to update request status. Please try again.');
             }
 
             if (response.ok) {
-                toast.success('Ticket status updated successfully');
-                toast.success('Ticket status updated successfully');
+                toast.success('Request status updated successfully!');
                 window.location.reload();
                 return data;
             }
     
             return data;
         } catch (error: any) {
-            toast.error(error.message || 'Gagal mengupdate status ticket');
+            toast.error(error.message || 'Unable to update request status. Please try again.');
             throw error;
         }
     }

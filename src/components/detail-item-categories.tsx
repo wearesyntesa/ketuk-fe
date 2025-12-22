@@ -27,40 +27,7 @@ import { Input } from "./ui/input";
 import { useItems } from "@/hooks/use-items";
 import DetailItem from "./detail-item";
 import Link from "next/link";
-
-const tableDetail: ColumnDef<ItemDetail>[] = [
-	{
-		accessorKey: "id",
-		header: "ID",
-	},
-	{
-		accessorKey: "year",
-		header: "Procurement Year",
-	},
-	{
-		accessorKey: "kondisi",
-		header: "Condition",
-	},
-	{
-		accessorKey: "note",
-		header: "Note",
-	},
-	{
-		header: "Action",
-		cell: ({ row }) => {
-			return (
-				<DropdownMenu>
-					<DropdownMenuTrigger asChild>
-						<EllipsisVertical className="cursor-pointer" />
-					</DropdownMenuTrigger>
-					<DropdownMenuContent>
-						<DetailItem itemId={row.getValue("id")} />
-					</DropdownMenuContent>
-				</DropdownMenu>
-			);
-		},
-	},
-];
+import { useTranslations } from "next-intl";
 
 interface DetailItemCategoriesProps {
 	name: string;
@@ -75,6 +42,8 @@ export default function DetailItemCategories({
 	id,
 	qty,
 }: DetailItemCategoriesProps) {
+	const t = useTranslations("inventory");
+	const tCommon = useTranslations("common");
 	const token = localStorage.getItem("access_token");
 	const categories = useCategories();
 	const items = useItems();
@@ -82,6 +51,40 @@ export default function DetailItemCategories({
 		name: "",
 		specification: "",
 	});
+
+	const tableDetail: ColumnDef<ItemDetail>[] = [
+		{
+			accessorKey: "id",
+			header: t("id"),
+		},
+		{
+			accessorKey: "year",
+			header: t("procurementYear"),
+		},
+		{
+			accessorKey: "kondisi",
+			header: t("condition"),
+		},
+		{
+			accessorKey: "note",
+			header: t("note"),
+		},
+		{
+			header: t("action"),
+			cell: ({ row }) => {
+				return (
+					<DropdownMenu>
+						<DropdownMenuTrigger asChild>
+							<EllipsisVertical className="cursor-pointer" />
+						</DropdownMenuTrigger>
+						<DropdownMenuContent>
+							<DetailItem itemId={row.getValue("id")} />
+						</DropdownMenuContent>
+					</DropdownMenu>
+				);
+			},
+		},
+	];
 
 	const fetchItemsCategory = () => {
 		if (token) {
@@ -128,18 +131,18 @@ export default function DetailItemCategories({
 						query: { categoryId: id },
 					}}
 					className="cursor-pointer hover:font-semibold w-full items-center justify-center flex">
-					Detail
+					{t("detail")}
 				</Link>
 			) : (
 				<Dialog>
 					<DialogTrigger
 						className="cursor-pointer hover:font-semibold w-full"
 						onClick={() => fetchItemsCategory()}>
-						Detail
+						{t("detail")}
 					</DialogTrigger>
 					<DialogContent>
 						<AlertDialogHeader>
-							<DialogTitle>Category : {name} <span className="text-sm text-slate-400">{specification && specification.length > 10 ? specification.substring(0, 10) + "..." : specification}</span></DialogTitle>
+							<DialogTitle>{t("category")} : {name} <span className="text-sm text-slate-400">{specification && specification.length > 10 ? specification.substring(0, 10) + "..." : specification}</span></DialogTitle>
 						</AlertDialogHeader>
 						<InventoryDetailTable
 							categoryName={name}
@@ -156,13 +159,13 @@ export default function DetailItemCategories({
 				<DialogTrigger
 					className="cursor-pointer hover:font-semibold w-full"
 					onClick={() => getCategory()}>
-					Update
+					{t("update")}
 				</DialogTrigger>
 				<DialogContent>
 					<AlertDialogHeader>
 						<DialogTitle>{name}</DialogTitle>
 						<DialogDescription>
-							Detail information about the item can be displayed here.
+							{t("detailInfoItem")}
 						</DialogDescription>
 					</AlertDialogHeader>
 					<div>
@@ -173,11 +176,11 @@ export default function DetailItemCategories({
 							}}>
 							<div className="flex flex-col gap-6">
 								<div className="grid gap-2">
-									<Label htmlFor="item-name">Nama Item</Label>
+									<Label htmlFor="item-name">{t("itemName")}</Label>
 									<Input
 										id="item-name"
 										type="text"
-										placeholder="Lemari"
+										placeholder={t("categoryPlaceholder")}
 										value={categoryData.name}
 										onChange={(e) =>
 											setCategoryData({ ...categoryData, name: e.target.value })
@@ -186,7 +189,7 @@ export default function DetailItemCategories({
 									/>
 								</div>
 								<div className="grid gap-2">
-									<Label htmlFor="specification">Specification</Label>
+									<Label htmlFor="specification">{t("specification")}</Label>
 									<Input
 										id="specification"
 										type="text"
@@ -204,9 +207,9 @@ export default function DetailItemCategories({
 
 								<div className="w-full gap-4 grid grid-cols-2">
 									<DialogClose className="flex-1 p-1 border rounded-md">
-										Cancel
+										{tCommon("cancel")}
 									</DialogClose>
-									<Button>Submit</Button>
+									<Button>{tCommon("submit")}</Button>
 								</div>
 							</div>
 						</form>
@@ -218,20 +221,20 @@ export default function DetailItemCategories({
 			{qty === 0 && (
 				<Dialog>
 					<DialogTrigger className="cursor-pointer hover:font-semibold w-full">
-						Delete
+						{t("delete")}
 					</DialogTrigger>
 					<DialogContent>
 						<DialogHeader>
 							<DialogTitle>{name}</DialogTitle>
 							<DialogDescription>
-								Are you sure you want to delete this item?
+								{t("confirmDeleteItem")}
 							</DialogDescription>
 							<div className="flex gap-2">
 								<DialogClose className="flex-1 p-1 border rounded-md">
-									Cancel
+									{tCommon("cancel")}
 								</DialogClose>
 								<Button onClick={() => deleteCategory()} className="flex-1">
-									Confirm
+									{tCommon("confirm")}
 								</Button>
 							</div>
 						</DialogHeader>

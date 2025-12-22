@@ -1,6 +1,7 @@
 "use client";
 
-import { Star, Quote, CheckCircle2 } from "lucide-react";
+import { Star, Quote } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 const reviews = [
   {
@@ -46,16 +47,18 @@ const reviews = [
 ];
 
 export default function ReviewBento() {
+  const t = useTranslations("reviews");
+
   return (
     <section className="py-24 bg-white">
       <div className="container mx-auto px-4 max-w-6xl">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
           <div className="max-w-2xl">
             <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl mb-4">
-              Trusted by modern faculties
+              {t("trustedByFaculties")}
             </h2>
             <p className="text-lg text-slate-500">
-              Join forward-thinking departments that have streamlined their lab operations.
+              {t("joinDepartments")}
             </p>
           </div>
 
@@ -65,7 +68,7 @@ export default function ReviewBento() {
                 <div key={i} className="w-6 h-6 rounded-full bg-slate-200 border-2 border-white" />
               ))}
             </div>
-            <span className="text-sm font-medium text-green-800">100+ Active Labs</span>
+            <span className="text-sm font-medium text-green-800">100+ {t("activeLabs")}</span>
           </div>
         </div>
 

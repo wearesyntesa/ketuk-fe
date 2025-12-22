@@ -10,12 +10,16 @@ import { Textarea } from "./ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { ItemDialogProps } from "./type";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 interface DetailItemProps {
 	itemId: number;
 }
 
 export default function DetailItem({ itemId }: DetailItemProps) {
+	const t = useTranslations("inventory");
+	const tCommon = useTranslations("common");
+	
 	const [categoryData, setCategoryData] = useState<ItemDialogProps>({
 		categoryId: 0,
 		name: "",
@@ -61,25 +65,25 @@ export default function DetailItem({ itemId }: DetailItemProps) {
 					query: { itemId: itemId },
 				}}
 				className="cursor-pointer flex justify-center hover:font-semibold w-full">
-				Detail Item
+				{t("viewDetails")}
 			</Link>
 			<Dialog>
 				<DialogTrigger className="cursor-pointer hover:font-semibold w-full">
-					Update Item
+					{t("editItem")}
 				</DialogTrigger>
 				<DialogContent>
-					<DialogTitle>Update Item</DialogTitle>
+					<DialogTitle>{t("editItem")}</DialogTitle>
 					<DialogDescription>
-						Fill in the details for the new inventory item.
+						{t("editItemDescription")}
 					</DialogDescription>
 					<form onSubmit={updateItem}>
 						<div className="flex flex-col gap-6">
 							<div className="grid gap-2">
-								<Label htmlFor="item-name">Nama Item</Label>
+								<Label htmlFor="item-name">{t("itemName")}</Label>
 								<Input
 									id="item-name"
 									type="text"
-									placeholder="Lemari"
+									placeholder={t("categoryPlaceholder")}
 									value={categoryData.name}
 									onChange={(e) =>
 										setCategoryData({ ...categoryData, name: e.target.value })
@@ -88,7 +92,7 @@ export default function DetailItem({ itemId }: DetailItemProps) {
 								/>
 							</div>
 							<div className="grid gap-2">
-								<Label htmlFor="specification">Specification</Label>
+								<Label htmlFor="specification">{t("specification")}</Label>
 								<Textarea
 									id="specification"
 									placeholder="Azko"
@@ -112,17 +116,17 @@ export default function DetailItem({ itemId }: DetailItemProps) {
 								}
 								required>
 								<SelectTrigger className="w-full">
-									<SelectValue placeholder="Select Condition" />
+									<SelectValue placeholder={t("selectCondition")} />
 								</SelectTrigger>
 								<SelectContent>
-									<SelectItem value="Good">Good</SelectItem>
-									<SelectItem value="Poor">Poor</SelectItem>
+									<SelectItem value="Good">{t("good")}</SelectItem>
+									<SelectItem value="Poor">{t("poor")}</SelectItem>
 								</SelectContent>
 							</Select>
 
 							<div className="w-full gap-4 grid grid-cols-2">
-								<DialogClose className="border rounded-mb">Cancel</DialogClose>
-								<Button>Submit</Button>
+								<DialogClose className="border rounded-mb">{tCommon("cancel")}</DialogClose>
+								<Button>{tCommon("submit")}</Button>
 							</div>
 						</div>
 					</form>
@@ -132,20 +136,20 @@ export default function DetailItem({ itemId }: DetailItemProps) {
 			{/* Delete Data */}
 			<Dialog>
 				<DialogTrigger className="cursor-pointer hover:font-semibold w-full">
-					Delete
+					{tCommon("delete")}
 				</DialogTrigger>
 				<DialogContent>
 					<DialogHeader>
 						<DialogTitle>{categoryData.name}</DialogTitle>
 						<DialogDescription>
-							Are you sure you want to delete this item?
+							{t("confirmDeleteItem")}
 						</DialogDescription>
 						<div className="flex gap-2">
 							<DialogClose className="flex-1 p-1 border rounded-md">
-								Cancel
+								{tCommon("cancel")}
 							</DialogClose>
 							<Button onClick={() => deleteItem()} className="flex-1">
-								Confirm
+								{tCommon("confirm")}
 							</Button>
 						</div>
 					</DialogHeader>

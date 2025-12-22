@@ -7,6 +7,7 @@ import { MergeSchedultType } from "./type";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Shadows_Into_Light, Nothing_You_Could_Do } from "next/font/google";
+import { useTranslations } from "next-intl";
 
 const shadowIntoLight = Shadows_Into_Light({
   subsets: ["latin"],
@@ -24,6 +25,7 @@ export default function ScheduleMonth({ data }: { data: MergeSchedultType[] }) {
   const [displayDate, setDisplayDate] = useState(new Date());
   const currentMonth = displayDate.getMonth();
   const currentYear = displayDate.getFullYear();
+  const t = useTranslations("schedule");
 
   const events = data.filter((event) => {
     const eventDate = new Date(event.date);
@@ -147,7 +149,7 @@ export default function ScheduleMonth({ data }: { data: MergeSchedultType[] }) {
 
                       {eventsForDay.length > 3 && (
                         <div className="hidden md:block text-[10px] text-slate-400 font-medium px-1">
-                          +{eventsForDay.length - 3} more
+                          +{eventsForDay.length - 3} {t("more")}
                         </div>
                       )}
                     </div>
@@ -163,7 +165,7 @@ export default function ScheduleMonth({ data }: { data: MergeSchedultType[] }) {
                         {eventsForDay.length === 0 ? (
                           <div className="flex flex-col items-center justify-center py-8 text-slate-400">
                             <CalendarClock className="w-10 h-10 mb-2 opacity-50" />
-                            <p className="text-sm">No events scheduled.</p>
+                            <p className="text-sm">{t("noEventsScheduled")}</p>
                           </div>
                         ) : (
                           eventsForDay.map((event, index) => (

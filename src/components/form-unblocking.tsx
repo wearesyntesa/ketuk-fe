@@ -16,6 +16,8 @@ import React, { useEffect, useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { DateRange } from "react-day-picker";
 import { toast } from "sonner";
+import { DateTime } from "luxon";
+import { useTranslations } from "next-intl";
 
 export function UnblockingForm({
     border,
@@ -26,6 +28,9 @@ export function UnblockingForm({
     className?: string;
     userId: number;
 }) {
+    const t = useTranslations("bookingWindow");
+    const tErrors = useTranslations("errors");
+    
     // Form state
     const [token, setToken] = useState("")
     const [year, setYear] = useState<number>(new Date().getFullYear());
@@ -34,7 +39,7 @@ export function UnblockingForm({
 
     const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
         from: new Date(),
-        to: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
+        to: DateTime.now().plus({ days: 1 }).toJSDate(),
     })
 
     useEffect(() => {
@@ -58,28 +63,20 @@ export function UnblockingForm({
 			setDateRange(dateRange);
 		} else {
 			setDateRange(undefined);
-			toast.error("Cannot select past dates");
+			toast.error(tErrors("validationError"));
 		}
 	}
 
     const postUnblocking = async () => {
         if (token) {
             if (!dateRange?.from || !dateRange.to) {
-                alert("Please select start and end dates.");
+                toast.warning(t("selectDates"));
                 return;
             }
-            // if (startDate > endDate) {
-            //     alert("Start date cannot be later than end date.");
-            //     return;
-            // }
             if (semester === "") {
-                alert("Please select a semester.");
+                toast.warning(t("semester"));
                 return;
             }
-            // if ((endDate.getMonth() < startDate.getMonth() && endDate.getFullYear() === startDate.getFullYear()) || (endDate.getFullYear() < startDate.getFullYear())) {
-            //     alert("End date cannot be earlier than start date.");
-            //     return;
-            // }
             unblocking.handlePostUnblocing(token || "", {
                     startDate: dateRange.from,
                     endDate: dateRange.to,
@@ -97,9 +94,9 @@ export function UnblockingForm({
                 className ? className : "w-full"
             }`}>
             <CardHeader>
-                <CardTitle>Unblocking Form</CardTitle>
+                <CardTitle>{t("newBookingWindow")}</CardTitle>
                 <CardDescription>
-                    Fill the form below to request unblocking.
+                    {t("description")}
                 </CardDescription>
             </CardHeader>
             <CardContent>
@@ -110,48 +107,37 @@ export function UnblockingForm({
                     <div className="flex flex-col gap-6">
                         <div className="grid gap-2">
                             <div className="flex items-center">
-                                <Label>Waktu</Label>
+                                <Label>{t("dateRange")}</Label>
                             </div>
                             <div className="flex items-center gap-2">
-                                {/* <CalendarUnblockForm
-                                    label={false}
-                                    setDateState={setStartDate}
-                                    valDateState={startDate ? new Date(startDate) : undefined}
-                                />
-                                <span className="flex items-center">-</span>
-                                <CalendarUnblockForm
-                                    label={false}
-                                    setDateState={setEndDate}
-                                    valDateState={endDate ? new Date(endDate) : undefined}
-                                /> */}
                                 <CalendarRange label use="request" valDateState={dateRange} onChange={handleChangeDateRange} />
                             </div>
                         </div>
                         <div className="grid gap-2">
-							<Label htmlFor="semester">Semester</Label>
+							<Label htmlFor="semester">{t("semester")}</Label>
 							<Select onValueChange={() => handleSemesterChange}>
                                 <SelectTrigger id="semester" className="w-full">
-                                    <SelectValue placeholder="Select a semester" />
+                                    <SelectValue placeholder={t("semester")} />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="Ganjil">Ganjil</SelectItem>
-                                    <SelectItem value="Genap">Genap</SelectItem>
+                                    <SelectItem value="Ganjil">{t("oddSemester")}</SelectItem>
+                                    <SelectItem value="Genap">{t("evenSemester")}</SelectItem>
                                 </SelectContent>
                             </Select>
 						</div>
                         <div className="grid gap-2">
-							<Label htmlFor="year">Tahun</Label>
+							<Label htmlFor="year">{t("year")}</Label>
 							<Input
 								id="year"
 								type="number"
 								value={year}
 								onChange={handleYearChange}
-								placeholder="Praktikum Pemrograman Dasar"
+								placeholder="2025"
 								required
 							/>
 						</div>
                         <div className="flex justify-end w-full gap-2">
-                            <Button type="submit">Submit Unblocking</Button>
+                            <Button type="submit">{t("createBookingWindow")}</Button>
                         </div>
                     </div>
                 </form>

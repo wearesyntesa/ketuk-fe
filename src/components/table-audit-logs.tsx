@@ -46,8 +46,9 @@ export default function AuditLogTable({ columns, data }: AuditLogTableProps) {
 						<DataTableRow key={rowIndex}>
 							{columns.map((column, colIndex) => (
 								<DataTableCell key={colIndex}>
-									{column.cell &&
-										column.cell({ row: { original: row } } as any)}
+									{typeof column.cell === "function"
+										? column.cell({ row: { original: row, getValue: (key: string) => (row as any)[key] } } as any)
+										: null}
 								</DataTableCell>
 							))}
 						</DataTableRow>
@@ -196,7 +197,7 @@ export const auditTableColumns: ColumnDef<AuditLog>[] = [
 		accessorKey: "ipAddress",
 		header: "IP Address",
 		cell: ({ row }) => {
-			const ipAddress = row.getValue("ipAddress");
+			const ipAddress = row.getValue("ipAddress") as string | null;
 			return ipAddress ? (
 				<span className="font-mono text-sm text-slate-600">
 					{ipAddress}

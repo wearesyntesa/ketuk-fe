@@ -23,6 +23,7 @@ import AddCategoryDialog from "./add-category-dialog";
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
@@ -33,6 +34,8 @@ export default function InventoryTable<TData, TValue>({
 	columns,
 	data,
 }: DataTableProps<TData, TValue>) {
+	const t = useTranslations("inventory");
+	const tCommon = useTranslations("common");
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
@@ -58,7 +61,7 @@ export default function InventoryTable<TData, TValue>({
 					<Input
 						id="search-inventory"
 						type="text"
-						placeholder="Search inventory..."
+						placeholder={t("searchInventory")}
 						className="flex-1"
 						value={
 							(table.getColumn("categoryName")?.getFilterValue() as string) ??
@@ -75,8 +78,8 @@ export default function InventoryTable<TData, TValue>({
 			</Card>
 			<div className="flex justify-between items-center px-2">
 				<div>
-					Data {table.getState().pagination.pageIndex + 1} of{" "}
-					{table.getState().pagination.pageSize}
+					{tCommon("page")} {table.getState().pagination.pageIndex + 1} {tCommon("of")}{" "}
+					{table.getPageCount() || 1}
 				</div>
 				<div className="flex gap-4">
 					<Button
@@ -155,8 +158,8 @@ export default function InventoryTable<TData, TValue>({
 							<TableRow>
 								<TableCell
 									colSpan={columns.length}
-									className="h-24 text-center">
-									No results.
+									className="h-24 text-center text-muted-foreground">
+									{t("noInventoryFound")}
 								</TableCell>
 							</TableRow>
 						)}

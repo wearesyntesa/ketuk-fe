@@ -4,26 +4,34 @@ import { Archive, BookCheck, CalendarDays, FlagTriangleRight, Logs, Ticket, User
 import { SidebarGroup, SidebarGroupContent, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "./ui/sidebar";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { SideBarItem } from "./type";
+import { useTranslations } from "next-intl";
+import { LucideIcon } from "lucide-react";
 
-const itemsAdmin: SideBarItem[] = [
-  { title: "Overview", url: "/app", icon: CalendarDays },
-  { title: "Schedule Request", url: "/app/requests", icon: BookCheck },
-  { title: "All Requests", url: "/app/your-requests", icon: Ticket },
-  { title: "Inventory", url: "/app/inventory", icon: Archive },
-  { title: "User Management", url: "/app/user-management", icon: UserCog2 },
-  { title: "Semester Periods", url: "/app/unblocking", icon: FlagTriangleRight },
-  { title: "Audit Logs", url: "/app/audit", icon: Logs },
+interface NavItem {
+  titleKey: string;
+  url: string;
+  icon: LucideIcon;
+}
+
+const itemsAdmin: NavItem[] = [
+  { titleKey: "overview", url: "/app", icon: CalendarDays },
+  { titleKey: "scheduleRequest", url: "/app/requests", icon: BookCheck },
+  { titleKey: "allRequests", url: "/app/your-requests", icon: Ticket },
+  { titleKey: "inventory", url: "/app/inventory", icon: Archive },
+  { titleKey: "userManagement", url: "/app/user-management", icon: UserCog2 },
+  { titleKey: "bookingWindows", url: "/app/unblocking", icon: FlagTriangleRight },
+  { titleKey: "auditLogs", url: "/app/audit", icon: Logs },
 ];
 
-const itemsUser: SideBarItem[] = [
-  { title: "Overview", url: "/app", icon: CalendarDays },
-  { title: "Schedule Request", url: "/app/requests", icon: BookCheck },
-  { title: "My History", url: "/app/your-requests", icon: Ticket },
+const itemsUser: NavItem[] = [
+  { titleKey: "overview", url: "/app", icon: CalendarDays },
+  { titleKey: "scheduleRequest", url: "/app/requests", icon: BookCheck },
+  { titleKey: "myHistory", url: "/app/your-requests", icon: Ticket },
 ];
 
 export default function NavMain({ role }: { role: string }) {
   const pathname = usePathname();
+  const t = useTranslations("nav");
   const items = role === "admin" ? itemsAdmin : itemsUser;
 
   return (
@@ -32,12 +40,13 @@ export default function NavMain({ role }: { role: string }) {
         <SidebarMenu className="gap-1">
           {items.map((item) => {
             const isActive = pathname === item.url;
+            const title = t(item.titleKey);
 
             return (
-              <SidebarMenuItem key={item.title}>
+              <SidebarMenuItem key={item.titleKey}>
                 <SidebarMenuButton
                   asChild
-                  tooltip={item.title}
+                  tooltip={title}
                   className={`
                     h-9 px-3 transition-all duration-200 rounded-lg group
                     ${
@@ -54,7 +63,7 @@ export default function NavMain({ role }: { role: string }) {
                             ${isActive ? "text-emerald-600" : "text-slate-400 group-hover:text-slate-600"}
                         `}
                     />
-                    <span className="text-sm">{item.title}</span>
+                    <span className="text-sm">{title}</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>

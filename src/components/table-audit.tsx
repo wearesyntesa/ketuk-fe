@@ -30,6 +30,7 @@ import {
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
@@ -40,6 +41,10 @@ export default function AuditUserTable<TData, TValue>({
 	columns,
 	data,
 }: DataTableProps<TData, TValue>) {
+	const t = useTranslations("audit");
+	const tCommon = useTranslations("common");
+	const tUsers = useTranslations("users");
+	
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
@@ -62,7 +67,7 @@ export default function AuditUserTable<TData, TValue>({
 			<Card className="p-2">
 				<div className="flex items-center gap-4">
 					<Input
-						placeholder="Search inventory..."
+						placeholder={tUsers("searchUsers")}
 						className="flex-1"
 						value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
 						onChange={(event) =>
@@ -79,20 +84,20 @@ export default function AuditUserTable<TData, TValue>({
 						<SelectTrigger
 							className="w-48"
 							value={table.getColumn("role")?.getFilterValue() as string}>
-							<SelectValue placeholder="Filter by role" />
+							<SelectValue placeholder={tUsers("filterByRole")} />
 						</SelectTrigger>
 						<SelectContent>
-							<SelectItem value="all">All</SelectItem>
-							<SelectItem value="admin">Admin</SelectItem>
-							<SelectItem value="user">User</SelectItem>
+							<SelectItem value="all">{tUsers("allRoles")}</SelectItem>
+							<SelectItem value="admin">{tUsers("admin")}</SelectItem>
+							<SelectItem value="user">{tUsers("user")}</SelectItem>
 						</SelectContent>
 					</Select>
 				</div>
 			</Card>
 			<div className="flex justify-between items-center px-2">
 				<div>
-					Data {table.getState().pagination.pageIndex + 1} of{" "}
-					{table.getState().pagination.pageSize}
+					{tCommon("page")} {table.getState().pagination.pageIndex + 1} {tCommon("of")}{" "}
+					{table.getPageCount() || 1}
 				</div>
 				<div className="flex gap-4">
 					<Button
@@ -161,8 +166,8 @@ export default function AuditUserTable<TData, TValue>({
 							<TableRow>
 								<TableCell
 									colSpan={columns.length}
-									className="h-24 text-center">
-									No results.
+									className="h-24 text-center text-muted-foreground">
+									{t("noLogsFound")}
 								</TableCell>
 							</TableRow>
 						)}

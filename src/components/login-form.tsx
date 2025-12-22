@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://192.168.10.184:8081";
 
@@ -12,6 +13,8 @@ export function LoginForm({
 	className,
 	...props
 }: React.ComponentProps<"div">) {
+	const t = useTranslations("auth");
+	const tErrors = useTranslations("errors");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [loading, setLoading] = useState(false);
@@ -50,10 +53,10 @@ export function LoginForm({
 				// Redirect to dashboard
 				window.location.href = "/app/";
 			} else {
-				setError(data.error || "Login failed");
+				setError(data.error || tErrors("somethingWentWrong"));
 			}
 		} catch (err) {
-			setError("Failed to connect to server");
+			setError(tErrors("connectionError"));
 			console.error("Login error:", err);
 		} finally {
 			setLoading(false);
@@ -73,10 +76,10 @@ export function LoginForm({
 				// Redirect to Google OAuth
 				window.location.href = data.data.auth_url;
 			} else {
-				setError("Failed to initiate Google login");
+				setError(tErrors("somethingWentWrong"));
 			}
 		} catch (err) {
-			setError("Failed to connect to server");
+			setError(tErrors("connectionError"));
 			console.error("Google login error:", err);
 		} finally {
 			setLoading(false);
@@ -92,9 +95,9 @@ export function LoginForm({
 						onSubmit={handleEmailLogin}>
 						<div className="flex flex-col gap-6">
 							<div className="flex flex-col items-center text-center">
-								<h1 className="text-2xl font-bold">Welcome back</h1>
+								<h1 className="text-2xl font-bold">{t("welcomeBack")}</h1>
 								<p className="text-muted-foreground text-balance">
-									Login to your Ketuk account
+									{t("loginDescription")}
 								</p>
 							</div>
 
@@ -103,51 +106,6 @@ export function LoginForm({
 									{error}
 								</div>
 							)}
-
-							{/* <div className="grid gap-3">
-								<Label htmlFor="email">Email</Label>
-								<Input
-									id="email"
-									type="email"
-									placeholder="m@example.com"
-									value={email}
-									onChange={(e) => setEmail(e.target.value)}
-									required
-									disabled={loading}
-								/>
-							</div>
-							<div className="grid gap-3">
-								<div className="flex items-center">
-									<Label htmlFor="password">Password</Label>
-									<a
-										href="#"
-										className="ml-auto text-sm underline-offset-2 hover:underline">
-										Forgot your password?
-									</a>
-								</div>
-								<Input
-									id="password"
-									type="password"
-									value={password}
-									onChange={(e) => setPassword(e.target.value)}
-									required
-									disabled={loading}
-								/>
-							</div>
-							<Button type="submit" className="w-full" disabled={loading}>
-								{loading ? "Logging in..." : "Login"}
-							</Button>
-
-							<div className="relative">
-								<div className="absolute inset-0 flex items-center">
-									<span className="w-full border-t" />
-								</div>
-								<div className="relative flex justify-center text-xs uppercase">
-									<span className="bg-background text-muted-foreground px-2">
-										Or continue with
-									</span>
-								</div>
-							</div> */}
 
 							<Button
 								type="button"
@@ -173,17 +131,8 @@ export function LoginForm({
 										fill="#EA4335"
 									/>
 								</svg>
-								{loading ? "Loading..." : "Continue with Google"}
+								{loading ? t("loggingIn") : t("signInWithGoogle")}
 							</Button>
-
-							{/* <div className="text-center text-sm">
-								Don&apos;t have an account?{" "}
-								<a
-									href="/auth/register"
-									className="underline underline-offset-4">
-									Sign up
-								</a>
-							</div> */}
 						</div>
 					</form>
 					<div className="bg-muted relative hidden md:block">

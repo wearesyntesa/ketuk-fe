@@ -18,6 +18,7 @@ import { useState } from "react";
 import { MergeSchedultType } from "./type";
 import { Button } from "./ui/button";
 import { ChevronLeft, ChevronRight, Search, Filter } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface DataTableProps<TData extends MergeSchedultType, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -28,6 +29,8 @@ export default function RequestsTable<TData extends MergeSchedultType, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  const t = useTranslations("requests");
+  const tCommon = useTranslations("common");
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
@@ -51,7 +54,7 @@ export default function RequestsTable<TData extends MergeSchedultType, TValue>({
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
           <Input
-            placeholder="Search by title..."
+            placeholder={t("searchRequests")}
             className="pl-9 h-10 bg-white border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/20"
             value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
             onChange={(event) => table.getColumn("title")?.setFilterValue(event.target.value)}
@@ -65,14 +68,14 @@ export default function RequestsTable<TData extends MergeSchedultType, TValue>({
           <SelectTrigger className="w-[180px] h-10 bg-white border-slate-200">
             <div className="flex items-center gap-2 text-slate-600">
               <Filter className="h-4 w-4" />
-              <SelectValue placeholder="Filter Status" />
+              <SelectValue placeholder={t("filterByStatus")} />
             </div>
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Status</SelectItem>
-            <SelectItem value="Pending">Pending</SelectItem>
-            <SelectItem value="Accepted">Accepted</SelectItem>
-            <SelectItem value="Rejected">Rejected</SelectItem>
+            <SelectItem value="all">{t("allStatuses")}</SelectItem>
+            <SelectItem value="Pending">{t("pending")}</SelectItem>
+            <SelectItem value="Accepted">{t("approved")}</SelectItem>
+            <SelectItem value="Rejected">{t("rejected")}</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -122,7 +125,7 @@ export default function RequestsTable<TData extends MergeSchedultType, TValue>({
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-32 text-center text-slate-500">
-                  No results found.
+                  {t("noRequestsFound")}
                 </TableCell>
               </TableRow>
             )}
@@ -131,7 +134,7 @@ export default function RequestsTable<TData extends MergeSchedultType, TValue>({
 
         <div className="flex items-center justify-between px-6 py-4 border-t border-slate-100 bg-slate-50/30">
           <div className="text-xs text-slate-500 font-medium">
-            Page {table.getState().pagination.pageIndex + 1} of {table.getState().pagination.pageSize}
+            {tCommon("page")} {table.getState().pagination.pageIndex + 1} {tCommon("of")} {table.getPageCount() || 1}
           </div>
           <div className="flex gap-2">
             <Button

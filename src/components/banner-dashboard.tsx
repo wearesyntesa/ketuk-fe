@@ -4,8 +4,10 @@ import { useEffect, useState, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { useUser } from "@/hooks/use-user";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 export default function BannerDashboard() {
+  const t = useTranslations("bannerDashboard");
   const [time, setTime] = useState("");
   const [mounted, setMounted] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -101,9 +103,9 @@ export default function BannerDashboard() {
           <div className="flex justify-between items-start">
             <div className="space-y-1">
               <h1 className="text-4xl md:text-5xl font-semibold tracking-tight drop-shadow-sm">
-                Hello, {user.user?.name ? user.user.name.split(" ")[0] : "User"}
+                {t("hello")}, {user.user?.name ? user.user.name.split(" ")[0] : "User"}
               </h1>
-              <p className="text-white/80 font-medium text-sm tracking-wide drop-shadow-sm">Welcome back to Ketuk.</p>
+              <p className="text-white/80 font-medium text-sm tracking-wide drop-shadow-sm">{t("welcomeBack")}</p>
             </div>
 
             <div className="hidden md:flex items-center justify-center w-16 h-16 rounded-2xl bg-white/10 border border-white/20 shadow-lg backdrop-blur-md">
@@ -113,7 +115,7 @@ export default function BannerDashboard() {
 
           <div className="flex items-end justify-between">
             <div className="flex flex-col space-y-1">
-              <span className="text-xs font-bold uppercase tracking-widest text-white/60">Today</span>
+              <span className="text-xs font-bold uppercase tracking-widest text-white/60">{t("today")}</span>
               <span className="text-xl font-medium tracking-tight drop-shadow-sm">
                 {date.toLocaleDateString("en-ID", options)}
               </span>

@@ -4,8 +4,11 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { SignInButton } from "./signin-button";
 import { Calendar, Box, ShieldCheck, PlayCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export default function LandingHero(isLogin: { isLogin: boolean }) {
+  const t = useTranslations("landing");
+  
   return (
     <section className="relative min-h-screen bg-white flex items-center overflow-hidden pt-20 lg:pt-0 border-b border-slate-100">
       <div
@@ -22,9 +25,9 @@ export default function LandingHero(isLogin: { isLogin: boolean }) {
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
           <div className="max-w-2xl space-y-8 text-center lg:text-left mx-auto lg:mx-0">
             <h1 className="text-5xl lg:text-7xl font-bold tracking-tighter text-slate-950 leading-[1.05]">
-              The operating system for{" "}
+              {t("heroTitle")}{" "}
               <span className="relative inline-block text-slate-950">
-                university labs.
+                {t("heroTitleHighlight")}
                 <svg
                   className="absolute w-full h-3 -bottom-1 left-0 text-emerald-500 opacity-80"
                   viewBox="0 0 100 10"
@@ -36,8 +39,7 @@ export default function LandingHero(isLogin: { isLogin: boolean }) {
             </h1>
 
             <p className="text-lg text-slate-500 leading-relaxed max-w-lg font-medium mx-auto lg:mx-0">
-              Ditch the spreadsheets. Ketuk handles equipment scheduling, inventory tracking, and access control in one
-              unified platform.
+              {t("heroDescription")}
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 pt-2 items-center justify-center lg:justify-start w-full">
@@ -49,7 +51,7 @@ export default function LandingHero(isLogin: { isLogin: boolean }) {
                       variant="outline"
                       className="h-12 px-6 rounded-full border-slate-200 text-slate-700 hover:bg-slate-50 hover:text-slate-900 text-base font-medium"
                     >
-                      <PlayCircle className="w-4 h-4 mr-2" /> Watch Demo
+                      <PlayCircle className="w-4 h-4 mr-2" /> {t("watchDemo")}
                     </Button>
                   </Link>
                 </>
@@ -59,7 +61,7 @@ export default function LandingHero(isLogin: { isLogin: boolean }) {
                     size="lg"
                     className="h-12 px-8 rounded-full text-base bg-slate-950 hover:bg-slate-800 text-white shadow-lg transition-all"
                   >
-                    Go to Dashboard
+                    {t("goToDashboard")}
                   </Button>
                 </Link>
               )}
@@ -77,7 +79,7 @@ export default function LandingHero(isLogin: { isLogin: boolean }) {
                 ))}
               </div>
               <div className="text-sm text-slate-500 font-medium">
-                Trusted by <span className="text-slate-900">12 departments</span>
+                {t("trustedBy")} <span className="text-slate-900">12 {t("departments")}</span>
               </div>
             </div>
           </div>
@@ -109,7 +111,7 @@ export default function LandingHero(isLogin: { isLogin: boolean }) {
 
               <div className="flex justify-between items-center mb-8">
                 <div>
-                  <h3 className="text-xl font-bold text-slate-900 tracking-tight">Lab Schedule</h3>
+                  <h3 className="text-xl font-bold text-slate-900 tracking-tight">{t("labSchedule")}</h3>
                   <p className="text-sm text-slate-500">Computer Science A10</p>
                 </div>
                 <div className="p-2 bg-slate-50 rounded-md border border-slate-100">
@@ -130,7 +132,7 @@ export default function LandingHero(isLogin: { isLogin: boolean }) {
                 <div className="flex gap-4 items-center group cursor-pointer">
                   <div className="w-12 text-xs font-mono text-slate-400">11:00</div>
                   <div className="flex-1 p-3 bg-white border border-slate-100 border-dashed rounded-lg">
-                    <span className="text-sm text-slate-400">Available</span>
+                    <span className="text-sm text-slate-400">{t("available")}</span>
                   </div>
                 </div>
                 <div className="flex gap-4 items-center group cursor-pointer">
@@ -138,7 +140,7 @@ export default function LandingHero(isLogin: { isLogin: boolean }) {
                   <div className="flex-1 p-3 bg-slate-50 border border-slate-100 rounded-lg">
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 rounded-full bg-slate-400" />
-                      <span className="text-sm font-medium text-slate-700">Maintenance</span>
+                      <span className="text-sm font-medium text-slate-700">{t("maintenance")}</span>
                     </div>
                   </div>
                 </div>
@@ -153,13 +155,13 @@ export default function LandingHero(isLogin: { isLogin: boolean }) {
                 <div className="p-1.5 bg-orange-50 rounded text-orange-600">
                   <Box className="w-4 h-4" />
                 </div>
-                <span className="text-xs font-bold text-slate-700 uppercase tracking-wide">Inventory</span>
+                <span className="text-xs font-bold text-slate-700 uppercase tracking-wide">{t("inventory")}</span>
               </div>
               <div className="text-sm font-medium text-slate-900 mb-1">Arduino Uno R3</div>
               <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden mb-2">
                 <div className="bg-orange-500 w-[20%] h-full" />
               </div>
-              <div className="text-xs text-slate-500 text-right">2 items left</div>
+              <div className="text-xs text-slate-500 text-right">2 {t("itemsLeft")}</div>
             </div>
 
             <div
@@ -173,7 +175,7 @@ export default function LandingHero(isLogin: { isLogin: boolean }) {
                 <div>
                   <div className="text-sm font-semibold">Muhammad Istiqlal</div>
                   <div className="text-xs text-slate-400 flex items-center gap-1">
-                    <ShieldCheck className="w-3 h-3" /> Admin Access
+                    <ShieldCheck className="w-3 h-3" /> {t("adminAccess")}
                   </div>
                 </div>
               </div>

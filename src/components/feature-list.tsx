@@ -1,25 +1,28 @@
-import { CalendarClock, PencilRuler, ScrollText } from "lucide-react";
+"use client";
 
-const features = [
+import { CalendarClock, PencilRuler, ScrollText } from "lucide-react";
+import { useTranslations } from "next-intl";
+
+const featureConfig = [
   {
-    title: "Request Schedule",
-    description: "Easily request lab schedules with our intuitive interface.",
+    titleKey: "requestSchedule",
+    descKey: "requestScheduleDesc",
     icon: CalendarClock,
     background: "bg-gradient-to-b from-blue-500/10 to-blue-500/5",
     highlight: "bg-blue-500/10",
     component: ChildRequestCard,
   },
   {
-    title: "Manage Inventory",
-    description: "Keep track of lab equipment and supplies efficiently.",
+    titleKey: "manageInventory",
+    descKey: "manageInventoryDesc",
     icon: PencilRuler,
     background: "bg-gradient-to-b from-fuchsia-500/10 to-fuchsia-500/5",
     highlight: "bg-fuchsia-500/10",
     component: ChildManageCard,
   },
   {
-    title: "History Logs",
-    description: "Access detailed logs of past lab activities and schedules.",
+    titleKey: "historyLogs",
+    descKey: "historyLogsDesc",
     icon: ScrollText,
     background: "bg-gradient-to-b from-emerald-500/10 to-emerald-500/5",
     highlight: "bg-emerald-500/10",
@@ -28,6 +31,13 @@ const features = [
 ];
 
 export default function FeatureList() {
+  const t = useTranslations("features");
+
+  const features = featureConfig.map((feature) => ({
+    ...feature,
+    title: t(feature.titleKey),
+    description: t(feature.descKey),
+  }));
   return (
     <div className="flex md:flex-row flex-col gap-6 lg:gap-10 w-full justify-center items-center relative mt-20 perspective-1000">
       {features.map((feature, id) => (

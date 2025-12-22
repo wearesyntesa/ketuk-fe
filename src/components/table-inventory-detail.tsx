@@ -1,8 +1,11 @@
+"use client";
+
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table"
 import { Card } from "./ui/card";
 import { Input } from "./ui/input";
 import AddItemDialog from "./add-item-dialog";
+import { useTranslations } from "next-intl";
 
 interface DataTableProps<TData, TValue> {
 	categoryName?: string;
@@ -17,25 +20,27 @@ export default function InventoryDetailTable<TData, TValue>({
 	data,
 	id,
 }: DataTableProps<TData, TValue>) {
+	const t = useTranslations("inventory");
 	const table = useReactTable({
 		data,
 		columns,
 		getCoreRowModel: getCoreRowModel(),
 	});
+
+	// Check if a column is a centered column by its accessorKey
+	const isCenteredColumn = (columnId: string) => {
+		return columnId === "year" || columnId === "action" || columnId === "";
+	};
+
 	return (
 		<div className="overflow-hidden rounded-md flex flex-col gap-4 w-full">
 			<Card className="p-2">
 				<div className="flex items-center">
 					{data.length > 0 ?
-					<Input placeholder="Search item..." className="flex-1" /> 
+					<Input placeholder={t("searchItem")} className="flex-1" /> 
 					:
-					<span className="flex-1">There is no item in category {categoryName}.</span>
+					<span className="flex-1">{t("noItemInCategory")} {categoryName}.</span>
 					}
-					{/* <Button
-						variant="outline"
-						className="ml-2 bg-linear-to-br from-blue-500 via-blue-400 to-blue-300 text-white">
-						Add Item +
-					</Button> */}
 					<AddItemDialog id={id} />
 				</div>
 			</Card>
@@ -50,8 +55,7 @@ export default function InventoryDetailTable<TData, TValue>({
 											<TableHead
 												key={header.id}
 												className={`px-4 ${
-													header.column.columnDef.header === "Procurement Year" ||
-													header.column.columnDef.header === "Action"
+													isCenteredColumn(header.column.id)
 														? "text-center"
 														: ""
 												}`}>
@@ -78,8 +82,7 @@ export default function InventoryDetailTable<TData, TValue>({
 											<TableCell
 												key={cell.id}
 												className={`px-4 ${
-													cell.column.columnDef.header === "Procurement Year" ||
-													cell.column.columnDef.header === "Action"
+													isCenteredColumn(cell.column.id)
 														? "align-middle text-center place-items-center"
 														: ""
 												}`}>
@@ -96,7 +99,7 @@ export default function InventoryDetailTable<TData, TValue>({
 									<TableCell
 										colSpan={columns.length}
 										className="h-24 text-center">
-										No results.
+										{t("noResults")}
 									</TableCell>
 								</TableRow>
 							)}

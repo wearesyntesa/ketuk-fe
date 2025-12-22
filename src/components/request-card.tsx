@@ -1,9 +1,15 @@
+"use client";
+
 import { CheckCircle, Hourglass, XCircle } from "lucide-react";
 import { EventRequest } from "./type";
 import { Card } from "./ui/card";
 import { Button } from "./ui/button";
+import { useTranslations } from "next-intl";
 
 export default function RequestCard({item}: {item: EventRequest}) {
+    const t = useTranslations("requests");
+    const tCommon = useTranslations("common");
+    
     const icon =
 			item.status === "Accepted" ? (
 				<CheckCircle className="text-green-500" />
@@ -41,12 +47,12 @@ export default function RequestCard({item}: {item: EventRequest}) {
                         </div>
                         <div className="flex flex-col ml-4">
                             <span className="font-semibold">{item.title}</span>
-                            <span className="text-sm text-muted-foreground flex">requested by @{item.pic}  | {item.time}</span>
+                            <span className="text-sm text-muted-foreground flex">{t("submittedBy")} @{item.pic}  | {item.time}</span>
                         </div>
                     </div>
                     {item.status === "Pending" && (
                         <div>
-                            <Button className="bg-gradient-to-br from-red-600 via-red-500 to-red-400" size="sm">Cancel</Button>
+                            <Button className="bg-gradient-to-br from-red-600 via-red-500 to-red-400" size="sm">{tCommon("cancel")}</Button>
                         </div>
                     )}
                 </div>

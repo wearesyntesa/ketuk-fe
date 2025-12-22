@@ -11,9 +11,11 @@ import {
 import { RequestForm, RequestRegulerForm } from "./request-form";
 import { useState } from "react";
 import { Switch } from "./ui/switch";
+import { useTranslations } from "next-intl";
 
 export function RequestDialog() {
 	const [isReguler, setIsRegular] = useState(false);
+	const t = useTranslations("requests");
 
 	const handleToggle = () => {
 		setIsRegular(!isReguler);
@@ -22,14 +24,14 @@ export function RequestDialog() {
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
-				<Button className="bg-blue-400">Request Schedule +</Button>
+				<Button className="bg-blue-400">{t("requestScheduleButton")}</Button>
 			</DialogTrigger>
 			<DialogContent className="sm:max-w-[425px] p-0">
 				<DialogHeader className="p-4 pb-0">
 					<DialogTitle className="text-2xl"></DialogTitle>
 				</DialogHeader>
 				<div className="w-full flex justify-end items-center gap-4 px-4 pt-4 m-auto">
-					<span>Check if you want to request a regular schedule</span>
+					<span>{t("checkRegularSchedule")}</span>
 					<Switch checked={isReguler} onCheckedChange={handleToggle} />
 				</div>
 				{isReguler ? (

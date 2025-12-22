@@ -82,12 +82,14 @@ export const useUnblocking = () => {
 			if (data.success) {
 				setUnblocking(true);
 				window.location.reload();
-				toast.success("Unblocking request submitted successfully");
+				toast.success("Booking window created successfully!");
 				return data;
 			} else {
+				toast.error(data.message || "Unable to create booking window. Please try again.");
 				console.error("Failed to post unblocking:", data.message);
 			}
 		} catch (err) {
+			toast.error("Connection error. Please check your internet and try again.");
 			console.error("Post unblocking error:", err);
 		} finally {
 			console.log("Post unblocking completed");
