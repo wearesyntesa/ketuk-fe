@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { Input } from "./ui/input";
@@ -10,6 +10,7 @@ import { Textarea } from "./ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { ItemDialogProps } from "./type";
 import { useTranslations } from "next-intl";
+import { Loader2 } from "lucide-react";
 
 export default function AddItemDialog({id}: {id: number}) {
 	const t = useTranslations("inventory");
@@ -22,15 +23,23 @@ export default function AddItemDialog({id}: {id: number}) {
 		condition: "Good",
 		year: new Date().getFullYear(),
 	});
-	const token = localStorage.getItem("access_token") || "";
+	const [token, setToken] = useState("");
+	const [isSubmitting, setIsSubmitting] = useState(false);
+
+	useEffect(() => {
+		setToken(localStorage.getItem("access_token") || "");
+	}, []);
 
 	const items = useItems();
 
-	const postItem = () => {
+	const postItem = async () => {
 		if (token) {
-			items.handlePostItem(token, categoryData).then(() => {
-				console.log("Item added");
-			});
+			setIsSubmitting(true);
+			try {
+				await items.handlePostItem(token, categoryData);
+			} finally {
+				setIsSubmitting(false);
+			}
 		}
 	};
 
@@ -68,7 +77,7 @@ export default function AddItemDialog({id}: {id: number}) {
 								<Label htmlFor="specification">{t("specification")}</Label>
 								<Textarea
 									id="specification"
-									placeholder="Azko"
+									placeholder={t("specificationPlaceholder")}
 									value={categoryData.note}
 									onChange={(e) =>
 										setCategoryData({
@@ -84,7 +93,7 @@ export default function AddItemDialog({id}: {id: number}) {
 								<Input
 									id="item-year"
 									type="number"
-									placeholder="2025"
+									placeholder={t("yearPlaceholder")}
 									value={categoryData.year}
 									onChange={(e) =>
 										setCategoryData({
@@ -112,8 +121,17 @@ export default function AddItemDialog({id}: {id: number}) {
 							</Select>
 
 							<div className="w-full gap-4 grid grid-cols-2">
-								<DialogClose className="border rounded-mb">{tCommon("cancel")}</DialogClose>
-								<Button>{tCommon("submit")}</Button>
+								<DialogClose className="border rounded-mb" disabled={isSubmitting}>{tCommon("cancel")}</DialogClose>
+								<Button type="submit" disabled={isSubmitting}>
+									{isSubmitting ? (
+										<>
+											<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+											{tCommon("processing")}
+										</>
+									) : (
+										tCommon("submit")
+									)}
+								</Button>
 							</div>
 						</div>
 					</form>

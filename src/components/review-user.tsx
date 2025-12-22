@@ -3,51 +3,51 @@
 import { Star, Quote } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-const reviews = [
-  {
-    id: 1,
-    name: "Alex Chen",
-    role: "Lab Coordinator @ CS-EDU",
-    text: "Ketuk completely replaced our spreadsheet chaos. The scheduling conflict detection alone saved us 20+ hours this semester.",
-    rating: 5,
-    className: "md:col-span-2 bg-slate-50", // WIDE CARD
-  },
-  {
-    id: 2,
-    name: "Sarah Miller",
-    role: "CS Student",
-    text: "Finally, I don't have to physically walk to the lab just to check if a PC is available. Real-time status is a lifesaver.",
-    rating: 5,
-    className: "bg-white",
-  },
-  {
-    id: 3,
-    name: "Dr. Budi Santoso",
-    role: "Head of Bio-Informatics",
-    text: "The reporting features give me exactly the data I need for accreditation. Highly recommended for any university department.",
-    rating: 5,
-    className: "bg-zinc-900 text-white dark-mode-card", // DARK FEATURE CARD
-  },
-  {
-    id: 4,
-    name: "Jessica Wu",
-    role: "Teaching Assistant",
-    text: "Super fast. The interface is clean and doesn't get in the way. It just works.",
-    rating: 4,
-    className: "bg-white",
-  },
-  {
-    id: 5,
-    name: "Marcus Johnson",
-    role: "Infrastructure Lead",
-    text: "Integration with our existing auth system was surprisingly easy. Setup took less than an afternoon.",
-    rating: 5,
-    className: "md:col-span-2 bg-blue-50/50 border-blue-100", // WIDE TINTED CARD
-  },
-];
-
 export default function ReviewBento() {
   const t = useTranslations("reviews");
+
+  const reviews = [
+    {
+      id: 1,
+      name: t("review1Name"),
+      role: t("review1Role"),
+      text: t("review1Text"),
+      rating: 5,
+      className: "md:col-span-2 bg-slate-50", // WIDE CARD
+    },
+    {
+      id: 2,
+      name: t("review2Name"),
+      role: t("review2Role"),
+      text: t("review2Text"),
+      rating: 5,
+      className: "bg-white",
+    },
+    {
+      id: 3,
+      name: t("review3Name"),
+      role: t("review3Role"),
+      text: t("review3Text"),
+      rating: 5,
+      className: "bg-zinc-900 text-white dark-mode-card", // DARK FEATURE CARD
+    },
+    {
+      id: 4,
+      name: t("review4Name"),
+      role: t("review4Role"),
+      text: t("review4Text"),
+      rating: 4,
+      className: "bg-white",
+    },
+    {
+      id: 5,
+      name: t("review5Name"),
+      role: t("review5Role"),
+      text: t("review5Text"),
+      rating: 5,
+      className: "md:col-span-2 bg-blue-50/50 border-blue-100", // WIDE TINTED CARD
+    },
+  ];
 
   return (
     <section className="py-24 bg-white">

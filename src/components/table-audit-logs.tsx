@@ -24,6 +24,7 @@ import {
 	MessageSquare,
 	AlertCircle
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface AuditLogTableProps {
 	columns: ColumnDef<AuditLog>[];
@@ -59,152 +60,156 @@ export default function AuditLogTable({ columns, data }: AuditLogTableProps) {
 	);
 }
 
-// Action icon and color mapping
-const getActionConfig = (action: AuditLog['action']) => {
-	const configs = {
+// Action icon and color mapping - returns labelKey for translation
+export const getActionConfig = (action: AuditLog['action']) => {
+	const configs: Record<AuditLog['action'], { icon: React.ReactElement; color: string; labelKey: string }> = {
 		created: {
 			icon: <FileText className="w-4 h-4" />,
 			color: "bg-emerald-50 text-emerald-700 border-emerald-100",
-			label: "Created"
+			labelKey: "created"
 		},
 		updated: {
 			icon: <Edit3 className="w-4 h-4" />,
 			color: "bg-blue-50 text-blue-700 border-blue-100", 
-			label: "Updated"
+			labelKey: "updated"
 		},
 		status_changed: {
 			icon: <Activity className="w-4 h-4" />,
 			color: "bg-amber-50 text-amber-700 border-amber-100",
-			label: "Status Changed"
+			labelKey: "statusChanged"
 		},
 		deleted: {
 			icon: <Trash2 className="w-4 h-4" />,
 			color: "bg-red-50 text-red-700 border-red-100",
-			label: "Deleted"
+			labelKey: "deleted"
 		},
 		assigned: {
 			icon: <UserPlus className="w-4 h-4" />,
 			color: "bg-purple-50 text-purple-700 border-purple-100",
-			label: "Assigned"
+			labelKey: "assigned"
 		},
 		commented: {
 			icon: <MessageSquare className="w-4 h-4" />,
 			color: "bg-slate-50 text-slate-700 border-slate-100",
-			label: "Commented"
+			labelKey: "commented"
 		},
 		approved: {
 			icon: <CheckCircle className="w-4 h-4" />,
 			color: "bg-green-50 text-green-700 border-green-100",
-			label: "Approved"
+			labelKey: "approved"
 		},
 		rejected: {
 			icon: <XCircle className="w-4 h-4" />,
 			color: "bg-rose-50 text-rose-700 border-rose-100",
-			label: "Rejected"
+			labelKey: "rejected"
 		}
 	};
 	
 	return configs[action] || {
 		icon: <AlertCircle className="w-4 h-4" />,
 		color: "bg-gray-50 text-gray-700 border-gray-100",
-		label: action
+		labelKey: action
 	};
 };
 
-// Export the column definitions for reuse
-export const auditTableColumns: ColumnDef<AuditLog>[] = [
-	{
-		accessorKey: "id",
-		header: "ID",
-		cell: ({ row }) => (
-			<span className="font-mono text-sm text-slate-600">
-				#{row.getValue("id")}
-			</span>
-		),
-	},
-	{
-		accessorKey: "action",
-		header: "Action",
-		cell: ({ row }) => {
-			const action = row.getValue("action") as AuditLog['action'];
-			const config = getActionConfig(action);
-			return (
-				<Badge className={`${config.color} gap-1 items-center`}>
-					{config.icon}
-					{config.label}
-				</Badge>
-			);
-		},
-	},
-	{
-		accessorKey: "user",
-		header: "User",
-		cell: ({ row }) => {
-			const user = row.original.user;
-			return user ? (
-				<div className="flex items-center gap-2">
-					<div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center">
-						<User className="w-3 h-3 text-primary" />
-					</div>
-					<div>
-						<div className="font-medium text-sm">{user.name}</div>
-						<div className="text-xs text-slate-500">{user.email}</div>
-					</div>
-				</div>
-			) : (
-				<span className="text-slate-400 text-sm">System</span>
-			);
-		},
-	},
-	{
-		accessorKey: "ticket",
-		header: "Ticket",
-		cell: ({ row }) => {
-			const ticket = row.original.ticket;
-			return ticket ? (
-				<div>
-					<div className="font-medium text-sm">#{ticket.id}</div>
-					<div className="text-xs text-slate-500 truncate max-w-[150px]">
-						{ticket.title}
-					</div>
-				</div>
-			) : (
-				<span className="text-slate-400 text-sm">-</span>
-			);
-		},
-	},
-	{
-		accessorKey: "createdAt",
-		header: "Date & Time",
-		cell: ({ row }) => {
-			const date = new Date(row.getValue("createdAt"));
-			return (
-				<div className="flex items-center gap-2">
-					<Calendar className="w-4 h-4 text-slate-400" />
-					<div>
-						<div className="text-sm font-medium">
-							{date.toLocaleDateString()}
-						</div>
-						<div className="text-xs text-slate-500">
-							{date.toLocaleTimeString()}
-						</div>
-					</div>
-				</div>
-			);
-		},
-	},
-	{
-		accessorKey: "ipAddress",
-		header: "IP Address",
-		cell: ({ row }) => {
-			const ipAddress = row.getValue("ipAddress") as string | null;
-			return ipAddress ? (
+// Hook to get translated column definitions
+export function useAuditTableColumns(): ColumnDef<AuditLog>[] {
+	const t = useTranslations("audit");
+	
+	return [
+		{
+			accessorKey: "id",
+			header: t("id"),
+			cell: ({ row }) => (
 				<span className="font-mono text-sm text-slate-600">
-					{ipAddress}
+					#{row.getValue("id")}
 				</span>
-			) : (
-				<span className="text-slate-400 text-sm">-</span>
-			);
+			),
 		},
-	},
-];
+		{
+			accessorKey: "action",
+			header: t("action"),
+			cell: ({ row }) => {
+				const action = row.getValue("action") as AuditLog['action'];
+				const config = getActionConfig(action);
+				return (
+					<Badge className={`${config.color} gap-1 items-center`}>
+						{config.icon}
+						{t(config.labelKey)}
+					</Badge>
+				);
+			},
+		},
+		{
+			accessorKey: "user",
+			header: t("user"),
+			cell: ({ row }) => {
+				const user = row.original.user;
+				return user ? (
+					<div className="flex items-center gap-2">
+						<div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center">
+							<User className="w-3 h-3 text-primary" />
+						</div>
+						<div>
+							<div className="font-medium text-sm">{user.name}</div>
+							<div className="text-xs text-slate-500">{user.email}</div>
+						</div>
+					</div>
+				) : (
+					<span className="text-slate-400 text-sm">{t("system")}</span>
+				);
+			},
+		},
+		{
+			accessorKey: "ticket",
+			header: t("ticket"),
+			cell: ({ row }) => {
+				const ticket = row.original.ticket;
+				return ticket ? (
+					<div>
+						<div className="font-medium text-sm">#{ticket.id}</div>
+						<div className="text-xs text-slate-500 truncate max-w-[150px]">
+							{ticket.title}
+						</div>
+					</div>
+				) : (
+					<span className="text-slate-400 text-sm">-</span>
+				);
+			},
+		},
+		{
+			accessorKey: "createdAt",
+			header: t("dateTime"),
+			cell: ({ row }) => {
+				const date = new Date(row.getValue("createdAt"));
+				return (
+					<div className="flex items-center gap-2">
+						<Calendar className="w-4 h-4 text-slate-400" />
+						<div>
+							<div className="text-sm font-medium">
+								{date.toLocaleDateString()}
+							</div>
+							<div className="text-xs text-slate-500">
+								{date.toLocaleTimeString()}
+							</div>
+						</div>
+					</div>
+				);
+			},
+		},
+		{
+			accessorKey: "ipAddress",
+			header: t("ipAddress"),
+			cell: ({ row }) => {
+				const ipAddress = row.getValue("ipAddress") as string | null;
+				return ipAddress ? (
+					<span className="font-mono text-sm text-slate-600">
+						{ipAddress}
+					</span>
+				) : (
+					<span className="text-slate-400 text-sm">-</span>
+				);
+			},
+		},
+	];
+}

@@ -124,7 +124,7 @@ export default function AuditUserTable<TData, TValue>({
 										<TableHead
 											key={header.id}
 											className={`px-4 ${
-												header.column.columnDef.header === "Action"
+												header.column.id === "action"
 													? "text-center"
 													: ""
 											}`}>
@@ -151,7 +151,7 @@ export default function AuditUserTable<TData, TValue>({
 										<TableCell
 											key={cell.id}
 											className={`px-4 ${
-												cell.column.columnDef.header === "Actions" &&
+												cell.column.id === "action" &&
 												"text-center"
 											}`}>
 											{flexRender(

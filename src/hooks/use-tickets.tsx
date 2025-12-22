@@ -7,7 +7,29 @@ import { toast } from "sonner";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://192.168.10.184:8081";
 
-export const useTickets = () => {
+interface UseTicketsOptions {
+    translations?: {
+        requestSubmitted?: string;
+        unableToSubmitRequest?: string;
+        requestUpdated?: string;
+        unableToUpdateRequest?: string;
+        unableToLoadRequestDetails?: string;
+        requestStatusUpdated?: string;
+        unableToUpdateRequestStatus?: string;
+    };
+}
+
+export const useTickets = (options?: UseTicketsOptions) => {
+    const t = options?.translations || {
+        requestSubmitted: "Request submitted successfully!",
+        unableToSubmitRequest: "Unable to submit your request. Please try again.",
+        requestUpdated: "Request updated successfully!",
+        unableToUpdateRequest: "Unable to update your request. Please try again.",
+        unableToLoadRequestDetails: "Unable to load request details. Please refresh the page.",
+        requestStatusUpdated: "Request status updated successfully!",
+        unableToUpdateRequestStatus: "Unable to update request status. Please try again.",
+    };
+
     // const token = localStorage.getItem("access_token") || "";
     // const route = useRouter();
     const [tickets, setTickets] = useState<Ticket[]>([]);
@@ -27,7 +49,7 @@ export const useTickets = () => {
 
     const handlePostTicket = async (ticket: ScheduleDataTicket, token: string) => {
         try {
-const response = await fetch(`${API_URL}/api/tickets/v1`, {
+            const response = await fetch(`${API_URL}/api/tickets/v1`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -38,19 +60,18 @@ const response = await fetch(`${API_URL}/api/tickets/v1`, {
             const data = await response.json();
             
             if (!response.ok) {
-                throw new Error(data.message || 'Unable to submit your request. Please try again.');
+                throw new Error(data.message || t.unableToSubmitRequest);
             }
 
-            // route.push('/app/your-requests');
-            // window.location.reload();
-            window.location.href = '/app/your-requests';
-            toast.success('Request submitted successfully!');
+            // Show toast first, then navigate after a short delay so user sees the feedback
+            toast.success(t.requestSubmitted);
+            setTimeout(() => {
+                window.location.href = '/app/your-requests';
+            }, 500);
             return data;
         } catch (error: any) {
-            toast.error(error.message || 'Unable to submit your request. Please try again.');
+            toast.error(error.message || t.unableToSubmitRequest);
             throw error;
-        } finally {
-
         }
     }
 
@@ -66,11 +87,11 @@ const response = await fetch(`${API_URL}/api/tickets/v1`, {
         const data = await response.json();
         
         if (!response.ok) {
-            toast.error(data.message || 'Unable to update your request. Please try again.');
-            throw new Error(data.message || 'Unable to update your request. Please try again.');
+            toast.error(data.message || t.unableToUpdateRequest);
+            throw new Error(data.message || t.unableToUpdateRequest);
         }
 
-        toast.success('Request updated successfully!');
+        toast.success(t.requestUpdated);
 
         return data;
     }
@@ -87,11 +108,11 @@ const response = await fetch(`${API_URL}/api/tickets/v1`, {
         const data = await response.json();
         
         if (!response.ok) {
-            toast.error(data.message || 'Unable to submit your request. Please try again.');
-            throw new Error(data.message || 'Unable to submit your request. Please try again.');
+            toast.error(data.message || t.unableToSubmitRequest);
+            throw new Error(data.message || t.unableToSubmitRequest);
         }
 
-        toast.success('Request submitted successfully!');
+        toast.success(t.requestSubmitted);
 
         return data;
     }
@@ -109,7 +130,7 @@ const response = await fetch(`${API_URL}/api/tickets/v1`, {
             console.log("Fetched Ticket by ID:", data);
 
             if (!response.ok) {
-                throw new Error(data.message || 'Unable to load request details. Please refresh the page.');
+                throw new Error(data.message || t.unableToLoadRequestDetails);
             }
 
             if (response.ok) {
@@ -117,7 +138,7 @@ const response = await fetch(`${API_URL}/api/tickets/v1`, {
             }
             return data.data;
         } catch (error: any) {
-            toast.error(error.message || 'Unable to load request details. Please refresh the page.');
+            toast.error(error.message || t.unableToLoadRequestDetails);
             throw error;
         }
     }
@@ -135,19 +156,17 @@ const response = await fetch(`${API_URL}/api/tickets/v1`, {
             const data = await response.json();
             
             if (!response.ok) {
-                toast.error(data.message || 'Unable to update request status. Please try again.');
-                throw new Error(data.message || 'Unable to update request status. Please try again.');
+                throw new Error(data.message || t.unableToUpdateRequestStatus);
             }
 
-            if (response.ok) {
-                toast.success('Request status updated successfully!');
+            // Show toast first, then reload after a short delay so user sees the feedback
+            toast.success(t.requestStatusUpdated);
+            setTimeout(() => {
                 window.location.reload();
-                return data;
-            }
-    
+            }, 500);
             return data;
         } catch (error: any) {
-            toast.error(error.message || 'Unable to update request status. Please try again.');
+            toast.error(error.message || t.unableToUpdateRequestStatus);
             throw error;
         }
     }

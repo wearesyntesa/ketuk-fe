@@ -4,7 +4,25 @@ import { toast } from "sonner";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://192.168.10.184:8081";
 
-export const useUnblocking = () => {
+interface UseUnblockingOptions {
+    translations?: {
+        unableToLoadBookingWindows?: string;
+        unableToLoadBookingWindowDetails?: string;
+        bookingWindowCreated?: string;
+        unableToCreateBookingWindow?: string;
+        connectionError?: string;
+    };
+}
+
+export const useUnblocking = (options?: UseUnblockingOptions) => {
+    const t = options?.translations || {
+        unableToLoadBookingWindows: "Unable to load booking windows. Please try again.",
+        unableToLoadBookingWindowDetails: "Unable to load booking window details. Please try again.",
+        bookingWindowCreated: "Booking window created successfully!",
+        unableToCreateBookingWindow: "Unable to create booking window. Please try again.",
+        connectionError: "Connection error. Please check your internet and try again.",
+    };
+
     const [unblocking, setUnblocking] = useState(false);
     const [dataUnblocking, setDataUnblocking] = useState<UnblockingResponse[]>([] as UnblockingResponse[]);
 
@@ -21,19 +39,15 @@ export const useUnblocking = () => {
 			if (data.success) {
 				setDataUnblocking(data.unblockings);
 				setUnblocking(true);
-				// if (dataUnblocking) {
-				// } else {
-				// 	setUnblocking(false);
-				// }
 			} else {
 				setUnblocking(false);
 				console.error("Failed to fetch unblocking:", data.message);
+				toast.error(t.unableToLoadBookingWindows);
 			}
 		} catch (err) {
 			setUnblocking(false);
 			console.error("Fetch unblocking error:", err);
-		} finally {
-			console.log("Fetch unblocking completed");
+			toast.error(t.connectionError);
 		}
 	};
 
@@ -51,9 +65,11 @@ export const useUnblocking = () => {
 				return data.unblocking;
 			} else {
 				console.error("Failed to fetch unblocking by ID:", data.message);
+				toast.error(t.unableToLoadBookingWindowDetails);
 			}
 		} catch (err) {
 			console.error("Fetch unblocking by ID error:", err);
+			toast.error(t.connectionError);
 		}
 	};
 
@@ -81,18 +97,19 @@ export const useUnblocking = () => {
 
 			if (data.success) {
 				setUnblocking(true);
-				window.location.reload();
-				toast.success("Booking window created successfully!");
+				// Show toast first, then reload after a short delay so user sees the feedback
+				toast.success(t.bookingWindowCreated);
+				setTimeout(() => {
+					window.location.reload();
+				}, 500);
 				return data;
 			} else {
-				toast.error(data.message || "Unable to create booking window. Please try again.");
+				toast.error(data.message || t.unableToCreateBookingWindow);
 				console.error("Failed to post unblocking:", data.message);
 			}
 		} catch (err) {
-			toast.error("Connection error. Please check your internet and try again.");
+			toast.error(t.connectionError);
 			console.error("Post unblocking error:", err);
-		} finally {
-			console.log("Post unblocking completed");
 		}
 	};
 

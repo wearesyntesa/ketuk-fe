@@ -31,7 +31,12 @@
     "noResults": "No results",
     "tryAgain": "Try again",
     "success": "Success",
-    "failed": "Failed"
+    "failed": "Failed",
+    "processing": "Processing...",
+    "toggleSidebar": "Toggle Sidebar",
+    "returnHome": "Return Home",
+    "sidebar": "Sidebar",
+    "mobileMenuDescription": "Displays the mobile sidebar."
   },
   "nav": {
     "overview": "Overview",
@@ -50,7 +55,17 @@
     "welcomeBack": "Welcome Back",
     "loginDescription": "Sign in to your account to continue",
     "loggingIn": "Signing in...",
-    "signedOutSuccess": "Signed out successfully"
+    "signedOutSuccess": "Signed out successfully",
+    "termsAgreement": "By clicking continue, you agree to our",
+    "termsOfService": "Terms of Service",
+    "privacyPolicy": "Privacy Policy",
+    "and": "and",
+    "authenticationFailed": "Authentication Failed",
+    "redirectingToLogin": "Redirecting to login page...",
+    "completingLogin": "Completing login...",
+    "authenticatingAccount": "Please wait while we authenticate your account.",
+    "noAuthorizationCode": "No authorization code received",
+    "loginBannerAlt": "Login banner image"
   },
   "dashboard": {
     "title": "Overview",
@@ -64,7 +79,24 @@
     "noDataAvailable": "This chart will show the distribution of requests by type once data is available.",
     "labSession": "Lab Session",
     "class": "Class",
-    "thesis": "Thesis"
+    "thesis": "Thesis",
+    "requestVolume": "Request Volume",
+    "dailyTrafficDescription": "Daily traffic over the past 30 days",
+    "categories": "Categories",
+    "distributionByType": "Distribution by type",
+    "total": "Total",
+    "totalRevenue": "Total Revenue",
+    "trendingUpThisMonth": "Trending up this month",
+    "visitorsLast6Months": "Visitors for the last 6 months",
+    "newCustomers": "New Customers",
+    "downThisPeriod": "Down 20% this period",
+    "acquisitionNeedsAttention": "Acquisition needs attention",
+    "activeAccounts": "Active Accounts",
+    "strongUserRetention": "Strong user retention",
+    "engagementExceedTargets": "Engagement exceed targets",
+    "growthRate": "Growth Rate",
+    "steadyPerformanceIncrease": "Steady performance increase",
+    "meetsGrowthProjections": "Meets growth projections"
   },
   "requests": {
     "title": "Requests",
@@ -134,7 +166,30 @@
     "semesterScheduleCreated": "Semester schedule created!",
     "regularClassPlaceholder": "e.g. Regular Class 4A",
     "requestScheduleButton": "Request Schedule +",
-    "checkRegularSchedule": "Check if you want to request a regular schedule"
+    "checkRegularSchedule": "Check if you want to request a regular schedule",
+    "eventNameRequired": "Please enter an event name",
+    "dateRequired": "Please select a start date",
+    "timeRequired": "Please select start and end times",
+    "userNotAuthenticated": "User not authenticated. Please log in again.",
+    "partialSuccess": "Partial success",
+    "created": "created",
+    "failed": "failed",
+    "failedToCreateSchedules": "Failed to create schedules",
+    "errorCreatingSchedules": "An error occurred while creating schedules",
+    "creatingSchedules": "Creating schedules...",
+    "requestSchedule": "Request Schedule",
+    "bookLabSlot": "Book a laboratory slot for your class or research.",
+    "regularMode": "Regular Mode",
+    "eventTitle": "Event Title",
+    "dateTime": "Date & Time",
+    "requester": "Requester",
+    "status": "Status",
+    "regular": "Regular",
+    "noActions": "No actions",
+    "myHistory": "My History",
+    "manageDescription": "Manage incoming laboratory reservation requests.",
+    "trackDescription": "Track the status of your previous reservations.",
+    "accepted": "Accepted"
   },
   "schedule": {
     "title": "Schedule",
@@ -193,6 +248,8 @@
     "needsRepair": "Needs Repair",
     "specification": "Specification",
     "year": "Year",
+    "yearPlaceholder": "2025",
+    "itemNamePlaceholder": "Cabinet",
     "viewDetails": "View Details",
     "editItem": "Edit Item",
     "editItemDescription": "Update the item details below.",
@@ -221,7 +278,8 @@
     "update": "Update",
     "delete": "Delete",
     "detailInfoItem": "Detail information about the item can be displayed here.",
-    "category": "Category"
+    "category": "Category",
+    "specificationPlaceholder": "Enter specification details..."
   },
   "users": {
     "title": "User Management",
@@ -253,9 +311,14 @@
     "notifications": "Notifications",
     "detail": "Detail",
     "id": "ID",
-    "role": "Role"
+    "role": "Role",
+    "name": "Name",
+    "email": "Email",
+    "joinDate": "Join",
+    "action": "Action"
   },
   "bookingWindow": {
+    "id": "ID",
     "title": "Booking Windows",
     "newBookingWindow": "New Booking Window",
     "description": "Set up when students can book lab times for this semester.",
@@ -267,6 +330,7 @@
     "startDate": "Start Date",
     "endDate": "End Date",
     "createBookingWindow": "Create Booking Window",
+    "creating": "Creating...",
     "active": "Active",
     "inactive": "Inactive",
     "expired": "Expired",
@@ -279,9 +343,11 @@
     "selectDates": "Select start and end dates",
     "searchBookingWindows": "Search booking windows...",
     "detail": "Detail",
-    "detailDescription": "Detail information about the item can be displayed here."
+    "detailDescription": "Detail information about the item can be displayed here.",
+    "yearPlaceholder": "2025"
   },
   "audit": {
+    "id": "ID",
     "title": "Audit Logs",
     "allLogs": "All Logs",
     "userLogs": "User Logs",
@@ -315,7 +381,18 @@
     "auditLogTicketsBy": "Audit Log Tickets by",
     "auditLogByTicketId": "Audit Log by Ticket with id",
     "detailLogAuditTicketByUser": "Detail information log audit ticket by user.",
-    "detailLogAuditTicketById": "Detail information log audit ticket by ticket ID"
+    "detailLogAuditTicketById": "Detail information log audit ticket by ticket ID",
+    "trackActivities": "Track system activities and changes across the platform.",
+    "totalEvents": "Total Events",
+    "createdEvents": "Created Events",
+    "statusChanges": "Status Changes",
+    "todaysActivity": "Today's Activity",
+    "recentActivity": "Recent Activity",
+    "latestSystemEvents": "Latest system events and modifications",
+    "activitiesWillAppear": "System activities and changes will appear here once they occur.",
+    "ticket": "Ticket",
+    "by": "by",
+    "changesLabel": "Changes"
   },
   "form": {
     "required": "Required",
@@ -363,7 +440,20 @@
     "itemsLeft": "items left",
     "adminAccess": "Admin Access",
     "login": "Log in",
-    "dashboard": "Dashboard"
+    "dashboard": "Dashboard",
+    "whyNeedIt": "Why do you need it?",
+    "everythingYouNeed": "Everything you need to run a modern lab.",
+    "stopUsingSpreadsheets": "Stop using spreadsheets. Get a suite of tools designed specifically for academic scheduling.",
+    "orchestrateSemester": "Orchestrate your semester",
+    "reserveLabTimes": "Reserve lab times, assign team shifts, and monitor equipment availability in a single, real-time view.",
+    "todaysFocus": "Today's Focus!",
+    "stickyNote1Item1": "Practicum Data Structure",
+    "stickyNote1Item2": "Databases class 24F",
+    "comingUp": "Coming Up...",
+    "stickyNote2Item1": "Algo & Programming",
+    "stickyNote2Item2": "Web Dev Class 25C",
+    "demoLabName": "Computer Science A10",
+    "demoClassName": "Embedded Systems"
   },
   "bannerDashboard": {
     "hello": "Hello",
@@ -426,7 +516,10 @@
     "privacyPolicy": "Privacy Policy",
     "termsOfService": "Terms of Service",
     "cookies": "Cookies",
-    "designedBy": "Designed by Syntesa"
+    "designedBy": "Designed by Syntesa",
+    "universityName": "Universitas Negeri Surabaya",
+    "buildingAddress": "A10 Building, Room 3 & 4",
+    "cityCountry": "Surabaya, Indonesia"
   },
   "landingDemo": {
     "seeInAction": "See Ketuk in action",
@@ -455,7 +548,22 @@
   "reviews": {
     "trustedByFaculties": "Trusted by modern faculties",
     "joinDepartments": "Join forward-thinking departments that have streamlined their lab operations.",
-    "activeLabs": "Active Labs"
+    "activeLabs": "Active Labs",
+    "review1Name": "Alex Chen",
+    "review1Role": "Lab Coordinator @ CS-EDU",
+    "review1Text": "Ketuk completely replaced our spreadsheet chaos. The scheduling conflict detection alone saved us 20+ hours this semester.",
+    "review2Name": "Sarah Miller",
+    "review2Role": "CS Student",
+    "review2Text": "Finally, I don't have to physically walk to the lab just to check if a PC is available. Real-time status is a lifesaver.",
+    "review3Name": "Dr. Budi Santoso",
+    "review3Role": "Head of Bio-Informatics",
+    "review3Text": "The reporting features give me exactly the data I need for accreditation. Highly recommended for any university department.",
+    "review4Name": "Jessica Wu",
+    "review4Role": "Teaching Assistant",
+    "review4Text": "Super fast. The interface is clean and doesn't get in the way. It just works.",
+    "review5Name": "Marcus Johnson",
+    "review5Role": "Infrastructure Lead",
+    "review5Text": "Integration with our existing auth system was surprisingly easy. Setup took less than an afternoon."
   },
   "qrCode": {
     "downloadQRCode": "Download QR Code"

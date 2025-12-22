@@ -2,8 +2,12 @@
 
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export default function NotFound() {
+  const t = useTranslations("errors");
+  const tCommon = useTranslations("common");
+
   return (
     <div className="relative min-h-screen bg-white flex flex-col items-center justify-center overflow-hidden selection:bg-slate-200">
       
@@ -70,7 +74,7 @@ export default function NotFound() {
 
         <div className="mt-4 text-center animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-200">
             <p className="text-sm font-mono text-slate-400 uppercase tracking-[0.3em]">
-                Page Not Found
+                {t("pageNotFound")}
             </p>
         </div>
 
@@ -78,7 +82,7 @@ export default function NotFound() {
             <Link 
                 href="/" 
                 className="group flex items-center justify-center w-12 h-12 rounded-full bg-white border border-slate-200 hover:bg-slate-50 hover:border-slate-300 transition-all duration-500 hover:shadow-lg hover:scale-105"
-                aria-label="Return Home"
+                aria-label={tCommon("returnHome")}
             >
                 <ArrowLeft className="w-5 h-5 text-slate-400 group-hover:text-slate-900 transition-colors" />
             </Link>

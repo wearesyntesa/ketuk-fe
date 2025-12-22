@@ -138,7 +138,7 @@ export function LoginForm({
 					<div className="bg-muted relative hidden md:block">
 						<Image
 							src="/banner-login.svg"
-							alt="Image"
+							alt={t("loginBannerAlt")}
 							className="absolute h-full w-full object-cover object-right"
 							width={400}
 							height={400}
@@ -147,8 +147,8 @@ export function LoginForm({
 				</CardContent>
 			</Card>
 			<div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
-				By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
-				and <a href="#">Privacy Policy</a>.
+				{t("termsAgreement")} <a href="#">{t("termsOfService")}</a>{" "}
+				{t("and")} <a href="#">{t("privacyPolicy")}</a>.
 			</div>
 		</div>
 	);

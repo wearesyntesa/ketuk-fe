@@ -91,7 +91,7 @@ export default function RequestsTable<TData extends MergeSchedultType, TValue>({
                       key={header.id}
                       className={`
                             h-12 px-6 text-xs font-bold uppercase tracking-wider text-slate-500
-                            ${header.column.columnDef.header === "Actions" || header.column.columnDef.header === "Is Reguler" ? "text-center" : ""}
+                            ${header.column.id === "action" || header.column.id === "isReguler" ? "text-center" : ""}
                         `}
                     >
                       {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
@@ -114,7 +114,7 @@ export default function RequestsTable<TData extends MergeSchedultType, TValue>({
                       key={cell.id}
                       className={`
                             px-6 py-4 text-sm text-slate-700
-                            ${cell.column.columnDef.header === "Actions" || cell.column.columnDef.header === "Is Reguler" ? "text-center" : ""}
+                            ${cell.column.id === "action" || cell.column.id === "isReguler" ? "text-center" : ""}
                         `}
                     >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}

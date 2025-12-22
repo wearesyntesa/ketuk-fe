@@ -157,11 +157,15 @@ function Sidebar({
   collapsible = "offcanvas",
   className,
   children,
+  mobileSheetTitle = "Sidebar",
+  mobileSheetDescription = "Displays the mobile sidebar.",
   ...props
 }: React.ComponentProps<"div"> & {
   side?: "left" | "right"
   variant?: "sidebar" | "floating" | "inset"
   collapsible?: "offcanvas" | "icon" | "none"
+  mobileSheetTitle?: string
+  mobileSheetDescription?: string
 }) {
   const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
 
@@ -196,8 +200,8 @@ function Sidebar({
           side={side}
         >
           <SheetHeader className="sr-only">
-            <SheetTitle>Sidebar</SheetTitle>
-            <SheetDescription>Displays the mobile sidebar.</SheetDescription>
+            <SheetTitle>{mobileSheetTitle}</SheetTitle>
+            <SheetDescription>{mobileSheetDescription}</SheetDescription>
           </SheetHeader>
           <div className="flex h-full w-full flex-col">{children}</div>
         </SheetContent>
@@ -256,8 +260,11 @@ function Sidebar({
 function SidebarTrigger({
   className,
   onClick,
+  srLabel = "Toggle Sidebar",
   ...props
-}: React.ComponentProps<typeof Button>) {
+}: React.ComponentProps<typeof Button> & {
+  srLabel?: string
+}) {
   const { toggleSidebar } = useSidebar()
 
   return (
@@ -273,22 +280,24 @@ function SidebarTrigger({
 			}}
 			{...props}>
 			<PanelLeftIcon className="min-w-6 min-h-6" />
-			<span className="sr-only">Toggle Sidebar</span>
+			<span className="sr-only">{srLabel}</span>
 		</Button>
 	);
 }
 
-function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
+function SidebarRail({ className, ariaLabel = "Toggle Sidebar", ...props }: React.ComponentProps<"button"> & {
+  ariaLabel?: string
+}) {
   const { toggleSidebar } = useSidebar()
 
   return (
     <button
       data-sidebar="rail"
       data-slot="sidebar-rail"
-      aria-label="Toggle Sidebar"
+      aria-label={ariaLabel}
       tabIndex={-1}
       onClick={toggleSidebar}
-      title="Toggle Sidebar"
+      title={ariaLabel}
       className={cn(
         "hover:after:bg-sidebar-border absolute inset-y-0 z-20 hidden w-4 -translate-x-1/2 transition-all ease-linear group-data-[side=left]:-right-4 group-data-[side=right]:left-0 after:absolute after:inset-y-0 after:left-1/2 after:w-[2px] sm:flex",
         "in-data-[side=left]:cursor-w-resize in-data-[side=right]:cursor-e-resize",

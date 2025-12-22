@@ -19,6 +19,7 @@ import { useTranslations } from "next-intl";
 
 export default function LandingNav(isLogin: { isLogin: boolean }) {
   const t = useTranslations("landing");
+  const tUsers = useTranslations("users");
   const user = useUser();
   const [scrolled, setScrolled] = useState(false);
 
@@ -78,7 +79,7 @@ export default function LandingNav(isLogin: { isLogin: boolean }) {
                 <DropdownMenuTrigger className="focus:outline-none">
                   <div className="flex items-center gap-2 pl-2 pr-1 py-1 rounded-full border border-slate-200 bg-white hover:border-slate-300 transition-colors cursor-pointer shadow-sm">
                     <span className="text-xs font-medium text-slate-700 pl-2 hidden sm:block">
-                      {user.user?.name || "Account"}
+                      {user.user?.name || tUsers("account")}
                     </span>
                     <div className="h-8 w-8">{InitialIcon(user.user?.name || "U")}</div>
                   </div>

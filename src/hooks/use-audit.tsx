@@ -2,10 +2,23 @@
 
 import { AuditLog, AuditLogByTicket, AuditLogByUser } from "@/components/type";
 import { useState } from "react";
+import { toast } from "sonner";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://192.168.10.184:8081";
 
-export const useAudit = (token: string) => {
+interface UseAuditOptions {
+	translations?: {
+		unableToLoadAuditLogs?: string;
+		connectionError?: string;
+	};
+}
+
+export const useAudit = (token: string, options?: UseAuditOptions) => {
+	const t = options?.translations || {
+		unableToLoadAuditLogs: "Unable to load audit logs. Please try again.",
+		connectionError: "Connection error. Please check your internet and try again.",
+	};
+
 	const [auditsTicketsbyID, setAuditsTickets] = useState<AuditLogByTicket[]>(
 		[]
 	);
@@ -31,11 +44,11 @@ export const useAudit = (token: string) => {
 				setAuditsTickets(data.data);
 			} else {
 				console.error("Failed to fetch audit logs by ticket ID:", data.message);
+				toast.error(t.unableToLoadAuditLogs);
 			}
 		} catch (err) {
 			console.error("Fetch audit logs by ticket ID error:", err);
-		} finally {
-			console.log("Fetch audit logs by ticket ID completed");
+			toast.error(t.connectionError);
 		}
 	};
 
@@ -56,11 +69,11 @@ export const useAudit = (token: string) => {
 				setAuditsTicketsbyUserID(data.data);
 			} else {
 				console.error("Failed to fetch audit logs by user ID:", data.message);
+				toast.error(t.unableToLoadAuditLogs);
 			}
 		} catch (err) {
 			console.error("Fetch audit logs by user ID error:", err);
-		} finally {
-			console.log("Fetch audit logs by user ID completed");
+			toast.error(t.connectionError);
 		}
 	};
 
@@ -78,11 +91,11 @@ export const useAudit = (token: string) => {
 				setAllAuditLogs(data.data);
 			} else {
 				console.error("Failed to fetch all audit logs:", data.message);
+				toast.error(t.unableToLoadAuditLogs);
 			}
 		} catch (err) {
 			console.error("Fetch all audit logs error:", err);
-		} finally {
-			console.log("Fetch all audit logs completed");
+			toast.error(t.connectionError);
 		}
 	};
 

@@ -7,12 +7,15 @@ import { useEffect, useState } from "react";
 import { useUser } from "@/hooks/use-user";
 import { CategoryChartData, MergeSchedultType } from "@/components/type";
 import { useSchedule } from "@/hooks/use-schedule";
+import { useTranslations, useLocale } from "next-intl";
 
 export default function Dashboard() {
   const [token, setToken] = useState<string>("");
   const user = useUser();
   const mergedSchedules: MergeSchedultType[] = [];
   const pieData: CategoryChartData[] = [];
+  const tErrors = useTranslations("errors");
+  const locale = useLocale();
 
   useEffect(() => {
     const storedToken = localStorage.getItem("access_token") || "";
@@ -27,7 +30,15 @@ export default function Dashboard() {
     }
   }, []);
 
-  const schedules = useSchedule(token);
+  const schedules = useSchedule(token, {
+    locale,
+    translations: {
+      unableToLoadSchedules: tErrors("connectionError"),
+      connectionError: tErrors("connectionError"),
+      unableToLoadRegularSchedules: tErrors("connectionError"),
+      unableToLoadYourSchedules: tErrors("connectionError"),
+    }
+  });
   useEffect(() => {
     const fetchData = async () => {
       if (token) {

@@ -48,7 +48,8 @@ export default function ScheduleMonth({ data }: { data: MergeSchedultType[] }) {
     });
   };
 
-  const baseDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const dayKeys = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"] as const;
+  const baseDays = dayKeys.map(key => t(key).substring(0, 3));
 
   return (
     <div className="flex flex-col gap-6">
@@ -81,9 +82,9 @@ export default function ScheduleMonth({ data }: { data: MergeSchedultType[] }) {
 
       <div className="rounded-3xl border border-slate-200/60 bg-white/40 backdrop-blur-xl p-4 shadow-sm">
         <div className="grid grid-cols-7 mb-2 border-b border-slate-200/50 pb-2">
-          {baseDays.map((day) => (
-            <div key={day} className="text-center text-xs font-bold uppercase tracking-widest text-slate-400 py-2">
-              <span className="md:inline hidden">{day}day</span>
+          {baseDays.map((day, index) => (
+            <div key={index} className="text-center text-xs font-bold uppercase tracking-widest text-slate-400 py-2">
+              <span className="md:inline hidden">{t(dayKeys[index])}</span>
               <span className="md:hidden inline">{day}</span>
             </div>
           ))}
@@ -227,22 +228,23 @@ export function ScheduleMonthLanding() {
   const currentMonth = displayDate.getMonth();
   const currentYear = displayDate.getFullYear();
   const baseDays = ["S", "M", "T", "W", "T", "F", "S"];
+  const t = useTranslations("landing");
 
   return (
     <div className="w-full max-w-4xl bg-white/40 backdrop-blur-xl border border-white/60 p-6 rounded-[32px] shadow-xl relative overflow-hidden">
       <div className="hidden md:block absolute -top-4 -left-4 z-20 rotate-[-8deg] w-64 bg-[#fef3c7] p-6 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] rounded-sm border-t-[12px] border-black/5">
-        <h3 className={`${shadowIntoLight.className} text-3xl font-bold text-amber-900/80 mb-2`}>Today's Focus!</h3>
+        <h3 className={`${shadowIntoLight.className} text-3xl font-bold text-amber-900/80 mb-2`}>{t("todaysFocus")}</h3>
         <ul className="list-disc list-inside text-lg text-amber-900/70 font-medium leading-relaxed">
-          <li>Practicum Data Structure</li>
-          <li>Databases class 24F</li>
+          <li>{t("stickyNote1Item1")}</li>
+          <li>{t("stickyNote1Item2")}</li>
         </ul>
       </div>
 
       <div className="hidden md:block absolute -bottom-6 -right-6 z-20 rotate-[6deg] w-64 bg-[#dbeafe] p-6 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] rounded-sm border-t-[12px] border-black/5">
-        <h3 className={`${nothingYouCouldDo.className} text-3xl font-bold text-emerald-900/80 mb-2`}>Coming Up...</h3>
+        <h3 className={`${nothingYouCouldDo.className} text-3xl font-bold text-emerald-900/80 mb-2`}>{t("comingUp")}</h3>
         <ul className="list-disc list-inside text-lg text-emerald-900/70 font-medium leading-relaxed">
-          <li>Algo & Programming</li>
-          <li>Web Dev Class 25C</li>
+          <li>{t("stickyNote2Item1")}</li>
+          <li>{t("stickyNote2Item2")}</li>
         </ul>
       </div>
 

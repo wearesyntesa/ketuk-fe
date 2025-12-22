@@ -1,6 +1,6 @@
 'use client';
 
-import { EllipsisVertical } from "lucide-react";
+import { EllipsisVertical, Loader2 } from "lucide-react";
 import InventoryDetailTable from "./table-inventory-detail";
 import { AlertDialogHeader } from "./ui/alert-dialog";
 import {
@@ -20,7 +20,7 @@ import {
 import { useCategories } from "@/hooks/use-categories";
 import { ColumnDef } from "@tanstack/react-table";
 import { ItemDetail } from "./type";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
@@ -44,13 +44,19 @@ export default function DetailItemCategories({
 }: DetailItemCategoriesProps) {
 	const t = useTranslations("inventory");
 	const tCommon = useTranslations("common");
-	const token = localStorage.getItem("access_token");
+	const [token, setToken] = useState<string | null>(null);
 	const categories = useCategories();
 	const items = useItems();
 	const [categoryData, setCategoryData] = useState({
 		name: "",
 		specification: "",
 	});
+	const [isUpdating, setIsUpdating] = useState(false);
+	const [isDeleting, setIsDeleting] = useState(false);
+
+	useEffect(() => {
+		setToken(localStorage.getItem("access_token"));
+	}, []);
 
 	const tableDetail: ColumnDef<ItemDetail>[] = [
 		{
@@ -105,18 +111,26 @@ export default function DetailItemCategories({
 		}
 	};
 
-	const updateCategory = () => {
+	const updateCategory = async () => {
 		if (token) {
-			categories.handleUpdateCategory(token, categoryData, id).then((data) => {
-				console.log(data);
-			});
+			setIsUpdating(true);
+			try {
+				await categories.handleUpdateCategory(token, categoryData, id);
+			} finally {
+				setIsUpdating(false);
+			}
 		}
 	};
 
-	const deleteCategory = () => {
+	const deleteCategory = async () => {
 		console.log("Deleting category with ID:", id);
 		if (token) {
-			categories.handleDeleteCategory(token, id);
+			setIsDeleting(true);
+			try {
+				await categories.handleDeleteCategory(token, id);
+			} finally {
+				setIsDeleting(false);
+			}
 		}
 	};
 
@@ -193,7 +207,7 @@ export default function DetailItemCategories({
 									<Input
 										id="specification"
 										type="text"
-										placeholder="Azko"
+										placeholder={t("specificationPlaceholder")}
 										value={categoryData.specification}
 										onChange={(e) =>
 											setCategoryData({
@@ -206,10 +220,19 @@ export default function DetailItemCategories({
 								</div>
 
 								<div className="w-full gap-4 grid grid-cols-2">
-									<DialogClose className="flex-1 p-1 border rounded-md">
+									<DialogClose className="flex-1 p-1 border rounded-md" disabled={isUpdating}>
 										{tCommon("cancel")}
 									</DialogClose>
-									<Button>{tCommon("submit")}</Button>
+									<Button type="submit" disabled={isUpdating}>
+										{isUpdating ? (
+											<>
+												<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+												{tCommon("processing")}
+											</>
+										) : (
+											tCommon("submit")
+										)}
+									</Button>
 								</div>
 							</div>
 						</form>
@@ -230,11 +253,18 @@ export default function DetailItemCategories({
 								{t("confirmDeleteItem")}
 							</DialogDescription>
 							<div className="flex gap-2">
-								<DialogClose className="flex-1 p-1 border rounded-md">
+								<DialogClose className="flex-1 p-1 border rounded-md" disabled={isDeleting}>
 									{tCommon("cancel")}
 								</DialogClose>
-								<Button onClick={() => deleteCategory()} className="flex-1">
-									{tCommon("confirm")}
+								<Button onClick={() => deleteCategory()} className="flex-1" disabled={isDeleting}>
+									{isDeleting ? (
+										<>
+											<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+											{tCommon("processing")}
+										</>
+									) : (
+										tCommon("confirm")
+									)}
 								</Button>
 							</div>
 						</DialogHeader>

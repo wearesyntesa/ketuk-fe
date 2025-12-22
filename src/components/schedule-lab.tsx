@@ -10,11 +10,12 @@ import { useState } from "react";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import { InitialIconWithName } from "./initial-icon";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 
 export default function ScheduleLab({ mergedSchedules }: { mergedSchedules: MergeSchedultType[] }) {
   const [scheduleType, setScheduleType] = useState("week");
   const t = useTranslations("schedule");
+  const locale = useLocale();
 
   const tableHeader: ColumnDef<MergeSchedultType>[] = [
     {
@@ -27,7 +28,7 @@ export default function ScheduleLab({ mergedSchedules }: { mergedSchedules: Merg
       header: t("date"),
       cell: ({ row }) => (
         <span className="text-slate-600 font-medium tabular-nums">
-          {new Date(row.original.date).toLocaleDateString("en-US", {
+          {new Date(row.original.date).toLocaleDateString(locale, {
             month: "short",
             day: "numeric",
           })}

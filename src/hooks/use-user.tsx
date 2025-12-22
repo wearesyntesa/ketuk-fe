@@ -6,7 +6,29 @@ import { toast } from "sonner";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://192.168.10.184:8081";
 
-export const useUser = () => {
+interface UseUserOptions {
+	translations?: {
+		unableToLoadUsers?: string;
+		unableToLoadUserDetails?: string;
+		userUpdated?: string;
+		failedToUpdateUser?: string;
+		userDeleted?: string;
+		failedToDeleteUser?: string;
+		connectionError?: string;
+	};
+}
+
+export const useUser = (options?: UseUserOptions) => {
+	const t = options?.translations || {
+		unableToLoadUsers: "Unable to load users. Please try again.",
+		unableToLoadUserDetails: "Unable to load user details. Please try again.",
+		userUpdated: "User updated successfully",
+		failedToUpdateUser: "Failed to update user",
+		userDeleted: "User deleted successfully",
+		failedToDeleteUser: "Failed to delete user",
+		connectionError: "Connection error. Please check your internet and try again.",
+	};
+
     const [user, setUser] = useState<UserType>();
     const [allUsers, setAllUsers] = useState<AllUser[]>();
 	const [allUserManagement, setAllUserManagement] = useState<AllUser[]>();
@@ -46,11 +68,11 @@ export const useUser = () => {
 				setAllUsers(data.data);
 			} else {
 				console.error("Failed to fetch users:", data.message);
+				toast.error(t.unableToLoadUsers);
 			}
 		} catch (err) {
 			console.error("Fetch users error:", err);
-		} finally {
-			console.log("Fetch users completed");
+			toast.error(t.connectionError);
 		}
 	};
 
@@ -66,30 +88,37 @@ export const useUser = () => {
 			const data = await response.json();
 
 			if (data.success) {
-				console.log("Fetched users for management:", data.data);
-				console.log("Excluding user ID:", id);
 				const dataFiltered = data.data.filter((user: AllUser) => user.id !== id);
 				setAllUserManagement(dataFiltered);
 			} else {
 				console.error("Failed to fetch users:", data.message);
+				toast.error(t.unableToLoadUsers);
 			}
 		} catch (err) {
 			console.error("Fetch users error:", err);
-		} finally {
-			console.log("Fetch users completed");
+			toast.error(t.connectionError);
 		}
 	};
 
 	const handleUserbyID = async (token: string, id: number) => {
-		const response = await fetch(`${API_URL}/api/users/v1/${id}`, {
-			method: "GET",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: `Bearer ${token}`,
-			},
-		});
-		const data = await response.json();
-		return data.data;
+		try {
+			const response = await fetch(`${API_URL}/api/users/v1/${id}`, {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+			});
+			const data = await response.json();
+			if (!data.success) {
+				throw new Error(data.message || 'Failed to load user');
+			}
+			return data.data;
+		} catch (err) {
+			console.error("Fetch user error:", err);
+			toast.error(t.unableToLoadUserDetails);
+			throw err;
+		}
 	};
 
 	const handleUpdateUser = async (
@@ -115,18 +144,19 @@ export const useUser = () => {
 			const data = await response.json();
 
 			if (data.success) {
-				toast.success("User updated successfully");
-				window.location.reload();
+				// Show toast first, then reload after a short delay so user sees the feedback
+				toast.success(t.userUpdated);
+				setTimeout(() => {
+					window.location.reload();
+				}, 500);
 				return data.data;
 			} else {
 				console.error("Failed to update user:", data.message);
-				toast.error(data.message || "Failed to update user");
+				toast.error(data.message || t.failedToUpdateUser);
 			}
 		} catch (err) {
 			console.error("Update user error:", err);
-			toast.error("Failed to update user");
-		} finally {
-			console.log("Update user completed");
+			toast.error(t.connectionError);
 		}
 	};
 
@@ -143,16 +173,18 @@ export const useUser = () => {
 			const data = await response.json();
 
 			if (data.success) {
-				// Save tokens to localStorage
-				window.location.reload();
-				toast.success("User deleted successfully");
+				// Show toast first, then reload after a short delay so user sees the feedback
+				toast.success(t.userDeleted);
+				setTimeout(() => {
+					window.location.reload();
+				}, 500);
 			} else {
 				console.error("Failed to delete user:", data.message);
+				toast.error(data.message || t.failedToDeleteUser);
 			}
 		} catch (err) {
-			console.error("Login error:", err);
-		} finally {
-			console.log("User delete completed");
+			console.error("Delete user error:", err);
+			toast.error(t.connectionError);
 		}
 	};
 

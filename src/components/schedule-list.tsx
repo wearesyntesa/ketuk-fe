@@ -42,7 +42,7 @@ export default function ScheduleList<TData, TValue>({ columns, data }: DataTable
                     <TableHead
                       key={header.id}
                       className={`px-6 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500 ${
-                        header.column.columnDef.header === "Action" ? "text-center" : ""
+                        header.column.id === "action" ? "text-center" : ""
                       }`}
                     >
                       {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}

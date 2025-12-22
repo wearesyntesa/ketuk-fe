@@ -18,6 +18,7 @@ import { CategoryChartData, MergeSchedultType } from "./type";
 import { useSchedule } from "@/hooks/use-schedule";
 import { useUser } from "@/hooks/use-user";
 import { Loader2 } from "lucide-react";
+import { useTranslations, useLocale } from "next-intl";
 
 interface ChartDataPoint {
   date: string;
@@ -35,8 +36,19 @@ const COLORS = [
 export default function DashboardChart({ pieData }: { pieData: CategoryChartData[] }) {
   const [token, setToken] = useState<string>("");
   const [isMounted, setIsMounted] = useState(false);
+  const t = useTranslations("dashboard");
+  const tErrors = useTranslations("errors");
+  const locale = useLocale();
 
-  const schedules = useSchedule(token);
+  const schedules = useSchedule(token, {
+    locale,
+    translations: {
+      unableToLoadSchedules: tErrors("connectionError"),
+      connectionError: tErrors("connectionError"),
+      unableToLoadRegularSchedules: tErrors("connectionError"),
+      unableToLoadYourSchedules: tErrors("connectionError"),
+    }
+  });
   const user = useUser();
 
   useEffect(() => {
@@ -79,7 +91,7 @@ export default function DashboardChart({ pieData }: { pieData: CategoryChartData
     const sortedData: ChartDataPoint[] = Array.from(dataMap.entries())
       .map(([date, count]) => ({
         rawDate: date,
-        date: new Date(date).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+        date: new Date(date).toLocaleDateString(locale, { month: "short", day: "numeric" }),
         requests: count,
       }))
       .sort((a, b) => new Date(a.rawDate).getTime() - new Date(b.rawDate).getTime());
@@ -103,9 +115,9 @@ export default function DashboardChart({ pieData }: { pieData: CategoryChartData
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <Card className="lg:col-span-2 border border-white/60 bg-white/60 backdrop-blur-xl shadow-sm rounded-[24px] overflow-hidden hover:shadow-md transition-shadow duration-300">
           <CardHeader className="pb-2">
-            <CardTitle className="text-lg font-bold tracking-tight text-slate-900">Request Volume</CardTitle>
+            <CardTitle className="text-lg font-bold tracking-tight text-slate-900">{t("requestVolume")}</CardTitle>
             <CardDescription className="text-slate-500 font-medium">
-              Daily traffic over the past 30 days
+              {t("dailyTrafficDescription")}
             </CardDescription>
           </CardHeader>
           <CardContent className="pl-0 pb-6 pr-6">
@@ -167,8 +179,8 @@ export default function DashboardChart({ pieData }: { pieData: CategoryChartData
 
         <Card className="flex flex-col border border-white/60 bg-white/60 backdrop-blur-xl shadow-sm rounded-[24px] hover:shadow-md transition-shadow duration-300">
           <CardHeader className="pb-2">
-            <CardTitle className="text-lg font-bold tracking-tight text-slate-900">Categories</CardTitle>
-            <CardDescription className="text-slate-500 font-medium">Distribution by type</CardDescription>
+            <CardTitle className="text-lg font-bold tracking-tight text-slate-900">{t("categories")}</CardTitle>
+            <CardDescription className="text-slate-500 font-medium">{t("distributionByType")}</CardDescription>
           </CardHeader>
           <CardContent className="flex-1 flex flex-col items-center justify-center p-6">
             <div className="h-[220px] w-full relative">
@@ -210,7 +222,7 @@ export default function DashboardChart({ pieData }: { pieData: CategoryChartData
                   <span className="text-4xl font-bold tracking-tighter text-slate-900 block">
                     {pieData.reduce((acc, curr) => acc + curr.totalRequest, 0)}
                   </span>
-                  <span className="text-[10px] font-bold tracking-widest text-slate-400 uppercase">Total</span>
+                  <span className="text-[10px] font-bold tracking-widest text-slate-400 uppercase">{t("total")}</span>
                 </div>
               </div>
             </div>

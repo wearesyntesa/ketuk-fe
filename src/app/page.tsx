@@ -8,9 +8,11 @@ import ReviewUser from "@/components/review-user"; // Assuming this is the Bento
 import Footer from "@/components/footer";
 import { useEffect } from "react";
 import { useUser } from "@/hooks/use-user";
+import { useTranslations } from "next-intl";
 
 export default function Home() {
   const user = useUser();
+  const t = useTranslations("landing");
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -33,12 +35,12 @@ export default function Home() {
       <section className="relative py-24 lg:py-32">
         <div className="container mx-auto px-4 lg:px-6 relative z-10">
           <div className="text-center max-w-3xl mx-auto mb-20">
-            <h2 className="text-base font-semibold text-slate-950 uppercase tracking-wide mb-3">Why do you need it?</h2>
+            <h2 className="text-base font-semibold text-slate-950 uppercase tracking-wide mb-3">{t("whyNeedIt")}</h2>
             <p className="text-3xl lg:text-4xl font-bold tracking-tight text-slate-900 mb-6">
-              Everything you need to run a modern lab.
+              {t("everythingYouNeed")}
             </p>
             <p className="text-lg text-slate-500">
-              Stop using spreadsheets. Get a suite of tools designed specifically for academic scheduling.
+              {t("stopUsingSpreadsheets")}
             </p>
           </div>
 
@@ -53,10 +55,10 @@ export default function Home() {
           <div className="flex flex-col items-center gap-12">
             <div className="text-center max-w-2xl">
               <h2 className="text-3xl lg:text-4xl font-bold tracking-tight text-slate-900 mb-4">
-                Orchestrate your semester
+                {t("orchestrateSemester")}
               </h2>
               <p className="text-lg text-slate-500">
-                Reserve lab times, assign team shifts, and monitor equipment availability in a single, real-time view.
+                {t("reserveLabTimes")}
               </p>
             </div>
 

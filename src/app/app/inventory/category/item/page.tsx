@@ -11,12 +11,15 @@ import { ArrowLeftCircle } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import QRCodeGenerator from "@/components/qr-code";
+import { useTranslations } from "next-intl";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://ketuk.app";
 
 export default function DetailCategoryItem() {
     const searchParams = useSearchParams();
     const itemId: number = Number(searchParams.get("itemId"));
+    const t = useTranslations("inventory");
+    const tCommon = useTranslations("common");
 
     const [categoryData, setCategoryData] = useState<ItemDialogProps>({
             categoryId: 0,
@@ -55,14 +58,14 @@ export default function DetailCategoryItem() {
                     <form onSubmit={updateItem}>
 						<div className="flex flex-col gap-6">
 							<div className="w-full gap-4 grid grid-cols-2">
-								<Button variant={"outline"} onClick={() => window.history.back()} className="w-fit"><ArrowLeftCircle/> Back</Button>
+								<Button variant={"outline"} onClick={() => window.history.back()} className="w-fit"><ArrowLeftCircle/> {tCommon("back")}</Button>
 							</div>
 							<div className="grid gap-2">
-								<Label htmlFor="item-name">Nama Item</Label>
+								<Label htmlFor="item-name">{t("itemName")}</Label>
 								<Input
 									id="item-name"
 									type="text"
-									placeholder="Lemari"
+									placeholder={t("itemNamePlaceholder")}
 									value={categoryData.name}
 									onChange={(e) =>
 										setCategoryData({ ...categoryData, name: e.target.value })
@@ -72,10 +75,10 @@ export default function DetailCategoryItem() {
 									/>
 							</div>
 							<div className="grid gap-2">
-								<Label htmlFor="specification">Specification</Label>
+								<Label htmlFor="specification">{t("specification")}</Label>
 								<Textarea
 									id="specification"
-									placeholder="Azko"
+									placeholder={t("specificationPlaceholder")}
 									value={categoryData.note}
 									onChange={(e) =>
 										setCategoryData({
@@ -96,11 +99,11 @@ export default function DetailCategoryItem() {
 							}
 							disabled>
 								<SelectTrigger className="w-full" >
-									<SelectValue placeholder="Select Condition" />
+									<SelectValue placeholder={t("selectCondition")} />
 								</SelectTrigger>
 								<SelectContent>
-									<SelectItem value="Good">Good</SelectItem>
-									<SelectItem value="Poor">Poor</SelectItem>
+									<SelectItem value="Good">{t("good")}</SelectItem>
+									<SelectItem value="Poor">{t("poor")}</SelectItem>
 								</SelectContent>
 							</Select>
 						</div>

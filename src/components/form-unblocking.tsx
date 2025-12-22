@@ -18,6 +18,7 @@ import { DateRange } from "react-day-picker";
 import { toast } from "sonner";
 import { DateTime } from "luxon";
 import { useTranslations } from "next-intl";
+import { Loader2 } from "lucide-react";
 
 export function UnblockingForm({
     border,
@@ -35,6 +36,7 @@ export function UnblockingForm({
     const [token, setToken] = useState("")
     const [year, setYear] = useState<number>(new Date().getFullYear());
     const [semester, setSemester] = useState("Ganjil");
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const unblocking = useUnblocking();
 
     const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
@@ -49,10 +51,6 @@ export function UnblockingForm({
 
     const handleYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setYear(parseInt(e.target.value));
-    }
-
-    const handleSemesterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setSemester(e.target.value);
     }
 
     const handleChangeDateRange = (dateRange: DateRange | undefined) => {
@@ -77,14 +75,19 @@ export function UnblockingForm({
                 toast.warning(t("semester"));
                 return;
             }
-            unblocking.handlePostUnblocing(token || "", {
-                    startDate: dateRange.from,
-                    endDate: dateRange.to,
-                    semester: semester,
-                    tahun: year,
-                    userId: userId,
-                }
-            )
+            setIsSubmitting(true);
+            try {
+                await unblocking.handlePostUnblocing(token || "", {
+                        startDate: dateRange.from,
+                        endDate: dateRange.to,
+                        semester: semester,
+                        tahun: year,
+                        userId: userId,
+                    }
+                );
+            } finally {
+                setIsSubmitting(false);
+            }
         }
     }
 
@@ -115,7 +118,7 @@ export function UnblockingForm({
                         </div>
                         <div className="grid gap-2">
 							<Label htmlFor="semester">{t("semester")}</Label>
-							<Select onValueChange={() => handleSemesterChange}>
+							<Select value={semester} onValueChange={setSemester}>
                                 <SelectTrigger id="semester" className="w-full">
                                     <SelectValue placeholder={t("semester")} />
                                 </SelectTrigger>
@@ -127,17 +130,26 @@ export function UnblockingForm({
 						</div>
                         <div className="grid gap-2">
 							<Label htmlFor="year">{t("year")}</Label>
-							<Input
-								id="year"
-								type="number"
-								value={year}
-								onChange={handleYearChange}
-								placeholder="2025"
-								required
-							/>
+						<Input
+							id="year"
+							type="number"
+							value={year}
+							onChange={handleYearChange}
+							placeholder={t("yearPlaceholder")}
+							required
+						/>
 						</div>
                         <div className="flex justify-end w-full gap-2">
-                            <Button type="submit">{t("createBookingWindow")}</Button>
+                            <Button type="submit" disabled={isSubmitting}>
+                                {isSubmitting ? (
+                                    <>
+                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        {t("creating")}
+                                    </>
+                                ) : (
+                                    t("createBookingWindow")
+                                )}
+                            </Button>
                         </div>
                     </div>
                 </form>

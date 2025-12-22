@@ -5,10 +5,11 @@ import ScheduleCard from "./schedule-card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { MergeSchedultType } from "./type";
 import { CalendarDays } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 
 export default function ScheduleWeek({ data }: { data: MergeSchedultType[] }) {
   const t = useTranslations("schedule");
+  const locale = useLocale();
   
   const dayKeys = ["monday", "tuesday", "wednesday", "thursday", "friday"] as const;
   const baseDays = dayKeys.map((key) => ({ key, label: t(key) }));
@@ -50,7 +51,7 @@ export default function ScheduleWeek({ data }: { data: MergeSchedultType[] }) {
                 </div>
 
                 <span className={`text-xs font-medium ${isToday ? "text-emerald-600/80" : "text-slate-400"}`}>
-                  {dayDate.toLocaleString("en-US", {
+                  {dayDate.toLocaleString(locale, {
                     day: "numeric",
                     month: "short",
                     year: "numeric",

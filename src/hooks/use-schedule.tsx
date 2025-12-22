@@ -2,10 +2,29 @@
 
 import { CategoryChartData, MergeSchedultType, ScheduleReguler, ScheduleTicket } from "@/components/type";
 import { useState } from "react";
+import { toast } from "sonner";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://192.168.10.184:8081";
 
-export const useSchedule = (token: string) => {
+interface UseScheduleOptions {
+	locale?: string;
+	translations?: {
+		unableToLoadSchedules?: string;
+		connectionError?: string;
+		unableToLoadRegularSchedules?: string;
+		unableToLoadYourSchedules?: string;
+	};
+}
+
+export const useSchedule = (token: string, options?: UseScheduleOptions) => {
+	const locale = options?.locale || "en";
+	const t = options?.translations || {
+		unableToLoadSchedules: "Unable to load schedules. Please try again.",
+		connectionError: "Connection error. Please check your internet and try again.",
+		unableToLoadRegularSchedules: "Unable to load regular schedules. Please try again.",
+		unableToLoadYourSchedules: "Unable to load your schedules. Please try again.",
+	};
+
 	const [schedules, setSchedules] = useState<MergeSchedultType[]>([]);
 	const [ticketSchedules, setTicketSchedules] = useState<ScheduleTicket[]>([]);
 	const [regulerSchedules, setRegulerSchedules] = useState<ScheduleReguler[]>(
@@ -22,11 +41,9 @@ export const useSchedule = (token: string) => {
 				},
 			});
 
-			console.log("aa")
 			const data = await response.json();
 
 			if (data.success) {
-				console.log("Fetched Ticket Schedules:", data.data);
 				const dataRes: ScheduleTicket[] = data.data;
 				setTicketSchedules(
 					dataRes.map((item: ScheduleTicket) => ({
@@ -46,11 +63,11 @@ export const useSchedule = (token: string) => {
 				return dataRes;
 			} else {
 				console.error("Failed to fetch ticket schedules:", data.message);
+				toast.error(t.unableToLoadSchedules);
 			}
 		} catch (err) {
 			console.error("Fetch ticket schedules error:", err);
-		} finally {
-			console.log("Fetch ticket schedules completed");
+			toast.error(t.connectionError);
 		}
 	};
 
@@ -83,11 +100,11 @@ export const useSchedule = (token: string) => {
 				return data.data;
 			} else {
 				console.error("Failed to fetch reguler schedules:", data.message);
+				toast.error(t.unableToLoadRegularSchedules);
 			}
 		} catch (err) {
 			console.error("Fetch reguler schedules error:", err);
-		} finally {
-			console.log("Fetch reguler schedules completed");
+			toast.error(t.connectionError);
 		}
 	};
 
@@ -118,11 +135,11 @@ export const useSchedule = (token: string) => {
 					})));
 			} else {
 				console.error("Failed to fetch schedules by user ID:", data.message);
+				toast.error(t.unableToLoadYourSchedules);
 			}
 		} catch (err) {
 			console.error("Fetch schedules by user ID error:", err);
-		} finally {
-			console.log("Fetch schedules by user ID completed");
+			toast.error(t.connectionError);
 		}
 	}
 
@@ -136,7 +153,7 @@ export const useSchedule = (token: string) => {
 				startDate: ticketSchedule.startDate,
 				endDate: ticketSchedule.endDate,
 				date: new Date(ticketSchedule.startDate),
-				day: new Date(ticketSchedule.startDate).toLocaleDateString('en-US', { weekday: 'long' }),
+				day: new Date(ticketSchedule.startDate).toLocaleDateString(locale, { weekday: 'long' }),
 				userId: ticketSchedule.userId,
 				kategori: ticketSchedule.kategori,
 				description: ticketSchedule.description,
@@ -156,7 +173,7 @@ export const useSchedule = (token: string) => {
 					startDate: regulerSchedule.startDate,
 					endDate: regulerSchedule.endDate,
 					date: new Date(regulerSchedule.startDate),
-					day: new Date(regulerSchedule.startDate).toLocaleDateString('en-US', { weekday: 'long' }),
+					day: new Date(regulerSchedule.startDate).toLocaleDateString(locale, { weekday: 'long' }),
 					userId: regulerSchedule.userId,
 					kategori: regulerSchedule.kategori,
 					description: regulerSchedule.description,

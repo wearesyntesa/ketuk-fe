@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import {
 	Dialog,
@@ -22,12 +22,13 @@ import {
 import { UserType } from "./type";
 import { useUser } from "@/hooks/use-user";
 import { useTranslations } from "next-intl";
+import { Loader2 } from "lucide-react";
 
 export default function DetailUser({ id }: { id: number }) {
 	const t = useTranslations("users");
 	const tCommon = useTranslations("common");
 	
-	const token = localStorage.getItem("access_token");
+	const [token, setToken] = useState<string | null>(null);
 	const user = useUser();
 	const [userName, setUserName] = useState<string>("");
 	const [userData, setUserData] = useState<UserType>({
@@ -36,6 +37,12 @@ export default function DetailUser({ id }: { id: number }) {
 		email: "",
 		role: "user",
 	});
+	const [isUpdating, setIsUpdating] = useState(false);
+	const [isDeleting, setIsDeleting] = useState(false);
+
+	useEffect(() => {
+		setToken(localStorage.getItem("access_token"));
+	}, []);
 
 	const fetchUser = () => {
 		if (token) {
@@ -46,19 +53,25 @@ export default function DetailUser({ id }: { id: number }) {
 		}
 	};
 
-	const updateUser = () => {
+	const updateUser = async () => {
 		if (token) {
-			user.handleUpdateUser(token, userData, id).then(() => {
-				console.log("User updated");
-			});
+			setIsUpdating(true);
+			try {
+				await user.handleUpdateUser(token, userData, id);
+			} finally {
+				setIsUpdating(false);
+			}
 		}
 	};
 
-	const deleteUser = () => {
+	const deleteUser = async () => {
 		if (token) {
-			user.handleDeleteUser(token, id).then(() => {
-				console.log("User deleted");
-			});
+			setIsDeleting(true);
+			try {
+				await user.handleDeleteUser(token, id);
+			} finally {
+				setIsDeleting(false);
+			}
 		}
 	};
 
@@ -111,13 +124,21 @@ export default function DetailUser({ id }: { id: number }) {
 						</div>
 					</div>
 					<div className="grid grid-cols-2 gap-4 w-full justify-end">
-						<DialogClose className="border rounded-mb mr-2">{tCommon("cancel")}</DialogClose>
+						<DialogClose className="border rounded-mb mr-2" disabled={isUpdating}>{tCommon("cancel")}</DialogClose>
 						<Button
+							disabled={isUpdating}
 							onClick={(e) => {
 								e.preventDefault();
 								updateUser();
 							}}>
-							{t("saveChanges")}
+							{isUpdating ? (
+								<>
+									<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+									{tCommon("processing")}
+								</>
+							) : (
+								t("saveChanges")
+							)}
 						</Button>
 					</div>
 				</DialogContent>
@@ -133,11 +154,18 @@ export default function DetailUser({ id }: { id: number }) {
 							{t("confirmDeleteUser")}
 						</DialogDescription>
 						<div className="flex gap-2">
-							<DialogClose className="flex-1 p-1 border rounded-md">
+							<DialogClose className="flex-1 p-1 border rounded-md" disabled={isDeleting}>
 								{tCommon("cancel")}
 							</DialogClose>
-							<Button onClick={() => deleteUser()} className="flex-1">
-								{tCommon("confirm")}
+							<Button onClick={() => deleteUser()} className="flex-1" disabled={isDeleting}>
+								{isDeleting ? (
+									<>
+										<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+										{tCommon("processing")}
+									</>
+								) : (
+									tCommon("confirm")
+								)}
 							</Button>
 						</div>
 					</DialogHeader>

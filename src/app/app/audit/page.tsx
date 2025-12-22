@@ -1,7 +1,6 @@
 'use client';
 
 import { AuditLog } from "@/components/type";
-import { auditTableColumns } from "@/components/table-audit-logs";
 import { useAudit } from "@/hooks/use-audit";
 import { useUser } from "@/hooks/use-user";
 import { useEffect } from "react";
@@ -12,11 +11,13 @@ import {
 	Clock,
 	BadgeCheck
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export default function AuditPage() {
 	const user = useUser();
 	const token = localStorage.getItem("access_token");
 	const audit = useAudit(token || "");
+	const t = useTranslations("audit");
 
 	useEffect(() => {
 		if (token) {
@@ -36,10 +37,10 @@ export default function AuditPage() {
 							</div>
 							<div>
 								<h2 className="text-2xl font-bold text-slate-900 tracking-tight">
-									Audit Logs
+									{t("title")}
 								</h2>
 								<p className="text-slate-500 text-sm">
-									Track system activities and changes across the platform.
+									{t("trackActivities")}
 								</p>
 							</div>
 						</div>
@@ -51,7 +52,7 @@ export default function AuditPage() {
 							<div className="flex items-center justify-between">
 								<div>
 									<p className="text-xs font-medium text-slate-500 uppercase tracking-wider">
-										Total Events
+										{t("totalEvents")}
 									</p>
 									<p className="text-2xl font-bold text-slate-900 mt-1">
 										{audit.allAuditLogs?.length || 0}
@@ -67,7 +68,7 @@ export default function AuditPage() {
 							<div className="flex items-center justify-between">
 								<div>
 									<p className="text-xs font-medium text-slate-500 uppercase tracking-wider">
-										Created Events
+										{t("createdEvents")}
 									</p>
 									<p className="text-2xl font-bold text-slate-900 mt-1">
 										{audit.allAuditLogs?.filter(log => log.action === "created").length || 0}
@@ -83,7 +84,7 @@ export default function AuditPage() {
 							<div className="flex items-center justify-between">
 								<div>
 									<p className="text-xs font-medium text-slate-500 uppercase tracking-wider">
-										Status Changes
+										{t("statusChanges")}
 									</p>
 									<p className="text-2xl font-bold text-slate-900 mt-1">
 										{audit.allAuditLogs?.filter(log => log.action === "status_changed").length || 0}
@@ -99,7 +100,7 @@ export default function AuditPage() {
 							<div className="flex items-center justify-between">
 								<div>
 									<p className="text-xs font-medium text-slate-500 uppercase tracking-wider">
-										Today's Activity
+										{t("todaysActivity")}
 									</p>
 									<p className="text-2xl font-bold text-slate-900 mt-1">
 										{audit.allAuditLogs?.filter(log => {
@@ -119,9 +120,9 @@ export default function AuditPage() {
 					{/* Audit Logs Table */}
 					<div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
 						<div className="p-4 border-b border-slate-200">
-							<h3 className="text-lg font-semibold text-slate-900">Recent Activity</h3>
+							<h3 className="text-lg font-semibold text-slate-900">{t("recentActivity")}</h3>
 							<p className="text-sm text-slate-500 mt-1">
-								Latest system events and modifications
+								{t("latestSystemEvents")}
 							</p>
 						</div>
 						
@@ -134,9 +135,9 @@ export default function AuditPage() {
 						) : (
 							<div className="flex flex-col items-center justify-center py-12 text-center">
 								<Activity className="w-12 h-12 text-slate-300 mb-3" />
-								<h3 className="text-lg font-medium text-slate-900 mb-1">No audit logs found</h3>
+								<h3 className="text-lg font-medium text-slate-900 mb-1">{t("noLogsFound")}</h3>
 								<p className="text-sm text-slate-500">
-									System activities and changes will appear here once they occur.
+									{t("activitiesWillAppear")}
 								</p>
 							</div>
 						)}
@@ -149,54 +150,56 @@ export default function AuditPage() {
 
 // Individual audit log row component
 function AuditLogRow({ log }: { log: AuditLog }) {
+	const t = useTranslations("audit");
+	
 	const getActionConfig = (action: AuditLog['action']) => {
-		const configs: Record<AuditLog['action'], { icon: React.ReactElement; color: string; label: string }> = {
+		const configs: Record<AuditLog['action'], { icon: React.ReactElement; color: string; labelKey: string }> = {
 			created: {
 				icon: <FileText className="w-4 h-4" />,
 				color: "bg-emerald-50 text-emerald-700 border-emerald-100",
-				label: "Created"
+				labelKey: "created"
 			},
 			updated: {
 				icon: <Activity className="w-4 h-4" />,
 				color: "bg-blue-50 text-blue-700 border-blue-100", 
-				label: "Updated"
+				labelKey: "updated"
 			},
 			status_changed: {
 				icon: <Activity className="w-4 h-4" />,
 				color: "bg-amber-50 text-amber-700 border-amber-100",
-				label: "Status Changed"
+				labelKey: "statusChanged"
 			},
 			deleted: {
 				icon: <Activity className="w-4 h-4" />,
 				color: "bg-red-50 text-red-700 border-red-100",
-				label: "Deleted"
+				labelKey: "deleted"
 			},
 			assigned: {
 				icon: <Activity className="w-4 h-4" />,
 				color: "bg-purple-50 text-purple-700 border-purple-100",
-				label: "Assigned"
+				labelKey: "assigned"
 			},
 			commented: {
 				icon: <Activity className="w-4 h-4" />,
 				color: "bg-slate-50 text-slate-700 border-slate-100",
-				label: "Commented"
+				labelKey: "commented"
 			},
 			approved: {
 				icon: <BadgeCheck className="w-4 h-4" />,
 				color: "bg-green-50 text-green-700 border-green-100",
-				label: "Approved"
+				labelKey: "approved"
 			},
 			rejected: {
 				icon: <Activity className="w-4 h-4" />,
 				color: "bg-rose-50 text-rose-700 border-rose-100",
-				label: "Rejected"
+				labelKey: "rejected"
 			}
 		};
 		
 		return configs[action] || {
 			icon: <Activity className="w-4 h-4" />,
 			color: "bg-gray-50 text-gray-700 border-gray-100",
-			label: action
+			labelKey: action
 		};
 	};
 
@@ -213,17 +216,17 @@ function AuditLogRow({ log }: { log: AuditLog }) {
 					
 					<div className="flex-1 min-w-0">
 						<div className="flex items-center gap-2 mb-1">
-							<span className="font-medium text-slate-900">{config.label}</span>
+							<span className="font-medium text-slate-900">{t(config.labelKey)}</span>
 							
 							{log.ticket && (
 								<span className="text-sm text-slate-600">
-									Ticket #{log.ticket.id}
+									{t("ticket")} #{log.ticket.id}
 								</span>
 							)}
 							
 							{log.user && (
 								<span className="text-sm text-slate-600">
-									by {log.user.name}
+									{t("by")} {log.user.name}
 								</span>
 							)}
 						</div>
@@ -234,7 +237,7 @@ function AuditLogRow({ log }: { log: AuditLog }) {
 						
 						{log.changes && (
 							<div className="text-xs text-slate-500 bg-slate-50 rounded p-2 mt-2">
-								Changes: {log.changes}
+								{t("changesLabel")}: {log.changes}
 							</div>
 						)}
 						

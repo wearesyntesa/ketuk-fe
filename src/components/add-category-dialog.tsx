@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./ui/dialog";
+import { Dialog, DialogClose, DialogContent, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { useCategories } from "@/hooks/use-categories";
 import { useTranslations } from "next-intl";
+import { Loader2 } from "lucide-react";
 
 export default function AddCategoryDialog() {
 	const t = useTranslations("inventory");
@@ -16,9 +17,24 @@ export default function AddCategoryDialog() {
 		name: "",
 		specification: "",
 	});
-	const token = localStorage.getItem("access_token") || "";
+	const [token, setToken] = useState("");
+	const [isSubmitting, setIsSubmitting] = useState(false);
+
+	useEffect(() => {
+		setToken(localStorage.getItem("access_token") || "");
+	}, []);
 
 	const categories = useCategories();
+
+	const handleSubmit = async (e: React.FormEvent) => {
+		e.preventDefault();
+		setIsSubmitting(true);
+		try {
+			await categories.handlePostCategory(token, categoryData);
+		} finally {
+			setIsSubmitting(false);
+		}
+	};
 
 	return (
 		<>
@@ -28,11 +44,7 @@ export default function AddCategoryDialog() {
 				</DialogTrigger>
 				<DialogContent>
 					<DialogTitle>{t("addCategory")}</DialogTitle>
-					<form
-						onSubmit={(e) => {
-							e.preventDefault();
-							categories.handlePostCategory(token, categoryData);
-						}}>
+					<form onSubmit={handleSubmit}>
 						<div className="flex flex-col gap-6">
 							<div className="grid gap-2">
 								<Label htmlFor="item-name">{t("categoryName")}</Label>
@@ -52,7 +64,7 @@ export default function AddCategoryDialog() {
 								<Input
 									id="specification"
 									type="text"
-									placeholder="Azko"
+									placeholder={t("specificationPlaceholder")}
 									value={categoryData.specification}
 									onChange={(e) =>
 										setCategoryData({
@@ -65,8 +77,19 @@ export default function AddCategoryDialog() {
 							</div>
 
 							<div className="w-full gap-4 grid grid-cols-2">
-								<Button variant={"secondary"}>{tCommon("cancel")}</Button>
-								<Button>{tCommon("submit")}</Button>
+								<DialogClose asChild>
+									<Button variant={"secondary"} type="button" disabled={isSubmitting}>{tCommon("cancel")}</Button>
+								</DialogClose>
+								<Button type="submit" disabled={isSubmitting}>
+									{isSubmitting ? (
+										<>
+											<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+											{tCommon("processing")}
+										</>
+									) : (
+										tCommon("submit")
+									)}
+								</Button>
 							</div>
 						</div>
 					</form>

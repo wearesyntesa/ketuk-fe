@@ -115,14 +115,14 @@ export default function AuditTicketsByTicketTable<TData, TValue>({
                                         <TableHead
                                             key={header.id}
                                             className={`px-4 ${
-                                                header.column.columnDef.header === "Action"
+                                                header.column.id === "action"
                                                     ? "text-center"
                                                     : ""
                                             }
                                             ${
-                                                header.column.columnDef.header === "Old Value" ||
-                                                header.column.columnDef.header === "New Value" ||
-                                                header.column.columnDef.header === "Changes"
+                                                header.column.id === "oldValue" ||
+                                                header.column.id === "newValue" ||
+                                                header.column.id === "changes"
                                                     ? "max-w-32"
                                                     : ""
                                             }
@@ -146,17 +146,17 @@ export default function AuditTicketsByTicketTable<TData, TValue>({
                                     key={row.id}
                                     className={`hover:bg-muted/50`}
                                     data-state={row.getIsSelected() && "selected"}>
-                                    {row.getVisibleCells().map((cell) => (
+                                        {row.getVisibleCells().map((cell) => (
                                         <TableCell
                                             key={cell.id}
                                             className={`px-4 ${
-                                                cell.column.columnDef.header === "Actions" &&
+                                                cell.column.id === "action" &&
                                                 "text-center"
                                             }
                                             ${
-                                                cell.column.columnDef.header === "Old Value" ||
-                                                cell.column.columnDef.header === "New Value" ||
-                                                cell.column.columnDef.header === "Changes"
+                                                cell.column.id === "oldValue" ||
+                                                cell.column.id === "newValue" ||
+                                                cell.column.id === "changes"
                                                     ? "max-w-32 overflow-clip"
                                                     : ""
                                             }

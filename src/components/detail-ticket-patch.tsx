@@ -18,7 +18,7 @@ import { MergeSchedultType, PatchTicketStatus, UserType } from "./type";
 import { useTickets } from "@/hooks/use-tickets";
 import { useSchedule } from "@/hooks/use-schedule";
 import { Check, X, AlertCircle } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 
 interface DetailItemProps {
   id: number;
@@ -40,6 +40,8 @@ interface TicketData {
 export default function DetailTicketPatch({ id, startTime, endTime, date }: DetailItemProps) {
   const t = useTranslations("tickets");
   const tCommon = useTranslations("common");
+  const tErrors = useTranslations("errors");
+  const locale = useLocale();
   
   const [ticketData, setTicketData] = useState<TicketData>({
     id: 0,
@@ -51,15 +53,29 @@ export default function DetailTicketPatch({ id, startTime, endTime, date }: Deta
     user: { id: 0, name: "", email: "", role: "" },
   });
 
-  const token = localStorage.getItem("access_token") || "";
-  const schedules = useSchedule(token);
+  const [token, setToken] = useState("");
+  const schedules = useSchedule(token, {
+    locale,
+    translations: {
+      unableToLoadSchedules: tErrors("connectionError"),
+      connectionError: tErrors("connectionError"),
+      unableToLoadRegularSchedules: tErrors("connectionError"),
+      unableToLoadYourSchedules: tErrors("connectionError"),
+    }
+  });
   const mergeAcceptedSchedules: MergeSchedultType[] = [];
   const tickets = useTickets();
 
   useEffect(() => {
-    schedules.handleGetAllRegulerSchedules();
-    schedules.handleGetAllTicketSchedules();
+    setToken(localStorage.getItem("access_token") || "");
   }, []);
+
+  useEffect(() => {
+    if (token) {
+      schedules.handleGetAllRegulerSchedules();
+      schedules.handleGetAllTicketSchedules();
+    }
+  }, [token]);
 
   schedules
     .handleGetAllAcceptedSchedules(schedules.ticketSchedules, schedules.regulerSchedules)

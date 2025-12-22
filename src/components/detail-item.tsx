@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { ItemDialogProps } from "./type";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { Loader2 } from "lucide-react";
 
 interface DetailItemProps {
 	itemId: number;
@@ -26,34 +27,47 @@ export default function DetailItem({ itemId }: DetailItemProps) {
 		note: "",
 		condition: "Good",
 	});
-	const token = localStorage.getItem("access_token") || "";
+	const [token, setToken] = useState("");
+	const [isUpdating, setIsUpdating] = useState(false);
+	const [isDeleting, setIsDeleting] = useState(false);
 
 	const items = useItems();
 
 	useEffect(() => {
-		items.handleGetItem(token, itemId).then((data) => {
-			setCategoryData({
-				categoryId: data.category_id,
-				name: data.name,
-				note: data.note,
-				condition: data.kondisi,
+		const storedToken = localStorage.getItem("access_token") || "";
+		setToken(storedToken);
+		
+		if (storedToken) {
+			items.handleGetItem(storedToken, itemId).then((data) => {
+				setCategoryData({
+					categoryId: data.category_id,
+					name: data.name,
+					note: data.note,
+					condition: data.kondisi,
+				});
 			});
-		});
-	}, []);
+		}
+	}, [itemId]);
 
-	const updateItem = () => {
+	const updateItem = async () => {
 		if (token) {
-			items.handleUpdateItem(token, categoryData, itemId).then(() => {
-				console.log("Item updated");
-			});
+			setIsUpdating(true);
+			try {
+				await items.handleUpdateItem(token, categoryData, itemId);
+			} finally {
+				setIsUpdating(false);
+			}
 		}
 	};
 
-	const deleteItem = () => {
+	const deleteItem = async () => {
 		if (token) {
-			items.handleDeleteItem(token, itemId).then(() => {
-				console.log("Item deleted");
-			});
+			setIsDeleting(true);
+			try {
+				await items.handleDeleteItem(token, itemId);
+			} finally {
+				setIsDeleting(false);
+			}
 		}
 	};
 
@@ -76,7 +90,7 @@ export default function DetailItem({ itemId }: DetailItemProps) {
 					<DialogDescription>
 						{t("editItemDescription")}
 					</DialogDescription>
-					<form onSubmit={updateItem}>
+					<form onSubmit={(e) => { e.preventDefault(); updateItem(); }}>
 						<div className="flex flex-col gap-6">
 							<div className="grid gap-2">
 								<Label htmlFor="item-name">{t("itemName")}</Label>
@@ -95,7 +109,7 @@ export default function DetailItem({ itemId }: DetailItemProps) {
 								<Label htmlFor="specification">{t("specification")}</Label>
 								<Textarea
 									id="specification"
-									placeholder="Azko"
+									placeholder={t("specificationPlaceholder")}
 									value={categoryData.note}
 									onChange={(e) =>
 										setCategoryData({
@@ -125,8 +139,17 @@ export default function DetailItem({ itemId }: DetailItemProps) {
 							</Select>
 
 							<div className="w-full gap-4 grid grid-cols-2">
-								<DialogClose className="border rounded-mb">{tCommon("cancel")}</DialogClose>
-								<Button>{tCommon("submit")}</Button>
+								<DialogClose className="border rounded-mb" disabled={isUpdating}>{tCommon("cancel")}</DialogClose>
+								<Button type="submit" disabled={isUpdating}>
+									{isUpdating ? (
+										<>
+											<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+											{tCommon("processing")}
+										</>
+									) : (
+										tCommon("submit")
+									)}
+								</Button>
 							</div>
 						</div>
 					</form>
@@ -145,11 +168,18 @@ export default function DetailItem({ itemId }: DetailItemProps) {
 							{t("confirmDeleteItem")}
 						</DialogDescription>
 						<div className="flex gap-2">
-							<DialogClose className="flex-1 p-1 border rounded-md">
+							<DialogClose className="flex-1 p-1 border rounded-md" disabled={isDeleting}>
 								{tCommon("cancel")}
 							</DialogClose>
-							<Button onClick={() => deleteItem()} className="flex-1">
-								{tCommon("confirm")}
+							<Button onClick={() => deleteItem()} className="flex-1" disabled={isDeleting}>
+								{isDeleting ? (
+									<>
+										<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+										{tCommon("processing")}
+									</>
+								) : (
+									tCommon("confirm")
+								)}
 							</Button>
 						</div>
 					</DialogHeader>

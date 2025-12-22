@@ -137,10 +137,10 @@ export default function Footer() {
                 </Link>
               </li>
               <li className="pt-4 text-xs text-slate-400 leading-relaxed">
-                Universitas Negeri Surabaya
+                {t("universityName")}
                 <br />
-                A10 Building, Room 3 & 4<br />
-                Surabaya, Indonesia
+                {t("buildingAddress")}<br />
+                {t("cityCountry")}
               </li>
             </ul>
           </div>

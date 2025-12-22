@@ -26,7 +26,7 @@ import {
   FileText,
   Type,
 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 
 const generateTimeSlots = () => {
   const slots = [];
@@ -49,10 +49,20 @@ function CleanCard({ children, className }: { children: React.ReactNode; classNa
 
 export function RequestForm({ className, border = true }: { className?: string; border?: boolean }) {
   const t = useTranslations("requests");
+  const tErrors = useTranslations("errors");
+  const locale = useLocale();
   const user = useUser();
   const tickets = useTickets();
   const [token, setToken] = useState("");
-  const schedules = useSchedule(token);
+  const schedules = useSchedule(token, {
+    locale,
+    translations: {
+      unableToLoadSchedules: tErrors("connectionError"),
+      connectionError: tErrors("connectionError"),
+      unableToLoadRegularSchedules: tErrors("connectionError"),
+      unableToLoadYourSchedules: tErrors("connectionError"),
+    }
+  });
   const mergedSchedules: MergeSchedultType[] = [];
   const [loading, setLoading] = useState(false);
 
@@ -127,7 +137,7 @@ export function RequestForm({ className, border = true }: { className?: string; 
     }
   };
 
-  const postTicket = () => {
+  const postTicket = async () => {
     setLoading(true);
     // Safe date parsing with luxon
     let startDate = new Date();
@@ -173,11 +183,16 @@ export function RequestForm({ className, border = true }: { className?: string; 
         return;
       }
     }
-    tickets.handlePostTicket(ticketData, token);
-    setTimeout(() => {
+    
+    try {
+      await tickets.handlePostTicket(ticketData, token);
+      // Note: handlePostTicket already shows success toast and redirects
+    } catch (error) {
+      // Error toast is already shown by handlePostTicket
+      console.error("Failed to submit ticket:", error);
+    } finally {
       setLoading(false);
-      toast.success(t("requestSubmitted"));
-    }, 1000);
+    }
   };
 
   if (loading) {
@@ -346,6 +361,7 @@ export function RequestRegulerForm({ className, border = true }: { className?: s
   const user = useUser();
   const [token, setToken] = useState("");
   const reguler = useReguler(token);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     setToken(localStorage.getItem("access_token") || "");
@@ -356,36 +372,74 @@ export function RequestRegulerForm({ className, border = true }: { className?: s
   const [endTime, setEndTime] = useState("");
   const [date, setDate] = useState<Date | undefined>(undefined);
 
-  // Safe date parsing with luxon for regular schedule
-    let startDate = new Date();
-    let endDate = new Date();
-    
-    if (date && startTime && endTime) {
+	const handleSubmit = async () => {
+		// Form validation
+		if (!eventName.trim()) {
+			toast.error(t("eventNameRequired"));
+			return;
+		}
+		if (!date) {
+			toast.error(t("dateRequired"));
+			return;
+		}
+		if (!startTime || !endTime) {
+			toast.error(t("timeRequired"));
+			return;
+		}
+		if (!user.user?.id) {
+			toast.error(t("userNotAuthenticated"));
+			return;
+		}
+		if (startTime >= endTime) {
+			toast.error(t("endTimeMustBeLater"));
+			return;
+		}
+
+    setIsSubmitting(true);
+
+    try {
+      // Build dates inside handleSubmit to ensure we have current state values
       const [startHours, startMinutes] = startTime.split(':').map(Number);
       const [endHours, endMinutes] = endTime.split(':').map(Number);
       
-      startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), startHours, startMinutes);
-      endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), endHours, endMinutes);
+      const startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), startHours, startMinutes);
+      const endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), endHours, endMinutes);
+
+      // Build 16 weekly requests
+      const arrRequest = Array.from({ length: 16 }, (_, i) => ({
+        title: eventName,
+        userId: user.user!.id,
+        startDate: new Date(startDate.getTime() + i * 7 * 24 * 60 * 60 * 1000),
+        endDate: new Date(endDate.getTime() + i * 7 * 24 * 60 * 60 * 1000),
+      }));
+
+      let successCount = 0;
+      let failCount = 0;
+
+      for (const req of arrRequest) {
+        const result = await reguler.handlePostReguler(req);
+        if (result) {
+          successCount++;
+        } else {
+          failCount++;
+        }
+      }
+
+		if (failCount === 0) {
+			toast.success(t("semesterScheduleCreated"));
+			// Navigate after all requests complete successfully
+			window.location.href = '/app/your-requests';
+		} else if (successCount > 0) {
+			toast.warning(`${t("partialSuccess")}: ${successCount} ${t("created")}, ${failCount} ${t("failed")}`);
+		} else {
+			toast.error(t("failedToCreateSchedules"));
+		}
+	} catch (error) {
+		console.error("Error creating schedules:", error);
+		toast.error(t("errorCreatingSchedules"));
+    } finally {
+      setIsSubmitting(false);
     }
-
-    const ticketData: ScheduleRegulerDataTicket = {
-      title: eventName,
-      userId: user.user?.id || 0,
-      startDate,
-      endDate,
-  };
-
-  const arrRequest = Array.from({ length: 16 }, (_, i) => ({
-    ...ticketData,
-    startDate: new Date(ticketData.startDate.getTime() + i * 7 * 24 * 60 * 60 * 1000),
-    endDate: new Date(ticketData.endDate.getTime() + i * 7 * 24 * 60 * 60 * 1000),
-  }));
-
-  const handleSubmit = async () => {
-    for (const t of arrRequest) {
-      await reguler.handlePostReguler(t);
-    }
-    toast.success(t("semesterScheduleCreated"));
   };
 
   return (
@@ -478,9 +532,17 @@ export function RequestRegulerForm({ className, border = true }: { className?: s
             <Button
               type="submit"
               size="lg"
-              className="bg-slate-900 hover:bg-slate-800 text-white font-semibold shadow-lg px-8 rounded-xl"
+              disabled={isSubmitting}
+              className="bg-slate-900 hover:bg-slate-800 text-white font-semibold shadow-lg px-8 rounded-xl disabled:opacity-50"
             >
-              {t("createWeeklySchedule")}
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  {t("creatingSchedules")}
+                </>
+              ) : (
+                t("createWeeklySchedule")
+              )}
             </Button>
           </div>
         </form>

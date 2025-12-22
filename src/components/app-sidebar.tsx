@@ -14,8 +14,11 @@ import React from "react";
 import NavMain from "./nav-main";
 import NavFooter from "./nav-footer";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 export function AppSidebar({ role, ...props }: { role: string } & React.ComponentProps<typeof Sidebar>) {
+  const tCommon = useTranslations("common");
+  
   return (
     <Sidebar
       collapsible="offcanvas"
@@ -34,7 +37,7 @@ export function AppSidebar({ role, ...props }: { role: string } & React.Componen
 
                 <div className="flex flex-col text-left leading-tight">
                   <span className="font-bold text-slate-900 text-[15px]">Ketuk</span>
-                  <span className="text-[10px] font-medium text-slate-500 uppercase tracking-wider">By Syntesa</span>
+                  <span className="text-[10px] font-medium text-slate-500 uppercase tracking-wider">{tCommon("tagline")}</span>
                 </div>
               </Link>
             </SidebarMenuButton>

@@ -112,7 +112,7 @@ export default function LandingHero(isLogin: { isLogin: boolean }) {
               <div className="flex justify-between items-center mb-8">
                 <div>
                   <h3 className="text-xl font-bold text-slate-900 tracking-tight">{t("labSchedule")}</h3>
-                  <p className="text-sm text-slate-500">Computer Science A10</p>
+                  <p className="text-sm text-slate-500">{t("demoLabName")}</p>
                 </div>
                 <div className="p-2 bg-slate-50 rounded-md border border-slate-100">
                   <Calendar className="w-5 h-5 text-slate-400" />
@@ -125,7 +125,7 @@ export default function LandingHero(isLogin: { isLogin: boolean }) {
                   <div className="flex-1 p-3 bg-blue-50/50 border border-blue-100 rounded-lg group-hover:border-blue-200 transition-colors">
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 rounded-full bg-blue-500" />
-                      <span className="text-sm font-medium text-slate-900">Embedded Systems</span>
+                      <span className="text-sm font-medium text-slate-900">{t("demoClassName")}</span>
                     </div>
                   </div>
                 </div>

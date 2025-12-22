@@ -4,10 +4,11 @@ import { useEffect, useState, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { useUser } from "@/hooks/use-user";
 import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 
 export default function BannerDashboard() {
   const t = useTranslations("bannerDashboard");
+  const locale = useLocale();
   const [time, setTime] = useState("");
   const [mounted, setMounted] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -64,10 +65,10 @@ export default function BannerDashboard() {
   useEffect(() => {
     setMounted(true);
     const interval = setInterval(() => {
-      setTime(new Date().toLocaleTimeString("en-ID", { hour: "2-digit", minute: "2-digit", hour12: false }));
+      setTime(new Date().toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit", hour12: false }));
     }, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [locale]);
 
   if (!mounted) return <div className="w-full h-64 bg-muted/20 animate-pulse rounded-[32px]" />;
 
@@ -117,7 +118,7 @@ export default function BannerDashboard() {
             <div className="flex flex-col space-y-1">
               <span className="text-xs font-bold uppercase tracking-widest text-white/60">{t("today")}</span>
               <span className="text-xl font-medium tracking-tight drop-shadow-sm">
-                {date.toLocaleDateString("en-ID", options)}
+                {date.toLocaleDateString(locale, options)}
               </span>
             </div>
 

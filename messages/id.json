@@ -31,7 +31,12 @@
     "noResults": "Tidak ada hasil",
     "tryAgain": "Coba lagi",
     "success": "Berhasil",
-    "failed": "Gagal"
+    "failed": "Gagal",
+    "processing": "Memproses...",
+    "toggleSidebar": "Beralih Sidebar",
+    "returnHome": "Kembali ke Beranda",
+    "sidebar": "Sidebar",
+    "mobileMenuDescription": "Menampilkan sidebar mobile."
   },
   "nav": {
     "overview": "Ringkasan",
@@ -50,7 +55,17 @@
     "welcomeBack": "Selamat Datang Kembali",
     "loginDescription": "Masuk ke akun Anda untuk melanjutkan",
     "loggingIn": "Sedang masuk...",
-    "signedOutSuccess": "Berhasil keluar"
+    "signedOutSuccess": "Berhasil keluar",
+    "termsAgreement": "Dengan mengklik lanjutkan, Anda menyetujui",
+    "termsOfService": "Ketentuan Layanan",
+    "privacyPolicy": "Kebijakan Privasi",
+    "and": "dan",
+    "authenticationFailed": "Autentikasi Gagal",
+    "redirectingToLogin": "Mengalihkan ke halaman login...",
+    "completingLogin": "Menyelesaikan login...",
+    "authenticatingAccount": "Mohon tunggu sementara kami mengautentikasi akun Anda.",
+    "noAuthorizationCode": "Tidak ada kode otorisasi yang diterima",
+    "loginBannerAlt": "Gambar banner login"
   },
   "dashboard": {
     "title": "Ringkasan",
@@ -64,7 +79,24 @@
     "noDataAvailable": "Grafik ini akan menampilkan distribusi pengajuan berdasarkan tipe setelah data tersedia.",
     "labSession": "Praktikum",
     "class": "Kelas",
-    "thesis": "Skripsi"
+    "thesis": "Skripsi",
+    "requestVolume": "Volume Pengajuan",
+    "dailyTrafficDescription": "Traffic harian selama 30 hari terakhir",
+    "categories": "Kategori",
+    "distributionByType": "Distribusi berdasarkan tipe",
+    "total": "Total",
+    "totalRevenue": "Total Pendapatan",
+    "trendingUpThisMonth": "Tren naik bulan ini",
+    "visitorsLast6Months": "Pengunjung 6 bulan terakhir",
+    "newCustomers": "Pelanggan Baru",
+    "downThisPeriod": "Turun 20% periode ini",
+    "acquisitionNeedsAttention": "Akuisisi perlu perhatian",
+    "activeAccounts": "Akun Aktif",
+    "strongUserRetention": "Retensi pengguna kuat",
+    "engagementExceedTargets": "Engagement melebihi target",
+    "growthRate": "Tingkat Pertumbuhan",
+    "steadyPerformanceIncrease": "Peningkatan performa stabil",
+    "meetsGrowthProjections": "Memenuhi proyeksi pertumbuhan"
   },
   "requests": {
     "title": "Pengajuan",
@@ -134,7 +166,30 @@
     "semesterScheduleCreated": "Jadwal semester berhasil dibuat!",
     "regularClassPlaceholder": "cth. Kelas Reguler 4A",
     "requestScheduleButton": "Ajukan Jadwal +",
-    "checkRegularSchedule": "Centang jika ingin mengajukan jadwal reguler"
+    "checkRegularSchedule": "Centang jika ingin mengajukan jadwal reguler",
+    "eventNameRequired": "Silakan masukkan nama acara",
+    "dateRequired": "Silakan pilih tanggal mulai",
+    "timeRequired": "Silakan pilih waktu mulai dan selesai",
+    "userNotAuthenticated": "Pengguna tidak terautentikasi. Silakan masuk kembali.",
+    "partialSuccess": "Sebagian berhasil",
+    "created": "dibuat",
+    "failed": "gagal",
+    "failedToCreateSchedules": "Gagal membuat jadwal",
+    "errorCreatingSchedules": "Terjadi kesalahan saat membuat jadwal",
+    "creatingSchedules": "Membuat jadwal...",
+    "requestSchedule": "Ajukan Jadwal",
+    "bookLabSlot": "Pesan slot laboratorium untuk kelas atau penelitian Anda.",
+    "regularMode": "Mode Reguler",
+    "eventTitle": "Judul Acara",
+    "dateTime": "Tanggal & Waktu",
+    "requester": "Pemohon",
+    "status": "Status",
+    "regular": "Reguler",
+    "noActions": "Tidak ada aksi",
+    "myHistory": "Riwayat Saya",
+    "manageDescription": "Kelola permintaan reservasi laboratorium yang masuk.",
+    "trackDescription": "Lacak status reservasi Anda sebelumnya.",
+    "accepted": "Diterima"
   },
   "schedule": {
     "title": "Jadwal",
@@ -221,7 +276,10 @@
     "update": "Ubah",
     "delete": "Hapus",
     "detailInfoItem": "Informasi detail tentang barang dapat ditampilkan di sini.",
-    "category": "Kategori"
+    "category": "Kategori",
+    "specificationPlaceholder": "Masukkan detail spesifikasi...",
+    "yearPlaceholder": "2025",
+    "itemNamePlaceholder": "Lemari"
   },
   "users": {
     "title": "Manajemen Pengguna",
@@ -253,9 +311,14 @@
     "notifications": "Notifikasi",
     "detail": "Detail",
     "id": "ID",
-    "role": "Role"
+    "role": "Role",
+    "name": "Nama",
+    "email": "Email",
+    "joinDate": "Bergabung",
+    "action": "Aksi"
   },
   "bookingWindow": {
+    "id": "ID",
     "title": "Periode Pemesanan",
     "newBookingWindow": "Periode Pemesanan Baru",
     "description": "Atur kapan mahasiswa dapat memesan jadwal lab untuk semester ini.",
@@ -267,6 +330,7 @@
     "startDate": "Tanggal Mulai",
     "endDate": "Tanggal Selesai",
     "createBookingWindow": "Buat Periode Pemesanan",
+    "creating": "Membuat...",
     "active": "Aktif",
     "inactive": "Tidak Aktif",
     "expired": "Berakhir",
@@ -279,9 +343,11 @@
     "selectDates": "Pilih tanggal mulai dan selesai",
     "searchBookingWindows": "Cari periode pemesanan...",
     "detail": "Detail",
-    "detailDescription": "Informasi detail tentang item dapat ditampilkan di sini."
+    "detailDescription": "Informasi detail tentang item dapat ditampilkan di sini.",
+    "yearPlaceholder": "2025"
   },
   "audit": {
+    "id": "ID",
     "title": "Log Aktivitas",
     "allLogs": "Semua Log",
     "userLogs": "Log Pengguna",
@@ -315,7 +381,18 @@
     "auditLogTicketsBy": "Log Audit Tiket oleh",
     "auditLogByTicketId": "Log Audit berdasarkan Tiket dengan id",
     "detailLogAuditTicketByUser": "Informasi detail log audit tiket berdasarkan pengguna.",
-    "detailLogAuditTicketById": "Informasi detail log audit tiket berdasarkan ID tiket"
+    "detailLogAuditTicketById": "Informasi detail log audit tiket berdasarkan ID tiket",
+    "trackActivities": "Lacak aktivitas dan perubahan sistem di seluruh platform.",
+    "totalEvents": "Total Event",
+    "createdEvents": "Event Dibuat",
+    "statusChanges": "Perubahan Status",
+    "todaysActivity": "Aktivitas Hari Ini",
+    "recentActivity": "Aktivitas Terbaru",
+    "latestSystemEvents": "Event dan modifikasi sistem terbaru",
+    "activitiesWillAppear": "Aktivitas dan perubahan sistem akan muncul di sini setelah terjadi.",
+    "ticket": "Tiket",
+    "by": "oleh",
+    "changesLabel": "Perubahan"
   },
   "form": {
     "required": "Wajib diisi",
@@ -363,7 +440,20 @@
     "itemsLeft": "barang tersisa",
     "adminAccess": "Akses Admin",
     "login": "Masuk",
-    "dashboard": "Dashboard"
+    "dashboard": "Dashboard",
+    "whyNeedIt": "Mengapa Anda membutuhkannya?",
+    "everythingYouNeed": "Semua yang Anda butuhkan untuk menjalankan lab modern.",
+    "stopUsingSpreadsheets": "Berhenti menggunakan spreadsheet. Dapatkan rangkaian alat yang dirancang khusus untuk penjadwalan akademik.",
+    "orchestrateSemester": "Atur semester Anda",
+    "reserveLabTimes": "Pesan jadwal lab, atur shift tim, dan pantau ketersediaan peralatan dalam satu tampilan real-time.",
+    "todaysFocus": "Fokus Hari Ini!",
+    "stickyNote1Item1": "Praktikum Struktur Data",
+    "stickyNote1Item2": "Kelas Database 24F",
+    "comingUp": "Akan Datang...",
+    "stickyNote2Item1": "Algoritma & Pemrograman",
+    "stickyNote2Item2": "Kelas Web Dev 25C",
+    "demoLabName": "Ilmu Komputer A10",
+    "demoClassName": "Sistem Embedded"
   },
   "bannerDashboard": {
     "hello": "Halo",
@@ -426,7 +516,10 @@
     "privacyPolicy": "Kebijakan Privasi",
     "termsOfService": "Ketentuan Layanan",
     "cookies": "Cookies",
-    "designedBy": "Didesain oleh Syntesa"
+    "designedBy": "Didesain oleh Syntesa",
+    "universityName": "Universitas Negeri Surabaya",
+    "buildingAddress": "Gedung A10, Ruang 3 & 4",
+    "cityCountry": "Surabaya, Indonesia"
   },
   "landingDemo": {
     "seeInAction": "Lihat Ketuk beraksi",
@@ -455,7 +548,22 @@
   "reviews": {
     "trustedByFaculties": "Dipercaya oleh fakultas modern",
     "joinDepartments": "Bergabung dengan departemen yang berpikir maju yang telah menyederhanakan operasi lab mereka.",
-    "activeLabs": "Lab Aktif"
+    "activeLabs": "Lab Aktif",
+    "review1Name": "Alex Chen",
+    "review1Role": "Koordinator Lab @ CS-EDU",
+    "review1Text": "Ketuk sepenuhnya menggantikan kekacauan spreadsheet kami. Deteksi konflik jadwal saja sudah menghemat 20+ jam semester ini.",
+    "review2Name": "Sarah Miller",
+    "review2Role": "Mahasiswa Ilkom",
+    "review2Text": "Akhirnya, saya tidak perlu berjalan ke lab hanya untuk mengecek apakah PC tersedia. Status real-time sangat membantu.",
+    "review3Name": "Dr. Budi Santoso",
+    "review3Role": "Kepala Bio-Informatika",
+    "review3Text": "Fitur pelaporan memberikan data yang tepat untuk akreditasi. Sangat direkomendasikan untuk departemen universitas manapun.",
+    "review4Name": "Jessica Wu",
+    "review4Role": "Asisten Dosen",
+    "review4Text": "Super cepat. Antarmukanya bersih dan tidak menghalangi. Langsung berfungsi.",
+    "review5Name": "Marcus Johnson",
+    "review5Role": "Lead Infrastruktur",
+    "review5Text": "Integrasi dengan sistem autentikasi kami ternyata sangat mudah. Setup hanya butuh kurang dari satu sore."
   },
   "qrCode": {
     "downloadQRCode": "Unduh Kode QR"
