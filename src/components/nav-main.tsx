@@ -8,18 +8,18 @@ import { SideBarItem } from "./type";
 
 const itemsAdmin: SideBarItem[] = [
   { title: "Overview", url: "/app", icon: CalendarDays },
-  { title: "Schedule", url: "/app/requests", icon: BookCheck },
-  { title: "Request List", url: "/app/your-requests", icon: Ticket },
+  { title: "Schedule Request", url: "/app/requests", icon: BookCheck },
+  { title: "All Requests", url: "/app/your-requests", icon: Ticket },
   { title: "Inventory", url: "/app/inventory", icon: Archive },
-  { title: "Users", url: "/app/user-management", icon: UserCog2 },
-  { title: "Unblocking", url: "/app/unblocking", icon: FlagTriangleRight },
+  { title: "User Management", url: "/app/user-management", icon: UserCog2 },
+  { title: "Semester Periods", url: "/app/unblocking", icon: FlagTriangleRight },
   { title: "Audit Logs", url: "/app/audit", icon: Logs },
 ];
 
 const itemsUser: SideBarItem[] = [
   { title: "Overview", url: "/app", icon: CalendarDays },
-  { title: "Schedule", url: "/app/requests", icon: BookCheck },
-  { title: "History", url: "/app/your-requests", icon: Ticket },
+  { title: "Schedule Request", url: "/app/requests", icon: BookCheck },
+  { title: "My History", url: "/app/your-requests", icon: Ticket },
 ];
 
 export default function NavMain({ role }: { role: string }) {
