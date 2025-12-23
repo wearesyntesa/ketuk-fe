@@ -16,6 +16,7 @@ import { Button } from "./ui/button";
 import { InitialIcon } from "./initial-icon";
 import { DoorOpen, LayoutDashboard } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { LanguageSwitcher } from "./language-switcher";
 
 export default function LandingNav(isLogin: { isLogin: boolean }) {
   const t = useTranslations("landing");
@@ -61,6 +62,7 @@ export default function LandingNav(isLogin: { isLogin: boolean }) {
           </Link>
 
           <div className="flex items-center gap-4">
+            <LanguageSwitcher />
             {!isLogin.isLogin ? (
               <div className="flex items-center gap-2">
                 <Link href="/app">

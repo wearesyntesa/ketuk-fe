@@ -49,13 +49,23 @@ export const useTickets = (options?: UseTicketsOptions) => {
 
     const handlePostTicket = async (ticket: ScheduleDataTicket, token: string) => {
         try {
+            // Map frontend field names to backend expected format
+            const requestBody = {
+                userId: ticket.userId,
+                title: ticket.title,
+                description: ticket.description,
+                category: ticket.category,
+                startDate: ticket.startDate.toISOString(),
+                endDate: ticket.endDate.toISOString(),
+            };
+
             const response = await fetch(`${API_URL}/api/tickets/v1`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify({ payload: ticket }),
+                body: JSON.stringify(requestBody),
             });
             const data = await response.json();
             
@@ -75,46 +85,69 @@ export const useTickets = (options?: UseTicketsOptions) => {
         }
     }
 
-    const handleUpdateTicket = async (ticket: ScheduleDataTicket, token: string) => {
-        const response = await fetch(`/api/tickets/update`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({ payload: ticket }),
-        });
-        const data = await response.json();
-        
-        if (!response.ok) {
-            toast.error(data.message || t.unableToUpdateRequest);
-            throw new Error(data.message || t.unableToUpdateRequest);
+    const handleUpdateTicket = async (ticketId: number, ticket: Partial<ScheduleDataTicket>, token: string) => {
+        try {
+            // Build request body - only title and description can be updated
+            const requestBody: Record<string, unknown> = {};
+            if (ticket.title !== undefined) requestBody.title = ticket.title;
+            if (ticket.description !== undefined) requestBody.description = ticket.description;
+
+            const response = await fetch(`${API_URL}/api/tickets/v1/${ticketId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(requestBody),
+            });
+            const data = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(data.message || t.unableToUpdateRequest);
+            }
+
+            toast.success(t.requestUpdated);
+            return data;
+        } catch (error: any) {
+            toast.error(error.message || t.unableToUpdateRequest);
+            throw error;
         }
-
-        toast.success(t.requestUpdated);
-
-        return data;
     }
 
     const handlePostTicketReguler = async (ticket: ScheduleRegulerDataTicket, token: string) => {
-        const response = await fetch(`${API_URL}/api/tickets/v1`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({ payload: ticket }),
-        });
-        const data = await response.json();
-        
-        if (!response.ok) {
-            toast.error(data.message || t.unableToSubmitRequest);
-            throw new Error(data.message || t.unableToSubmitRequest);
+        try {
+            // Map frontend field names to backend expected format
+            const requestBody = {
+                title: ticket.title,
+                startDate: ticket.startDate.toISOString(),
+                endDate: ticket.endDate.toISOString(),
+                userId: ticket.userId,
+            };
+
+            const response = await fetch(`${API_URL}/api/schedules/reguler/v1`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(requestBody),
+            });
+            const data = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(data.message || t.unableToSubmitRequest);
+            }
+
+            // Show toast first, then navigate after a short delay so user sees the feedback
+            toast.success(t.requestSubmitted);
+            setTimeout(() => {
+                window.location.href = '/app/your-requests';
+            }, 500);
+            return data;
+        } catch (error: any) {
+            toast.error(error.message || t.unableToSubmitRequest);
+            throw error;
         }
-
-        toast.success(t.requestSubmitted);
-
-        return data;
     }
 
     const handleGetTicketByID = async (id: number, token: string) => {
@@ -140,6 +173,29 @@ export const useTickets = (options?: UseTicketsOptions) => {
         } catch (error: any) {
             toast.error(error.message || t.unableToLoadRequestDetails);
             throw error;
+        }
+    }
+
+    const handleGetTicketsByUserID = async (userId: number, token: string): Promise<Ticket[]> => {
+        try {
+            const response = await fetch(`${API_URL}/api/tickets/v1/user/${userId}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            const data = await response.json();
+            console.log("Fetched Tickets by User ID:", data);
+
+            if (!response.ok) {
+                throw new Error(data.message || t.unableToLoadRequestDetails);
+            }
+
+            return data.data || [];
+        } catch (error: any) {
+            console.error("Failed to fetch tickets by user ID:", error);
+            return [];
         }
     }
 
@@ -179,6 +235,7 @@ export const useTickets = (options?: UseTicketsOptions) => {
         handleUpdateTicket,
         handlePostTicketReguler,
         handleGetTicketByID,
+        handleGetTicketsByUserID,
         handlePatchTicket,
     }
 }

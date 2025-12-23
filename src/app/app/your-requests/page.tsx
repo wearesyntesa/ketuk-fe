@@ -2,16 +2,16 @@
 
 import RequestsTable from "@/components/table-requests";
 import { ColumnDef } from "@tanstack/react-table";
-import { MergeSchedultType } from "@/components/type";
+import { Ticket } from "@/components/type";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { EllipsisVertical, Calendar, Clock, BookOpen, GraduationCap, Monitor } from "lucide-react";
 import { useUser } from "@/hooks/use-user";
 import { useEffect, useState, useMemo } from "react";
-import { useSchedule } from "@/hooks/use-schedule";
-import { InitialIconEmail, InitialIconWithName } from "@/components/initial-icon";
+import { useTickets } from "@/hooks/use-tickets";
+import { InitialIconWithName } from "@/components/initial-icon";
 import DetailTicketPatch from "@/components/detail-ticket-patch";
 import { Badge } from "@/components/ui/badge";
-import { useTranslations, useLocale } from "next-intl";
+import { useTranslations } from "next-intl";
 
 function EventTypeCell({ category }: { category: string }) {
   if (!category) return null;
@@ -54,29 +54,28 @@ function StatusCell({ status, t }: { status: string; t: (key: string) => string 
 
 export default function YourRequestsPage() {
   const [token, setToken] = useState<string>("");
+  const [allTickets, setAllTickets] = useState<Ticket[]>([]);
+  const [userTickets, setUserTickets] = useState<Ticket[]>([]);
   const user = useUser();
-  const mergedSchedules: MergeSchedultType[] = [];
   const t = useTranslations("requests");
   const tCommon = useTranslations("common");
   const tErrors = useTranslations("errors");
-  const locale = useLocale();
+
+  const ticketsHook = useTickets({
+    translations: {
+      unableToLoadRequestDetails: tErrors("connectionError"),
+    }
+  });
 
   useEffect(() => {
-    setToken(localStorage.getItem("access_token") || "");
+    const storedToken = localStorage.getItem("access_token") || "";
+    setToken(storedToken);
     const userData = localStorage.getItem("user");
     if (userData) user.setUser(JSON.parse(userData));
   }, []);
 
-  const schedules = useSchedule(token, {
-    locale,
-    translations: {
-      unableToLoadSchedules: tErrors("connectionError"),
-      connectionError: tErrors("connectionError"),
-      unableToLoadRegularSchedules: tErrors("connectionError"),
-      unableToLoadYourSchedules: tErrors("connectionError"),
-    }
-  });
   useEffect(() => {
+    if (!token) return;
     const userData = localStorage.getItem("user");
     if (!userData) return;
 
@@ -84,22 +83,20 @@ export default function YourRequestsPage() {
     const id = JSON.parse(userData).id;
 
     if (role === "admin") {
-      schedules.handleGetAllRegulerSchedules();
-      schedules.handleGetAllTicketSchedules();
+      // Admin fetches ALL tickets (pending, accepted, rejected)
+      ticketsHook.handleGetAllTickets().then((tickets) => {
+        setAllTickets(tickets || []);
+      });
     } else {
-      schedules.handleScheduleByUserId(id || 0);
+      // Regular users fetch only their own tickets
+      ticketsHook.handleGetTicketsByUserID(id, token).then((tickets) => {
+        setUserTickets(tickets);
+      });
     }
   }, [token]);
 
-  const regulerFiltered = schedules.regulerSchedules.filter(
-    (schedule, index, self) => index === self.findIndex((s) => s.title === schedule.title),
-  );
-
-  schedules
-    .handleMergeSchedules(schedules.ticketSchedules, regulerFiltered, user.user?.role === "admin")
-    .forEach((item) => mergedSchedules.push(item));
-
-  const tableHeaderAdmin: ColumnDef<MergeSchedultType>[] = useMemo(() => [
+  // Admin table columns - shows all tickets with approve/reject actions
+  const tableHeaderAdmin: ColumnDef<Ticket>[] = useMemo(() => [
     {
       accessorKey: "title",
       header: t("eventTitle"),
@@ -125,37 +122,23 @@ export default function YourRequestsPage() {
     {
       id: "personInCharge",
       header: t("requester"),
-      cell: ({ row }) => <InitialIconWithName title={row.original.user.name} />,
+      cell: ({ row }) => <InitialIconWithName title={row.original.user?.name || "Unknown"} />,
     },
     {
-      accessorKey: "kategori",
+      accessorKey: "category",
       header: t("category"),
-      cell: ({ row }) => <EventTypeCell category={row.original.kategori} />,
+      cell: ({ row }) => <EventTypeCell category={row.original.category} />,
     },
     {
       accessorKey: "status",
       header: t("status"),
-      cell: ({ row }) => <StatusCell status={row.original.status || "Pending"} t={t} />,
-    },
-    {
-      header: t("regular"),
-      cell: ({ row }) => (
-        <div className="flex justify-center">
-          {row.original.isReguler ? (
-            <span className="text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider border border-emerald-100">
-              {tCommon("yes")}
-            </span>
-          ) : (
-            <span className="text-slate-400 text-lg">-</span>
-          )}
-        </div>
-      ),
+      cell: ({ row }) => <StatusCell status={row.original.status || "pending"} t={t} />,
     },
     {
       header: tCommon("actions"),
       id: "actions",
       cell: ({ row }) => {
-        const isPending = (row.original.status || "Pending").toLowerCase() === "pending";
+        const isPending = (row.original.status || "pending").toLowerCase() === "pending";
 
         if (!isPending) return <div className="text-center text-slate-300 text-xs italic">{t("noActions")}</div>;
 
@@ -170,7 +153,7 @@ export default function YourRequestsPage() {
                   startTime={row.original.startDate}
                   endTime={row.original.endDate}
                   date={row.original.startDate}
-                  id={row.original.tickets?.[0].id || 0}
+                  id={row.original.id}
                 />
               </DropdownMenuContent>
             </DropdownMenu>
@@ -180,7 +163,8 @@ export default function YourRequestsPage() {
     },
   ], [t, tCommon]);
 
-  const tableHeaderUser: ColumnDef<MergeSchedultType>[] = useMemo(() => [
+  // User table columns - shows their own tickets (read-only)
+  const tableHeaderUser: ColumnDef<Ticket>[] = useMemo(() => [
     {
       accessorKey: "title",
       header: t("eventTitle"),
@@ -204,38 +188,42 @@ export default function YourRequestsPage() {
       header: t("description"),
       cell: ({ row }) => (
         <div className="truncate max-w-[200px] text-slate-500" title={row.original.description}>
-          {row.original.description}
+          {row.original.description || "-"}
         </div>
       ),
     },
     {
-      accessorKey: "kategori",
+      accessorKey: "category",
       header: t("category"),
-      cell: ({ row }) => <EventTypeCell category={row.original.kategori} />,
+      cell: ({ row }) => <EventTypeCell category={row.original.category} />,
     },
     {
       accessorKey: "status",
       header: t("status"),
-      cell: ({ row }) => <StatusCell status={row.original.status || "Pending"} t={t} />,
+      cell: ({ row }) => <StatusCell status={row.original.status || "pending"} t={t} />,
     },
   ], [t]);
 
-  const header = user.user?.role === "admin" ? tableHeaderAdmin : tableHeaderUser;
+  const isAdmin = user.user?.role === "admin";
 
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-1">
         <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
-          {user.user?.role === "admin" ? t("allRequests") : t("myHistory")}
+          {isAdmin ? t("allRequests") : t("myHistory")}
         </h2>
         <p className="text-slate-500 text-sm">
-          {user.user?.role === "admin"
+          {isAdmin
             ? t("manageDescription")
             : t("trackDescription")}
         </p>
       </div>
 
-      <RequestsTable columns={header} data={mergedSchedules} />
+      {isAdmin ? (
+        <RequestsTable columns={tableHeaderAdmin} data={allTickets} />
+      ) : (
+        <RequestsTable columns={tableHeaderUser} data={userTickets} />
+      )}
     </div>
   );
 }

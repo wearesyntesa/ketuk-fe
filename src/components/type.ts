@@ -136,9 +136,13 @@ export interface Ticket {
 	user: UserType;
 	title: string;
 	description: string;
+	category: "Kelas" | "Praktikum" | "Skripsi" | "Lainnya" | string;
+	startDate: string;
+	endDate: string;
 	status: "pending" | "accepted" | "rejected" | string;
 	createdAt: string;
 	updatedAt: string;
+	approvedAt?: string;
 	reason: string;
 }
 

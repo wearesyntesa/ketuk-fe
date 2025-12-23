@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense, useEffect, useState } from "react";
 import { ItemDialogProps } from "@/components/type";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,13 +10,26 @@ import { Textarea } from "@/components/ui/textarea";
 import { useItems } from "@/hooks/use-items";
 import { ArrowLeftCircle } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
 import QRCodeGenerator from "@/components/qr-code";
 import { useTranslations } from "next-intl";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://ketuk.app";
 
-export default function DetailCategoryItem() {
+function LoadingState() {
+    return (
+        <div className="@container/main flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+            <div className="px-4 lg:gap-2 lg:px-6 flex flex-col gap-4">
+                <div className="h-8 w-24 bg-muted animate-pulse rounded" />
+                <div className="h-10 bg-muted animate-pulse rounded" />
+                <div className="h-24 bg-muted animate-pulse rounded" />
+                <div className="h-10 bg-muted animate-pulse rounded" />
+                <div className="h-52 w-52 bg-muted animate-pulse rounded" />
+            </div>
+        </div>
+    );
+}
+
+function DetailCategoryItemInner() {
     const searchParams = useSearchParams();
     const itemId: number = Number(searchParams.get("itemId"));
     const t = useTranslations("inventory");
@@ -27,20 +41,22 @@ export default function DetailCategoryItem() {
             note: "",
             condition: "Good",
         });
-        const token = localStorage.getItem("access_token") || "";
-    
-        const items = useItems();
+    const token = typeof window !== "undefined" ? localStorage.getItem("access_token") || "" : "";
+
+    const items = useItems();
 
     useEffect(() => {
-        items.handleGetItem(token, itemId).then((data) => {
-            setCategoryData({
-                categoryId: data.category_id,
-                name: data.name,
-                note: data.note,
-                condition: data.kondisi,
+        if (token && itemId) {
+            items.handleGetItem(token, itemId).then((data) => {
+                setCategoryData({
+                    categoryId: data.category_id,
+                    name: data.name,
+                    note: data.note,
+                    condition: data.kondisi,
+                });
             });
-        });
-    }, []);
+        }
+    }, [itemId]);
     
     const updateItem = () => {
         if (token) {
@@ -112,5 +128,13 @@ export default function DetailCategoryItem() {
                 </div>
             </div>
         </>
+    );
+}
+
+export default function DetailCategoryItem() {
+    return (
+        <Suspense fallback={<LoadingState />}>
+            <DetailCategoryItemInner />
+        </Suspense>
     );
 }

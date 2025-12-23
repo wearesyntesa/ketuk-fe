@@ -15,17 +15,16 @@ import { Card } from "./ui/card";
 import { Input } from "./ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { useState } from "react";
-import { MergeSchedultType } from "./type";
 import { Button } from "./ui/button";
 import { ChevronLeft, ChevronRight, Search, Filter } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-interface DataTableProps<TData extends MergeSchedultType, TValue> {
+interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
-export default function RequestsTable<TData extends MergeSchedultType, TValue>({
+export default function RequestsTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {

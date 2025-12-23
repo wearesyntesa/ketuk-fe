@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import DetailItem from "@/components/detail-item";
 import InventoryDetailTable from "@/components/table-inventory-detail";
 import { ItemDetail } from "@/components/type";
@@ -12,8 +13,19 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState, useMemo } from "react";
 import { useTranslations } from "next-intl";
 
-export default function DetailCategoryItem() {
-    const token = localStorage.getItem("access_token") || "";
+function LoadingState() {
+    return (
+        <div className="@container/main flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+            <div className="px-4 lg:gap-2 lg:px-6 flex flex-col gap-4">
+                <div className="h-8 w-48 bg-muted animate-pulse rounded" />
+                <div className="h-64 bg-muted animate-pulse rounded" />
+            </div>
+        </div>
+    );
+}
+
+function DetailCategoryItemInner() {
+    const token = typeof window !== "undefined" ? localStorage.getItem("access_token") || "" : "";
     const searchParams = useSearchParams();
     const idFromQuery: number = Number(searchParams.get("categoryId"));
     const items = useItems();
@@ -90,5 +102,13 @@ export default function DetailCategoryItem() {
                 </div>
             </div>
         </>
+    );
+}
+
+export default function DetailCategoryItem() {
+    return (
+        <Suspense fallback={<LoadingState />}>
+            <DetailCategoryItemInner />
+        </Suspense>
     );
 }

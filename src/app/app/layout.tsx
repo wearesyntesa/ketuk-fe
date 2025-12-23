@@ -2,10 +2,12 @@
 
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
+import AppHeader from "@/components/app-header";
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useUser } from "@/hooks/use-user";
 import { toast, Toaster } from "sonner";
+import { useTranslations } from "next-intl";
 
 export default function AppLayout({
   children,
@@ -15,8 +17,20 @@ export default function AppLayout({
   const router = useRouter();
   const pathname = usePathname();
   const [loading, setLoading] = useState(true);
-  const [header, setHeader] = useState("Dashboard");
   const user = useUser();
+  const tNav = useTranslations("nav");
+
+  // Get page title based on pathname
+  const getPageTitle = () => {
+    if (pathname === "/app") return tNav("overview");
+    if (pathname.includes("/app/requests")) return tNav("allRequests");
+    if (pathname.includes("/app/your-requests")) return tNav("myHistory");
+    if (pathname.includes("/app/inventory")) return tNav("inventory");
+    if (pathname.includes("/app/user-management")) return tNav("userManagement");
+    if (pathname.includes("/app/unblocking")) return tNav("bookingWindows");
+    if (pathname.includes("/app/audit")) return tNav("auditLogs");
+    return tNav("overview");
+  };
 
   useEffect(() => {
     // Check if user is authenticated
@@ -84,6 +98,7 @@ export default function AppLayout({
 
       <SidebarInset className="bg-transparent overflow-x-hidden">
         <div className="flex min-h-screen flex-col">
+          <AppHeader title={getPageTitle()} />
           <div className="flex-1 p-4 md:p-6 lg:p-8 max-w-[1600px] mx-auto w-full">{children}</div>
 
           <Toaster richColors position="bottom-right" theme="light" />
