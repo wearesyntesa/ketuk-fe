@@ -259,6 +259,80 @@ export interface PatchTicketStatus {
 	reason?: string;
 }
 
+// Form Link types for public form feature
+export interface FormLink {
+	id: number;
+	code: string;
+	title: string;
+	description: string;
+	createdBy: number;
+	creator: UserType;
+	picName: string;
+	picEmail: string;
+	picPhone: string;
+	expiresAt: string;
+	maxSubmissions: number | null;
+	submissionCount: number;
+	isActive: boolean;
+	createdAt: string;
+	updatedAt: string;
+}
+
+export interface CreateFormLinkRequest {
+	title: string;
+	description?: string;
+	picName: string;
+	picEmail: string;
+	picPhone?: string;
+	expiresAt: Date;
+	maxSubmissions?: number | null;
+}
+
+export interface UpdateFormLinkRequest {
+	title?: string;
+	description?: string;
+	picName?: string;
+	picEmail?: string;
+	picPhone?: string;
+	expiresAt?: Date;
+	maxSubmissions?: number | null;
+	isActive?: boolean;
+}
+
+export interface PublicFormResponse {
+	code: string;
+	title: string;
+	description: string;
+	picName: string;
+	picEmail: string;
+	picPhone: string;
+	expiresAt: string;
+	remainingSlots: number | null;
+	isAvailable: boolean;
+}
+
+export interface PublicFormSubmitRequest {
+	submitterName: string;
+	submitterEmail: string;
+	submitterPhone?: string;
+	title: string;
+	description?: string;
+	category: "Kelas" | "Praktikum" | "Skripsi" | "Lainnya" | string;
+	startDate: Date;
+	endDate: Date;
+}
+
+export interface PublicFormSubmitResponse {
+	confirmationCode: string;
+	title: string;
+	startDate: string;
+	endDate: string;
+	picName: string;
+	picEmail: string;
+	picPhone: string;
+	message: string;
+}
+
 // const chartData = [
 //   { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
 //   { browser: "safari", visitors: 200, fill: "var(--color-safari)" },

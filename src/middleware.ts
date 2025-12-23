@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 // Paths that don't require authentication
-const publicPaths = ["/auth/login", "/auth/register", "/auth/google/callback", "/"];
+const publicPaths = ["/auth/login", "/auth/register", "/auth/google/callback", "/", "/form"];
 
 // Paths that require authentication
 // const protectedPaths = ["/app"];

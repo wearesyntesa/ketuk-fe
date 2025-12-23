@@ -1,6 +1,6 @@
 "use client";
 
-import { Archive, BookCheck, CalendarDays, FlagTriangleRight, Logs, Ticket, UserCog2 } from "lucide-react";
+import { Archive, BookCheck, CalendarDays, FlagTriangleRight, Link2, Logs, Ticket, UserCog2 } from "lucide-react";
 import { SidebarGroup, SidebarGroupContent, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "./ui/sidebar";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -17,6 +17,7 @@ const itemsAdmin: NavItem[] = [
   { titleKey: "overview", url: "/app", icon: CalendarDays },
   { titleKey: "scheduleRequest", url: "/app/requests", icon: BookCheck },
   { titleKey: "allRequests", url: "/app/your-requests", icon: Ticket },
+  { titleKey: "formLinks", url: "/app/form-links", icon: Link2 },
   { titleKey: "inventory", url: "/app/inventory", icon: Archive },
   { titleKey: "userManagement", url: "/app/user-management", icon: UserCog2 },
   { titleKey: "bookingWindows", url: "/app/unblocking", icon: FlagTriangleRight },
