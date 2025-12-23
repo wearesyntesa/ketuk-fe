@@ -148,7 +148,7 @@ export const useTickets = () => {
     
             return data;
         } catch (error: any) {
-            toast.error(error.message || 'Gagal mengupdate status ticket');
+            toast.error(error.message || 'Gagal mengupdate status ticket yes');
             throw error;
         }
     }
