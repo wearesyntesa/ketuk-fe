@@ -159,6 +159,9 @@ export default function ScheduleMonth({data}: {data: MergeSchedultType[]}) {
 															{event.title}
 														</h3>
 														<p className="text-sm text-muted-foreground">
+															{event.pic}
+														</p>
+														<p className="text-sm text-muted-foreground">
 															{event.startDate} - {event.endDate}
 														</p>
 														<p className="text-sm">{event.description}</p>

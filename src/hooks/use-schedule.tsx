@@ -22,7 +22,6 @@ export const useSchedule = (token: string) => {
 				},
 			});
 
-			console.log("aa")
 			const data = await response.json();
 
 			if (data.success) {
@@ -41,6 +40,7 @@ export const useSchedule = (token: string) => {
 						updatedAt: item.updatedAt,
 						user: item.user,
 						tickets: item.tickets,
+						pic: item.pic,
 					}))
 				);
 				return dataRes;
@@ -115,6 +115,7 @@ export const useSchedule = (token: string) => {
 						updatedAt: item.updatedAt,
 						user: item.user,
 						tickets: item.tickets,
+						pic: item.pic,
 					})));
 			} else {
 				console.error("Failed to fetch schedules by user ID:", data.message);
@@ -146,6 +147,7 @@ export const useSchedule = (token: string) => {
 				tickets: ticketSchedule.tickets,
 				status: ticketSchedule.tickets?.[0].status || "Pending",
 				isReguler: false,
+				pic: ticketSchedule.pic,
 			});
 		});
 		if (admin) {

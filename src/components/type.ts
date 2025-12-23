@@ -148,6 +148,7 @@ export interface ScheduleTicket {
 	updatedAt: string;
 	user: UserType;
 	tickets?: Ticket[];
+	pic: string;
 }
 
 export interface ScheduleReguler {
@@ -179,6 +180,7 @@ export interface MergeSchedultType {
 	status: "pending" | "accepted" | "rejected" | string;
 	tickets?: Ticket[];
 	isReguler: boolean;
+	pic?: string;
 }
 
 export interface AuditLogByUser {
